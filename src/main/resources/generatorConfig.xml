@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+
+  <properties resource="application.properties"/>
+  <classPathEntry location="${mbg.jdbc.driver-location}"/>
+  <context id="zfgc3_context" targetRuntime="MyBatis3">
+
+    <jdbcConnection connectionURL="jdbc:postgresql://zfgc.com:5432/zfgc_dev"
+    				driverClass="org.postgresql.Driver"
+    				password="${mbg.jdbc.password}"
+    				userId="${mbg.jdbc.username}"/>
+    				
+    <javaModelGenerator targetPackage="com.zfgc.zfgbb.dbo" targetProject="zfgbb">
+    	<property name="enableSubPackages" value="true" />
+    </javaModelGenerator>
+    <sqlMapGenerator targetPackage="com.zfgc.zfgbb.mappers" targetProject="zfgbb">
+    	<property name="enableSubPackages" value="true" />
+    </sqlMapGenerator>
+    <javaClientGenerator targetPackage="com.zfgc.zfgbb.mappers" targetProject="zfgbb" type="XMLMAPPER" />
+    
+
+    <!-- tables -->
+   
+   <table schema="zfgbb" tableName="attribute_data_type" domainObjectName="AttributeDataTypeDbo">
+		<generatedKey column="attribute_data_type_id" sqlStatement="JDBC" identity="true" />
+		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.Instant"/>
+		<columnOverride column="updated_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.Instant"/>
+    </table>
+    
+    <table schema="zfgbb" tableName="bb_code_attribute" domainObjectName="BBCodeAttributeDbo">
+		<generatedKey column="bb_code_attribute_id" sqlStatement="JDBC" identity="true" />
+		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.Instant"/>
+		<columnOverride column="updated_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.Instant"/>
+    </table>
+    
+    <table schema="zfgbb" tableName="bb_code_attribute_mode" domainObjectName="BBCodeAttributeModeDbo">
+		<generatedKey column="bb_code_attribute_mode_id" sqlStatement="JDBC" identity="true" />
+		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.Instant"/>
+		<columnOverride column="updated_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.Instant"/>
+    </table>
+    
+    <table schema="zfgbb" tableName="bb_code_config" domainObjectName="BBCodeConfigDbo">
+		<generatedKey column="bb_code_config_id" sqlStatement="JDBC" identity="true" />
+		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.Instant"/>
+		<columnOverride column="updated_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.Instant"/>
+    </table>
+   
+   <!--<table schema="zfgbb" tableName="user" domainObjectName="UserDbo">
+		<generatedKey column="user_ID" sqlStatement="JDBC" identity="true" />
+		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.Instant"/>
+		<columnOverride column="updated_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.Instant"/>
+    </table>
+   
+   	<table schema="zfgbb" tableName="thread" domainObjectName="ThreadDbo">
+		<generatedKey column="thread_ID" sqlStatement="JDBC" identity="true" />
+		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.Instant"/>
+		<columnOverride column="updated_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.Instant"/>
+    </table>
+   
+     <table schema="zfgbb" tableName="BOARD" domainObjectName="BoardDbo">
+		<generatedKey column="BOARD_ID" sqlStatement="JDBC" identity="true" />
+		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.Instant"/>
+		<columnOverride column="updated_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.Instant"/>
+    </table>
+    
+    <table schema="zfgbb" tableName="category" domainObjectName="CategoryDbo">
+		<generatedKey column="category_id" sqlStatement="JDBC" identity="true" />
+		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.Instant"/>
+		<columnOverride column="updated_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.Instant"/>
+    </table>-->
+    
+  </context>
+</generatorConfiguration>
