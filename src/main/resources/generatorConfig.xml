@@ -21,6 +21,20 @@
     
 
     <!-- tables -->
+    <table schema="zfgbb" tableName="email_address" domainObjectName="EmailAddressDbo">
+		<generatedKey column="email_address_id" sqlStatement="JDBC" identity="true" />
+		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.Instant"/>
+		<columnOverride column="updated_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.Instant"/>
+    </table>
+    
+     <!--<table schema="zfgbb" tableName="user" domainObjectName="UserDbo">
+		<generatedKey column="user_id" sqlStatement="JDBC" identity="true" />
+		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.Instant"/>
+		<columnOverride column="updated_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.Instant"/>
+    </table>
+    
+    <table schema="zfgbb" tableName="user_permission_view" domainObjectName="UserPermissionViewDbo">
+    </table>
    
    <table schema="zfgbb" tableName="attribute_data_type" domainObjectName="AttributeDataTypeDbo">
 		<generatedKey column="attribute_data_type_id" sqlStatement="JDBC" identity="true" />
@@ -46,7 +60,7 @@
 		<columnOverride column="updated_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.Instant"/>
     </table>
    
-   <!--<table schema="zfgbb" tableName="user" domainObjectName="UserDbo">
+   <table schema="zfgbb" tableName="user" domainObjectName="UserDbo">
 		<generatedKey column="user_ID" sqlStatement="JDBC" identity="true" />
 		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.Instant"/>
 		<columnOverride column="updated_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.Instant"/>

@@ -61,4 +61,8 @@ public class ForumDataProvider extends AbstractDataProvider {
 		return forum;
 	}
 	
+	public Thread getThread(Integer threadId) {
+		return mapper.map(threadDao.get(threadId), Thread.class);
+	}
+	
 }
