@@ -1,7 +1,7 @@
 package com.zfgc.zfgbb.mappers;
 
-import com.zfgc.zfgbb.dbo.zfgbb.ThreadDbo;
-import com.zfgc.zfgbb.dbo.zfgbb.ThreadDboExample;
+import com.zfgc.zfgbb.dbo.ThreadDbo;
+import com.zfgc.zfgbb.dbo.ThreadDboExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 

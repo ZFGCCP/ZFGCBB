@@ -6,10 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.zfgc.zfgbb.dao.AbstractDao;
-import com.zfgc.zfgbb.dbo.zfgbb.EmailAddressDbo;
-import com.zfgc.zfgbb.dbo.zfgbb.EmailAddressDboExample;
-import com.zfgc.zfgbb.dbo.zfgbb.UserDbo;
-import com.zfgc.zfgbb.dbo.zfgbb.UserDboExample;
+import com.zfgc.zfgbb.dbo.EmailAddressDbo;
+import com.zfgc.zfgbb.dbo.EmailAddressDboExample;
+import com.zfgc.zfgbb.dbo.UserDbo;
+import com.zfgc.zfgbb.dbo.UserDboExample;
 import com.zfgc.zfgbb.mappers.EmailAddressDboMapper;
 import com.zfgc.zfgbb.mappers.UserDboMapper;
 

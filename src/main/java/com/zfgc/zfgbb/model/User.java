@@ -16,6 +16,8 @@ public class User extends BaseModel implements UserDetails {
 	@JsonIgnore
 	private Integer userId;
 	private String displayName;
+	
+	@JsonIgnore
 	private List<Permission> permissions = new ArrayList<>();
 	
 	public List<Permission> getPermissions() {

@@ -1,7 +1,7 @@
 package com.zfgc.zfgbb.mappers;
 
-import com.zfgc.zfgbb.dbo.zfgbb.UserPermissionViewDbo;
-import com.zfgc.zfgbb.dbo.zfgbb.UserPermissionViewDboExample;
+import com.zfgc.zfgbb.dbo.UserPermissionViewDbo;
+import com.zfgc.zfgbb.dbo.UserPermissionViewDboExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 

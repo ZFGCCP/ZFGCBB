@@ -85,6 +85,11 @@
     		<artifactId>dozer</artifactId>
     		<version>5.5.1</version>
 		</dependency>
+		<dependency>
+    		<groupId>com.google.guava</groupId>
+    		<artifactId>guava</artifactId>
+    		<version>31.1-jre</version>
+		</dependency>
 	</dependencies>
 
 	<build>

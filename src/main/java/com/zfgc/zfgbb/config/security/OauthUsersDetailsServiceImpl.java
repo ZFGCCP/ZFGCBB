@@ -19,12 +19,12 @@ import org.springframework.web.client.RestTemplate;
 
 import com.zfgc.zfgbb.dao.users.EmailAddressDao;
 import com.zfgc.zfgbb.dao.users.UserDao;
-import com.zfgc.zfgbb.dao.zfgbb.UserPermissionViewDao;
+import com.zfgc.zfgbb.dao.UserPermissionViewDao;
 import com.zfgc.zfgbb.dataprovider.users.UserDataProvider;
-import com.zfgc.zfgbb.dbo.zfgbb.EmailAddressDboExample;
-import com.zfgc.zfgbb.dbo.zfgbb.UserDbo;
-import com.zfgc.zfgbb.dbo.zfgbb.UserDboExample;
-import com.zfgc.zfgbb.dbo.zfgbb.UserPermissionViewDboExample;
+import com.zfgc.zfgbb.dbo.EmailAddressDboExample;
+import com.zfgc.zfgbb.dbo.UserDbo;
+import com.zfgc.zfgbb.dbo.UserDboExample;
+import com.zfgc.zfgbb.dbo.UserPermissionViewDboExample;
 import com.zfgc.zfgbb.model.User;
 import com.zfgc.zfgbb.model.users.AuthCredentials;
 

@@ -1,7 +1,7 @@
 package com.zfgc.zfgbb.mappers;
 
-import com.zfgc.zfgbb.dbo.zfgbb.AttributeDataTypeDbo;
-import com.zfgc.zfgbb.dbo.zfgbb.AttributeDataTypeDboExample;
+import com.zfgc.zfgbb.dbo.AttributeDataTypeDbo;
+import com.zfgc.zfgbb.dbo.AttributeDataTypeDboExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 

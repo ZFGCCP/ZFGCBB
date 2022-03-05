@@ -1,7 +1,7 @@
 package com.zfgc.zfgbb.mappers;
 
-import com.zfgc.zfgbb.dbo.zfgbb.BoardDbo;
-import com.zfgc.zfgbb.dbo.zfgbb.BoardDboExample;
+import com.zfgc.zfgbb.dbo.BoardDbo;
+import com.zfgc.zfgbb.dbo.BoardDboExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 

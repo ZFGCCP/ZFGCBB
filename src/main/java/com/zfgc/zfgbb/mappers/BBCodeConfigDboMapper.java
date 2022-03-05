@@ -1,7 +1,7 @@
 package com.zfgc.zfgbb.mappers;
 
-import com.zfgc.zfgbb.dbo.zfgbb.BBCodeConfigDbo;
-import com.zfgc.zfgbb.dbo.zfgbb.BBCodeConfigDboExample;
+import com.zfgc.zfgbb.dbo.BBCodeConfigDbo;
+import com.zfgc.zfgbb.dbo.BBCodeConfigDboExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 

@@ -3,7 +3,9 @@ package com.zfgc.zfgbb.model.forum;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.zfgc.zfgbb.model.BaseModel;
+import com.zfgc.zfgbb.model.users.Permission;
 
 public class Forum {
 
@@ -11,6 +13,8 @@ public class Forum {
 	private String boardName;
 	private List<Thread> stickyThreads = new ArrayList<>();
 	private List<Thread> threads = new ArrayList<>();
+	@JsonIgnore
+	private List<Permission> boardPermissions = new ArrayList<>();
 
 	public List<Category> getCategories() {
 		return categories;
@@ -42,6 +46,14 @@ public class Forum {
 
 	public void setStickyThreads(List<Thread> stickyThreads) {
 		this.stickyThreads = stickyThreads;
+	}
+
+	public List<Permission> getBoardPermissions() {
+		return boardPermissions;
+	}
+
+	public void setBoardPermissions(List<Permission> boardPermissions) {
+		this.boardPermissions = boardPermissions;
 	}
 
 

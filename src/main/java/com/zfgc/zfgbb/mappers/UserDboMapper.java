@@ -1,7 +1,7 @@
 package com.zfgc.zfgbb.mappers;
 
-import com.zfgc.zfgbb.dbo.zfgbb.UserDbo;
-import com.zfgc.zfgbb.dbo.zfgbb.UserDboExample;
+import com.zfgc.zfgbb.dbo.UserDbo;
+import com.zfgc.zfgbb.dbo.UserDboExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 

@@ -1,7 +1,7 @@
 package com.zfgc.zfgbb.mappers;
 
-import com.zfgc.zfgbb.dbo.zfgbb.EmailAddressDbo;
-import com.zfgc.zfgbb.dbo.zfgbb.EmailAddressDboExample;
+import com.zfgc.zfgbb.dbo.EmailAddressDbo;
+import com.zfgc.zfgbb.dbo.EmailAddressDboExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 

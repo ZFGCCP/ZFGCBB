@@ -1,9 +1,13 @@
 package com.zfgc.zfgbb.model.forum;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.zfgc.zfgbb.model.BaseModel;
+import com.zfgc.zfgbb.model.User;
+import com.zfgc.zfgbb.model.users.Permission;
 
 public class Thread extends BaseModel {
 	@JsonIgnore
@@ -14,6 +18,12 @@ public class Thread extends BaseModel {
     private Instant createdTs;
     private Instant updatedTs;
     private Integer boardId;
+    
+    private User createdUser;
+    
+    @JsonIgnore
+    private List<Permission> boardPermissions = new ArrayList<>();
+    private List<Message> messages = new ArrayList<>();
     
 	public Integer getThreadId() {
 		return threadId;
@@ -64,5 +74,23 @@ public class Thread extends BaseModel {
 	@Override
 	public void setId(Integer id) {
 		threadId = id;
+	}
+	public User getCreatedUser() {
+		return createdUser;
+	}
+	public void setCreatedUser(User createdUser) {
+		this.createdUser = createdUser;
+	}
+	public List<Permission> getBoardPermissions() {
+		return boardPermissions;
+	}
+	public void setBoardPermissions(List<Permission> boardPermissions) {
+		this.boardPermissions = boardPermissions;
+	}
+	public List<Message> getMessages() {
+		return messages;
+	}
+	public void setMessages(List<Message> messages) {
+		this.messages = messages;
 	}
 }

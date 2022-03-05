@@ -1,7 +1,7 @@
 package com.zfgc.zfgbb.mappers;
 
-import com.zfgc.zfgbb.dbo.zfgbb.BBCodeAttributeModeDbo;
-import com.zfgc.zfgbb.dbo.zfgbb.BBCodeAttributeModeDboExample;
+import com.zfgc.zfgbb.dbo.BBCodeAttributeModeDbo;
+import com.zfgc.zfgbb.dbo.BBCodeAttributeModeDboExample;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
 

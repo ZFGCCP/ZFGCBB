@@ -7,11 +7,11 @@ import org.springframework.stereotype.Repository;
 
 import com.zfgc.zfgbb.dao.users.EmailAddressDao;
 import com.zfgc.zfgbb.dao.users.UserDao;
-import com.zfgc.zfgbb.dao.zfgbb.UserPermissionViewDao;
+import com.zfgc.zfgbb.dao.UserPermissionViewDao;
 import com.zfgc.zfgbb.dataprovider.AbstractDataProvider;
-import com.zfgc.zfgbb.dbo.zfgbb.UserDbo;
-import com.zfgc.zfgbb.dbo.zfgbb.UserDboExample;
-import com.zfgc.zfgbb.dbo.zfgbb.UserPermissionViewDboExample;
+import com.zfgc.zfgbb.dbo.UserDbo;
+import com.zfgc.zfgbb.dbo.UserDboExample;
+import com.zfgc.zfgbb.dbo.UserPermissionViewDboExample;
 import com.zfgc.zfgbb.model.User;
 import com.zfgc.zfgbb.model.users.Permission;
 

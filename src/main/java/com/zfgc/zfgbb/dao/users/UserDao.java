@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.zfgc.zfgbb.dao.AbstractDao;
-import com.zfgc.zfgbb.dbo.zfgbb.UserDbo;
-import com.zfgc.zfgbb.dbo.zfgbb.UserDboExample;
+import com.zfgc.zfgbb.dbo.UserDbo;
+import com.zfgc.zfgbb.dbo.UserDboExample;
 import com.zfgc.zfgbb.mappers.UserDboMapper;
 
 @Repository

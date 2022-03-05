@@ -12,22 +12,35 @@
     				userId="${mbg.jdbc.username}"/>
     				
     <javaModelGenerator targetPackage="com.zfgc.zfgbb.dbo" targetProject="zfgbb">
-    	<property name="enableSubPackages" value="true" />
     </javaModelGenerator>
     <sqlMapGenerator targetPackage="com.zfgc.zfgbb.mappers" targetProject="zfgbb">
-    	<property name="enableSubPackages" value="true" />
     </sqlMapGenerator>
     <javaClientGenerator targetPackage="com.zfgc.zfgbb.mappers" targetProject="zfgbb" type="XMLMAPPER" />
     
 
     <!-- tables -->
+    <table schema="zfgbb" tableName="message_history" domainObjectName="MessageHistoryDbo">
+		<generatedKey column="message_history_id" sqlStatement="JDBC" identity="true" />
+		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.Instant"/>
+		<columnOverride column="updated_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.Instant"/>
+    </table>
+    
+    <!--<table schema="zfgbb" tableName="message" domainObjectName="MessageDbo">
+		<generatedKey column="message_id" sqlStatement="JDBC" identity="true" />
+		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.Instant"/>
+		<columnOverride column="updated_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.Instant"/>
+    </table>
+    
+    <table schema="zfgbb" tableName="board_permission_view" domainObjectName="BoardPermissionViewDbo">
+    </table>
+    
     <table schema="zfgbb" tableName="email_address" domainObjectName="EmailAddressDbo">
 		<generatedKey column="email_address_id" sqlStatement="JDBC" identity="true" />
 		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.Instant"/>
 		<columnOverride column="updated_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.Instant"/>
     </table>
     
-     <!--<table schema="zfgbb" tableName="user" domainObjectName="UserDbo">
+     <table schema="zfgbb" tableName="user" domainObjectName="UserDbo">
 		<generatedKey column="user_id" sqlStatement="JDBC" identity="true" />
 		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.Instant"/>
 		<columnOverride column="updated_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.Instant"/>
