@@ -11,6 +11,7 @@ import com.zfgc.zfgbb.dao.BoardDao;
 import com.zfgc.zfgbb.dao.BoardPermissionViewDao;
 import com.zfgc.zfgbb.dao.CategoryDao;
 import com.zfgc.zfgbb.dao.ThreadDao;
+import com.zfgc.zfgbb.dao.forum.CurrentMessageDao;
 import com.zfgc.zfgbb.dao.forum.MessageDao;
 import com.zfgc.zfgbb.dao.forum.MessageHistoryDao;
 import com.zfgc.zfgbb.dataprovider.AbstractDataProvider;
@@ -19,10 +20,12 @@ import com.zfgc.zfgbb.dbo.BoardDboExample;
 import com.zfgc.zfgbb.dbo.BoardPermissionViewDboExample;
 import com.zfgc.zfgbb.dbo.CategoryDbo;
 import com.zfgc.zfgbb.dbo.CategoryDboExample;
+import com.zfgc.zfgbb.dbo.CurrentMessageDboExample;
 import com.zfgc.zfgbb.dbo.MessageDbo;
 import com.zfgc.zfgbb.dbo.MessageDboExample;
 import com.zfgc.zfgbb.dbo.MessageHistoryDbo;
 import com.zfgc.zfgbb.dbo.MessageHistoryDboExample;
+import com.zfgc.zfgbb.dbo.ThreadDbo;
 import com.zfgc.zfgbb.dbo.ThreadDboExample;
 import com.zfgc.zfgbb.model.forum.Board;
 import com.zfgc.zfgbb.model.forum.Category;
@@ -54,6 +57,9 @@ public class ForumDataProvider extends AbstractDataProvider {
 	
 	@Autowired
 	private MessageHistoryDao messageHistoryDao;
+	
+	@Autowired
+	private CurrentMessageDao currentMessageDao;
 	
 	public Forum getForum(Integer boardId) {
 		Forum forum = new Forum();
@@ -91,14 +97,21 @@ public class ForumDataProvider extends AbstractDataProvider {
 		Thread result = mapper.map(threadDao.get(threadId), Thread.class);
 		
 		//get messages
-		Integer start = ((page - 1)*count) + 1;
-		MessageDboExample ex = new MessageDboExample();
-		ex.createCriteria().andThreadIdEqualTo(threadId);
-		result.setMessages(super.convertDboListToModel(messageDao.getWithLimit(ex, start, count), Message.class));
+		result.setMessages(super.convertDboListToModel(getMessagesForThread(threadId, page, count), Message.class));
 		
 		//get permissions for the parent board
 		result.setBoardPermissions(getBoardPermissions(result.getBoardId()));
 		return result;
+	}
+	
+	public Thread saveThread(Thread thread) {
+		ThreadDbo threadDbo = mapper.map(thread, ThreadDbo.class);
+		
+		//create the thread dbo first
+		threadDbo = threadDao.save(threadDbo);
+		
+		MessageDbo headMessage = mapper.map(thread.getMessages().stream().findFirst().orElseThrow(), MessageDbo.class);
+		Thread result = mapper.map(threadDbo, Thread.class);
 	}
 	
 	public List<Permission> getBoardPermissions(Integer boardId){
@@ -109,9 +122,21 @@ public class ForumDataProvider extends AbstractDataProvider {
 	
 	public List<Message> getMessagesForThread(Integer threadId, Integer page, Integer count){
 		Integer start = ((page - 1)*count) + 1;
-		MessageDboExample ex = new MessageDboExample();
+		CurrentMessageDboExample ex = new CurrentMessageDboExample();
 		ex.createCriteria().andThreadIdEqualTo(threadId);
-		return super.convertDboListToModel(messageDao.getWithLimit(ex, start, count), Message.class);
+		
+		List<Message> messages = currentMessageDao.getWithLimit(ex, start, count)
+						 .stream()
+						 .map(message -> {
+							 Message msg = mapper.map(message, Message.class);
+							 MessageHistory hist = mapper.map(message, MessageHistory.class);
+							 msg.getHistory().add(hist);
+							 return msg;
+						 }).collect(Collectors.toList());
+						 
+		
+		
+		return super.convertDboListToModel(messages, Message.class);
 	}
 	
 	public Message getMessage(Integer messageId) {
@@ -122,6 +147,19 @@ public class ForumDataProvider extends AbstractDataProvider {
 		message.setHistory(history);
 		
 		return message;
+	}
+	
+	public Message saveMessage(Message message) {
+		MessageDbo messageDbo = mapper.map(message, MessageDbo.class);
+		
+		messageDbo = messageDao.save(messageDbo);
+		
+		MessageHistory history = message.getCurrentMessage();
+		MessageHistoryDbo historyDbo = mapper.map(history, MessageHistoryDbo.class);
+		historyDbo = messageHistoryDao.save(historyDbo);
+		
+		Message result = mapper.map(messageDbo, Message.class);
+		result.getHistory().addAll(message.getHistory());
 	}
 	
 	public Message postMessageToThread(Integer threadId, Message message) {

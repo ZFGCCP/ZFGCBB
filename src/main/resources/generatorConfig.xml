@@ -19,13 +19,15 @@
     
 
     <!-- tables -->
-    <table schema="zfgbb" tableName="message_history" domainObjectName="MessageHistoryDbo">
+    <table schema="zfgbb" tableName="current_message_view" domainObjectName="CurrentMessageDbo">
+    </table>
+    <!--<table schema="zfgbb" tableName="message_history" domainObjectName="MessageHistoryDbo">
 		<generatedKey column="message_history_id" sqlStatement="JDBC" identity="true" />
 		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.Instant"/>
 		<columnOverride column="updated_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.Instant"/>
     </table>
     
-    <!--<table schema="zfgbb" tableName="message" domainObjectName="MessageDbo">
+    <table schema="zfgbb" tableName="message" domainObjectName="MessageDbo">
 		<generatedKey column="message_id" sqlStatement="JDBC" identity="true" />
 		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.Instant"/>
 		<columnOverride column="updated_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.Instant"/>

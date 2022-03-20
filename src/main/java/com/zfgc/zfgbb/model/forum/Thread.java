@@ -18,6 +18,7 @@ public class Thread extends BaseModel {
     private Instant createdTs;
     private Instant updatedTs;
     private Integer boardId;
+    private Integer createdUserId;
     
     private User createdUser;
     
@@ -92,5 +93,11 @@ public class Thread extends BaseModel {
 	}
 	public void setMessages(List<Message> messages) {
 		this.messages = messages;
+	}
+	public Integer getCreatedUserId() {
+		return createdUserId;
+	}
+	public void setCreatedUserId(Integer createdUserId) {
+		this.createdUserId = createdUserId;
 	}
 }

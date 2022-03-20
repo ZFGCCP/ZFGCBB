@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.zfgc.zfgbb.dataprovider.forum.ForumDataProvider;
 import com.zfgc.zfgbb.dataprovider.users.UserDataProvider;
+import com.zfgc.zfgbb.exception.ZfgcNotFoundException;
 import com.zfgc.zfgbb.model.User;
 import com.zfgc.zfgbb.model.forum.Forum;
 import com.zfgc.zfgbb.model.forum.Message;
@@ -21,6 +22,9 @@ public class ForumService {
 	@Autowired
 	private ForumDataProvider forumDataProvider;
 	
+	@Autowired
+	private BBCodeService bbCodeService;
+	
 	public Forum getForum(Integer boardId, User zfgcUser) {
 		Forum forum = forumDataProvider.getForum(boardId);
 		
@@ -29,19 +33,34 @@ public class ForumService {
 		return forum;
 	}
 	
+	public Thread createThread(Thread thread, User zfgcUser) {
+		//first, lets make sure the user actually can post to this board
+		thread.setBoardPermissions(forumDataProvider.getBoardPermissions(thread.getBoardId()));
+		secureThread(thread, zfgcUser);
+		
+		//then ensure the user didn't fuck with the owner of the thread template
+		thread.setCreatedUserId(zfgcUser.getUserId());
+		
+		return thread;
+	}
+	
 	public Thread getThread(Integer threadId, Integer page, Integer count, User zfgcUser) {
 		Thread thread = forumDataProvider.getThread(threadId, page, count);
 		
 		secureThread(thread, zfgcUser);
-		return thread;
-	}
-	
-	public List<Message> getThreadMessages(Integer boardId, Integer threadId, Integer page, Integer count, User zfgcUser){
-		Thread temp = new Thread();
-		temp.setBoardPermissions(forumDataProvider.getBoardPermissions(boardId));
-		secureThread(temp, zfgcUser);
 		
-		return forumDataProvider.getMessagesForThread(threadId, page, count);
+		//parse messages
+		thread.getMessages().forEach(message -> {
+			try {
+				String parsed = bbCodeService.parseText(message.getCurrentMessage().getMessageText());
+				message.getCurrentMessage().setMessageText(parsed);
+			} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
+				e.printStackTrace();
+				throw new RuntimeException(e);
+			}
+		});
+		
+		return thread;
 	}
 	
 	private void secureThread(Thread thread, User zfgcUser) {
@@ -51,6 +70,8 @@ public class ForumService {
 				return;
 			}
 		});
+		
+		throw new ZfgcNotFoundException();
 	}
 	
 	private void secureForum(Forum forum, User zfgcUser) {
@@ -61,7 +82,7 @@ public class ForumService {
 			}
 		});
 		
-		//ResponseExceptionProvider.throwNotFoundException("The board you attempted to access could not be found.");
+		throw new ZfgcNotFoundException();
 	}
 	
 }
