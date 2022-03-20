@@ -8,8 +8,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.zfgc.zfgbb.model.BaseModel;
 import com.zfgc.zfgbb.model.User;
 import com.zfgc.zfgbb.model.users.Permission;
+import com.zfgc.zfgbb.security.Securable;
 
-public class Thread extends BaseModel {
+public class Thread extends BaseModel implements Securable {
 	@JsonIgnore
 	private Integer threadId;
     private String threadName;
@@ -99,5 +100,11 @@ public class Thread extends BaseModel {
 	}
 	public void setCreatedUserId(Integer createdUserId) {
 		this.createdUserId = createdUserId;
+	}
+	
+	@Override
+	@JsonIgnore
+	public List<Permission> getPermissions() {
+		return getBoardPermissions();
 	}
 }

@@ -6,8 +6,9 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.zfgc.zfgbb.model.BaseModel;
 import com.zfgc.zfgbb.model.users.Permission;
+import com.zfgc.zfgbb.security.Securable;
 
-public class Forum {
+public class Forum implements Securable{
 
 	private List<Category> categories = new ArrayList<>();
 	private String boardName;
@@ -54,6 +55,12 @@ public class Forum {
 
 	public void setBoardPermissions(List<Permission> boardPermissions) {
 		this.boardPermissions = boardPermissions;
+	}
+
+	@Override
+	@JsonIgnore
+	public List<Permission> getPermissions() {
+		return this.boardPermissions;
 	}
 
 
