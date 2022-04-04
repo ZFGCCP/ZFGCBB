@@ -6,6 +6,8 @@ import com.zfgc.zfgbb.dataprovider.forum.ForumDataProvider;
 import com.zfgc.zfgbb.dataprovider.forum.ThreadDataProvider;
 import com.zfgc.zfgbb.model.User;
 import com.zfgc.zfgbb.model.forum.Forum;
+import com.zfgc.zfgbb.model.forum.Message;
+import com.zfgc.zfgbb.model.forum.MessageHistory;
 import com.zfgc.zfgbb.services.AbstractService;
 import com.zfgc.zfgbb.model.forum.Thread;
 
@@ -27,6 +29,22 @@ public class ForumService extends AbstractService {
 		super.secureObject(forum, zfgcUser);
 		
 		return forum;
+	}
+	
+	public Thread getThreadTemplate(Integer boardId, User zfgcUser) {
+		Thread thread = new Thread();
+		thread.setBoardId(boardId);
+		thread.setCreatedUserId(zfgcUser.getUserId());
+		thread.setBoardPermissions(forumDataProvider.getBoardPermissions(thread.getBoardId()));
+		super.secureObject(thread, zfgcUser);
+		
+		Message message = new Message();
+		MessageHistory history = new MessageHistory();
+		history.setCurrentFlag(true);
+		message.getHistory().add(history);
+		thread.getMessages().add(message);
+		
+		return thread;
 	}
 	
 	public Thread createThread(Thread thread, User zfgcUser) {

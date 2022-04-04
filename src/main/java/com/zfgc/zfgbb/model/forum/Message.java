@@ -1,6 +1,7 @@
 package com.zfgc.zfgbb.model.forum;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,7 +63,7 @@ public class Message extends BaseModel {
 	}
 	
 	@JsonIgnore
-	public Instant getLatestMessageTs() {
+	public LocalDate getLatestMessageTs() {
 		return getCurrentMessage().getCreatedTs();
 	}
 	

@@ -19,12 +19,12 @@ public abstract class AbstractDao<DbExample, DbMapper, Dbo extends AbstractDbo> 
 	
 	public Dbo save(Dbo toSave) {
 		
-		if(toSave.getRecordId() == null) {
+		if(toSave.getPkId() == null) {
 			create(toSave);
 		}
 		else {
 			//get record from database
-			Dbo existing = get(toSave.getRecordId());
+			Dbo existing = get(toSave.getPkId());
 			if(existing.getUpdatedTime().compareTo(toSave.getUpdatedTime()) > 0) {
 				//concurrency problem, get this garbo outta here
 				throw new ConcurrentModificationException();
@@ -34,7 +34,7 @@ public abstract class AbstractDao<DbExample, DbMapper, Dbo extends AbstractDbo> 
 		}
 		
 		//return the most up to date version of the record
-		return get(toSave.getRecordId());
+		return get(toSave.getPkId());
 	}
 	
 	public DbMapper getMapper() {

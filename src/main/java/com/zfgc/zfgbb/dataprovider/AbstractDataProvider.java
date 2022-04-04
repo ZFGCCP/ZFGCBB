@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.dozer.DozerBeanMapper;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class AbstractDataProvider {
 	@Autowired
-	protected DozerBeanMapper mapper;
+	protected ModelMapper mapper;
 	
 	public <T,U> List<U> convertDboListToModel(List<T> input, Class<U> type){
 		if(input != null) {

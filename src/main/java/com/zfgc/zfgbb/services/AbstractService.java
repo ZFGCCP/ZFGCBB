@@ -12,13 +12,8 @@ public abstract class AbstractService {
 	
 	protected void secureObject(Securable secureThis, User zfgcUser) {
 		Set<Integer> userPerms = zfgcUser.getPermissions().stream().map(Permission::getPermissionId).collect(Collectors.toSet());
-		secureThis.getPermissions().forEach(perm -> {
-			if(userPerms.contains(perm.getPermissionId())) {
-				return;
-			}
-		});
 		
-		throw new ZfgcNotFoundException();
+		secureThis.getPermissions().stream().filter(x -> userPerms.contains(x.getPermissionId())).findAny().orElseThrow(() -> new ZfgcNotFoundException());
 	}
 	
 }

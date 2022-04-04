@@ -16,8 +16,6 @@ public class Thread extends BaseModel implements Securable {
     private String threadName;
     private Boolean lockedFlag;
     private Boolean pinnedFlag;
-    private Instant createdTs;
-    private Instant updatedTs;
     private Integer boardId;
     private Integer createdUserId;
     
@@ -50,18 +48,6 @@ public class Thread extends BaseModel implements Securable {
 	}
 	public void setPinnedFlag(Boolean pinnedFlag) {
 		this.pinnedFlag = pinnedFlag;
-	}
-	public Instant getCreatedTs() {
-		return createdTs;
-	}
-	public void setCreatedTs(Instant createdTs) {
-		this.createdTs = createdTs;
-	}
-	public Instant getUpdatedTs() {
-		return updatedTs;
-	}
-	public void setUpdatedTs(Instant updatedTs) {
-		this.updatedTs = updatedTs;
 	}
 	public Integer getBoardId() {
 		return boardId;

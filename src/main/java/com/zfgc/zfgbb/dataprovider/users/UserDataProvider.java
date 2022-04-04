@@ -1,5 +1,6 @@
 package com.zfgc.zfgbb.dataprovider.users;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,9 +34,12 @@ public class UserDataProvider extends AbstractDataProvider {
 		UserDbo userDb = userDao.get(ex).stream().findFirst().orElse(createGuest());
 		
 		User user = mapper.map(userDb, User.class);
+
+		//todo: setup guest permissions
 		UserPermissionViewDboExample upEx = new UserPermissionViewDboExample();
 		upEx.createCriteria().andUserIdEqualTo(user.getUserId());
 		List<Permission> permissions = convertDboListToModel(userPermissionDao.get(upEx), Permission.class);
+
 		user.setPermissions(permissions);
 		
 		return user;

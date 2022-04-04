@@ -3,7 +3,9 @@ package com.zfgc.zfgbb;
 import java.util.Arrays;
 import java.util.List;
 
-import org.dozer.DozerBeanMapper;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.config.Configuration.AccessLevel;
+import org.modelmapper.convention.MatchingStrategies;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -22,14 +24,14 @@ public class ZfgbbApplication {
 	}
 	
 	@Bean(name = "org.dozer.Mapper")
-    public DozerBeanMapper dozerBean() {
-      List<String> mappingFiles = Arrays.asList(
-        
-      );
-
-      DozerBeanMapper dozerBean = new DozerBeanMapper();
-      dozerBean.setMappingFiles(mappingFiles);
-      return dozerBean;
+    public ModelMapper modelMapper() {
+		ModelMapper modelMapper = new ModelMapper();
+	    modelMapper.getConfiguration()
+	        .setFieldMatchingEnabled(true)
+	        .setFieldAccessLevel(AccessLevel.PUBLIC)
+	        .setMatchingStrategy(MatchingStrategies.STRICT);
+	    
+	    return modelMapper;
     }
 
 }

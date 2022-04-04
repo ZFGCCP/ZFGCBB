@@ -19,18 +19,24 @@
     
 
     <!-- tables -->
+    <table schema="zfgbb" tableName="user" domainObjectName="UserDbo">
+		<generatedKey column="user_id" sqlStatement="JDBC" identity="true" />
+		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDate"/>
+		<columnOverride column="updated_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDate"/>
+    </table>
+    
     <table schema="zfgbb" tableName="current_message_view" domainObjectName="CurrentMessageDbo">
     </table>
-    <!--<table schema="zfgbb" tableName="message_history" domainObjectName="MessageHistoryDbo">
+    <table schema="zfgbb" tableName="message_history" domainObjectName="MessageHistoryDbo">
 		<generatedKey column="message_history_id" sqlStatement="JDBC" identity="true" />
-		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.Instant"/>
-		<columnOverride column="updated_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.Instant"/>
+		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDate"/>
+		<columnOverride column="updated_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDate"/>
     </table>
     
     <table schema="zfgbb" tableName="message" domainObjectName="MessageDbo">
 		<generatedKey column="message_id" sqlStatement="JDBC" identity="true" />
-		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.Instant"/>
-		<columnOverride column="updated_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.Instant"/>
+		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDate"/>
+		<columnOverride column="updated_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDate"/>
     </table>
     
     <table schema="zfgbb" tableName="board_permission_view" domainObjectName="BoardPermissionViewDbo">
@@ -38,14 +44,14 @@
     
     <table schema="zfgbb" tableName="email_address" domainObjectName="EmailAddressDbo">
 		<generatedKey column="email_address_id" sqlStatement="JDBC" identity="true" />
-		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.Instant"/>
-		<columnOverride column="updated_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.Instant"/>
+		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDate"/>
+		<columnOverride column="updated_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDate"/>
     </table>
     
      <table schema="zfgbb" tableName="user" domainObjectName="UserDbo">
 		<generatedKey column="user_id" sqlStatement="JDBC" identity="true" />
-		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.Instant"/>
-		<columnOverride column="updated_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.Instant"/>
+		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDate"/>
+		<columnOverride column="updated_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDate"/>
     </table>
     
     <table schema="zfgbb" tableName="user_permission_view" domainObjectName="UserPermissionViewDbo">
@@ -53,51 +59,51 @@
    
    <table schema="zfgbb" tableName="attribute_data_type" domainObjectName="AttributeDataTypeDbo">
 		<generatedKey column="attribute_data_type_id" sqlStatement="JDBC" identity="true" />
-		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.Instant"/>
-		<columnOverride column="updated_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.Instant"/>
+		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDate"/>
+		<columnOverride column="updated_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDate"/>
     </table>
     
     <table schema="zfgbb" tableName="bb_code_attribute" domainObjectName="BBCodeAttributeDbo">
 		<generatedKey column="bb_code_attribute_id" sqlStatement="JDBC" identity="true" />
-		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.Instant"/>
-		<columnOverride column="updated_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.Instant"/>
+		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDate"/>
+		<columnOverride column="updated_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDate"/>
     </table>
     
     <table schema="zfgbb" tableName="bb_code_attribute_mode" domainObjectName="BBCodeAttributeModeDbo">
 		<generatedKey column="bb_code_attribute_mode_id" sqlStatement="JDBC" identity="true" />
-		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.Instant"/>
-		<columnOverride column="updated_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.Instant"/>
+		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDate"/>
+		<columnOverride column="updated_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDate"/>
     </table>
     
     <table schema="zfgbb" tableName="bb_code_config" domainObjectName="BBCodeConfigDbo">
 		<generatedKey column="bb_code_config_id" sqlStatement="JDBC" identity="true" />
-		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.Instant"/>
-		<columnOverride column="updated_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.Instant"/>
+		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDate"/>
+		<columnOverride column="updated_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDate"/>
     </table>
    
    <table schema="zfgbb" tableName="user" domainObjectName="UserDbo">
 		<generatedKey column="user_ID" sqlStatement="JDBC" identity="true" />
-		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.Instant"/>
-		<columnOverride column="updated_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.Instant"/>
+		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDate"/>
+		<columnOverride column="updated_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDate"/>
     </table>
    
    	<table schema="zfgbb" tableName="thread" domainObjectName="ThreadDbo">
 		<generatedKey column="thread_ID" sqlStatement="JDBC" identity="true" />
-		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.Instant"/>
-		<columnOverride column="updated_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.Instant"/>
+		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDate"/>
+		<columnOverride column="updated_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDate"/>
     </table>
    
      <table schema="zfgbb" tableName="BOARD" domainObjectName="BoardDbo">
 		<generatedKey column="BOARD_ID" sqlStatement="JDBC" identity="true" />
-		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.Instant"/>
-		<columnOverride column="updated_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.Instant"/>
+		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDate"/>
+		<columnOverride column="updated_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDate"/>
     </table>
     
     <table schema="zfgbb" tableName="category" domainObjectName="CategoryDbo">
 		<generatedKey column="category_id" sqlStatement="JDBC" identity="true" />
-		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.Instant"/>
-		<columnOverride column="updated_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.Instant"/>
-    </table>-->
+		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDate"/>
+		<columnOverride column="updated_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDate"/>
+    </table>
     
   </context>
 </generatorConfiguration>

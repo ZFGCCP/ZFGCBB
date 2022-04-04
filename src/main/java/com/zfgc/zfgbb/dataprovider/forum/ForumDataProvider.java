@@ -3,7 +3,6 @@ package com.zfgc.zfgbb.dataprovider.forum;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.dozer.DozerBeanMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
