@@ -41,6 +41,11 @@ public class MessageDao extends AbstractDao<MessageDboExample, MessageDboMapper,
 		return mapper.selectByExample(ex);
 	}
 	
+	@Override
+	public void delete(MessageDboExample ex) {
+		mapper.deleteByExample(ex);
+	}
+	
 	public List<MessageDbo> getWithLimit(MessageDboExample ex, Integer start, Integer total){
 		return mapper.selectByExampleWithLimit(ex, start, total);
 	}

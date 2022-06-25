@@ -43,5 +43,6 @@ public abstract class AbstractDao<DbExample, DbMapper, Dbo extends AbstractDbo> 
 	
 	protected abstract void update(Dbo toSave);
 	protected abstract void create(Dbo toCreate);
+	public void delete(DbExample id) { throw new RuntimeException("delete not supported"); }
 	
 }

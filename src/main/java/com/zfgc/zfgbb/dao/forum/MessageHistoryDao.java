@@ -36,4 +36,8 @@ public class MessageHistoryDao extends AbstractDao<MessageHistoryDboExample, Mes
 		mapper.insert(toCreate);
 	}
 	
+	@Override
+	public void delete(MessageHistoryDboExample ex) {
+		mapper.deleteByExample(ex);
+	}
 }

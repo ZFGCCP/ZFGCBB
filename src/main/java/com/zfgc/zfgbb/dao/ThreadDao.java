@@ -39,4 +39,9 @@ public class ThreadDao extends AbstractDao<ThreadDboExample, ThreadDboMapper, Th
 		mapper.insert(toCreate);
 	}
 	
+	@Override
+	public void delete(ThreadDboExample ex) {
+		mapper.deleteByExample(ex);
+	}
+	
 }
