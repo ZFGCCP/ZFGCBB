@@ -1,10 +1,10 @@
 package com.zfgc.zfgbb.dbo;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public abstract class AbstractDbo {
 	
 	public abstract Integer getPkId();
-	public abstract LocalDate getUpdatedTime();
+	public abstract LocalDateTime getUpdatedTime();
 	
 }

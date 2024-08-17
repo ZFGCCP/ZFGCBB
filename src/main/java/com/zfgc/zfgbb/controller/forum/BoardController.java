@@ -19,15 +19,8 @@ public class BoardController extends BaseController {
 	@Autowired
 	private ForumService forumService;
 	
-	@GetMapping("/{boardId}/thread/template")
-	public ResponseEntity getThreadTemplate(@PathVariable("boardId") Integer boardId) {
-		Thread template = forumService.getThreadTemplate(boardId, super.zfgcUser());
-		return ResponseEntity.ok(template);
-	}
-	
-	@PostMapping("/{boardId}/thread")
-	public ResponseEntity saveThread(@PathVariable("boardId") Integer boardId, Thread thread) {
-		Thread saved = forumService.saveThread(thread, super.zfgcUser());
-		return ResponseEntity.ok(saved);
+	@GetMapping("/{boardId}")
+	public ResponseEntity getBoard(@PathVariable("boardId") Integer boardId) {
+		return ResponseEntity.ok(forumService.getForum(boardId, super.zfgcUser()));
 	}
 }

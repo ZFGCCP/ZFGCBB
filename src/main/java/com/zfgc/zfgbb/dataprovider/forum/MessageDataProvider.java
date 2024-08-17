@@ -59,9 +59,12 @@ public class MessageDataProvider extends AbstractDataProvider {
 	public List<Message> getMessagesForThread(Integer threadId, Integer page, Integer count){
 		Integer start = ((page - 1)*count) + 1;
 		CurrentMessageDboExample ex = new CurrentMessageDboExample();
-		ex.createCriteria().andThreadIdEqualTo(threadId);
+		ex.createCriteria().andThreadIdEqualTo(threadId)
+						   .andPostInThreadBetween(start, start + count);
 		
-		List<Message> messages = currentMessageDao.getWithLimit(ex, start, count)
+		
+		
+		List<Message> messages = currentMessageDao.get(ex)
 						 .stream()
 						 .map(message -> {
 							 Message msg = mapper.map(message, Message.class);

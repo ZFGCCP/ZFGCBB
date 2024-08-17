@@ -59,5 +59,7 @@ public class OauthUsersDetailsServiceImpl implements UserDetailsService{
 		ResponseEntity<String> result = template.exchange(authEndpoint + "/oauth/token", HttpMethod.POST, ent, String.class);
 		return result.getBody();
 	}
+	
+	
 
 }

@@ -1,7 +1,7 @@
 package com.zfgc.zfgbb.model;
 
-import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import org.apache.commons.lang3.time.DateUtils;
 
@@ -9,26 +9,26 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public abstract class BaseModel {
 	@JsonIgnore
-	private LocalDate updatedTs;
+	private LocalDateTime updatedTs;
 	@JsonIgnore
-	private LocalDate createdTs;
+	private LocalDateTime createdTs;
 	
 	public abstract Integer getId();
 	public abstract void setId(Integer id);
 	
-	public LocalDate getUpdatedTs() {
+	public LocalDateTime getUpdatedTs() {
 		return updatedTs;
 	}
 	
-	public LocalDate getCreatedTs() {
+	public LocalDateTime getCreatedTs() {
 		return updatedTs;
 	}
 	
-	public void setUpdatedTs(LocalDate updatedTs) {
+	public void setUpdatedTs(LocalDateTime updatedTs) {
 		this.updatedTs = updatedTs;
 	}
 	
-	public void setCreatedTs(LocalDate createdTs) {
+	public void setCreatedTs(LocalDateTime createdTs) {
 		this.createdTs = createdTs;
 	}
 	

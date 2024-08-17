@@ -8,12 +8,18 @@ import com.zfgc.zfgbb.model.BaseModel;
 import com.zfgc.zfgbb.model.users.Permission;
 import com.zfgc.zfgbb.security.Securable;
 
-public class Forum implements Securable{
+public class Forum extends BaseModel implements Securable{
 
 	private List<Category> categories = new ArrayList<>();
 	private String boardName;
 	private List<Thread> stickyThreads = new ArrayList<>();
 	private List<Thread> threads = new ArrayList<>();
+	private Integer categoryId;
+	private Long threadCount = 0L;
+	private Integer threadsPerPage = 10;
+	
+	@JsonIgnore
+	private Integer boardId;
 	@JsonIgnore
 	private List<Permission> boardPermissions = new ArrayList<>();
 
@@ -63,6 +69,52 @@ public class Forum implements Securable{
 		return this.boardPermissions;
 	}
 
+	public Integer getCategoryId() {
+		return categoryId;
+	}
+
+	public void setCategoryId(Integer categoryId) {
+		this.categoryId = categoryId;
+	}
+
+	@Override
+	public Integer getId() {
+		return boardId;
+	}
+
+	@Override
+	public void setId(Integer id) {
+		boardId = id;
+	}
+
+	public Integer getBoardId() {
+		return boardId;
+	}
+
+	public void setBoardId(Integer boardId) {
+		this.boardId = boardId;
+	}
+
+	public Integer getThreadsPerPage() {
+		return threadsPerPage;
+	}
+
+	public void setThreadsPerPage(Integer threadsPerPage) {
+		this.threadsPerPage = threadsPerPage;
+	}
+
+	public Long getThreadCount() {
+		return threadCount;
+	}
+
+	public void setThreadCount(Long threadCount) {
+		this.threadCount = threadCount;
+	}
+
+	public Integer getPageCount() {
+		int count = (int)Math.ceil( threadCount / threadsPerPage.longValue());
+		return count == 0 ? 1 : count;
+	}
 
 	
 	

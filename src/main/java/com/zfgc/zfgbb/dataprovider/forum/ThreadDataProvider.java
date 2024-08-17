@@ -13,6 +13,7 @@ import com.zfgc.zfgbb.dao.ThreadDao;
 import com.zfgc.zfgbb.dao.forum.CurrentMessageDao;
 import com.zfgc.zfgbb.dao.forum.MessageDao;
 import com.zfgc.zfgbb.dao.forum.MessageHistoryDao;
+import com.zfgc.zfgbb.dao.users.UserDao;
 import com.zfgc.zfgbb.dataprovider.AbstractDataProvider;
 import com.zfgc.zfgbb.dbo.BoardPermissionViewDboExample;
 import com.zfgc.zfgbb.dbo.CurrentMessageDboExample;
@@ -22,6 +23,8 @@ import com.zfgc.zfgbb.dbo.MessageHistoryDbo;
 import com.zfgc.zfgbb.dbo.MessageHistoryDboExample;
 import com.zfgc.zfgbb.dbo.ThreadDbo;
 import com.zfgc.zfgbb.dbo.ThreadDboExample;
+import com.zfgc.zfgbb.dbo.UserDboExample;
+import com.zfgc.zfgbb.model.User;
 import com.zfgc.zfgbb.model.forum.Message;
 import com.zfgc.zfgbb.model.forum.MessageHistory;
 import com.zfgc.zfgbb.model.forum.Thread;
@@ -40,11 +43,14 @@ public class ThreadDataProvider extends AbstractDataProvider {
 	@Autowired
 	private BoardPermissionViewDao boardPermissionDao;
 	
+	@Autowired
+	private UserDao userDao;
+	
 	public Thread getThread(Integer threadId, Integer page, Integer count) {
 		ThreadDbo threadDb = threadDao.get(threadId);
 		Thread result = null;
 		if(threadDb != null) {
-			result = mapper.map(threadDao.get(threadId), Thread.class);
+			result = mapper.map(threadDb, Thread.class);
 			
 			//get messages
 			result.setMessages(super.convertDboListToModel(messageDataProvider.getMessagesForThread(threadId, page, count), Message.class));
@@ -52,6 +58,19 @@ public class ThreadDataProvider extends AbstractDataProvider {
 			//get permissions for the parent board
 			result.setBoardPermissions(getBoardPermissions(result.getBoardId()));
 		}
+		return result;
+	}
+	
+	public List<Thread> getThreadsByBoardId(Integer boardId, Boolean sticky){
+		ThreadDboExample exT = new ThreadDboExample();
+		exT.createCriteria().andBoardIdEqualTo(boardId).andPinnedFlagEqualTo(sticky);
+		
+		List<Thread> result = super.convertDboListToModel(threadDao.get(exT), Thread.class);
+		
+		result.forEach(th -> {
+			th.setCreatedUser(super.mapper.map(userDao.get(th.getCreatedUserId()), User.class));
+		});
+		
 		return result;
 	}
 	

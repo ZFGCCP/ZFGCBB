@@ -38,8 +38,4 @@ public class CurrentMessageDao extends AbstractDao<CurrentMessageDboExample, Cur
 		throw new UnsupportedOperationException();
 	}
 	
-	public List<CurrentMessageDbo> getWithLimit(CurrentMessageDboExample ex, Integer start, Integer total){
-		return mapper.selectByExampleWithLimit(ex, start, total);
-	}
-	
 }

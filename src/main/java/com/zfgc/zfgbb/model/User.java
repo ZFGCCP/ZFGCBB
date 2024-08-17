@@ -10,15 +10,24 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.zfgc.zfgbb.model.meta.IpAddress;
+import com.zfgc.zfgbb.model.users.EmailAddress;
 import com.zfgc.zfgbb.model.users.Permission;
 
 public class User extends BaseModel implements UserDetails {
 	@JsonIgnore
 	private Integer userId;
 	private String displayName;
+	private String userName;
+	private Boolean activeFlag;
+	private EmailAddress email;
 	
 	@JsonIgnore
 	private List<Permission> permissions = new ArrayList<>();
+	
+	private IpAddress currentIpAddress;
+	private List<IpAddress> allKnownIpAddresses = new ArrayList<>();
+	
 	
 	public List<Permission> getPermissions() {
 		return permissions;
@@ -97,6 +106,30 @@ public class User extends BaseModel implements UserDetails {
 
 	public void setDisplayName(String displayName) {
 		this.displayName = displayName;
+	}
+
+	public IpAddress getCurrentIpAddress() {
+		return currentIpAddress;
+	}
+
+	public void setCurrentIpAddress(IpAddress currentIpAddress) {
+		this.currentIpAddress = currentIpAddress;
+	}
+
+	public List<IpAddress> getAllKnownIpAddresses() {
+		return allKnownIpAddresses;
+	}
+
+	public void setAllKnownIpAddresses(List<IpAddress> allKnownIpAddresses) {
+		this.allKnownIpAddresses = allKnownIpAddresses;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 	
 }

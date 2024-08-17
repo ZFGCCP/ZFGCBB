@@ -25,16 +25,21 @@ public class ThreadController extends BaseController {
 	@Autowired
 	private ForumService forumService;
 	
-	@GetMapping("/{threadId}/template")
-	@PreAuthorize("hasRole('ROLE_ZFGC_THREAD_CREATOR')")
-	public ResponseEntity getMessageTemplate(@PathVariable("threadId") Integer threadId, Thread thread) {
-		Message template = forumService.getMessageTemplate(thread.getBoardId(), thread.getThreadId(), null, super.zfgcUser());
+	@GetMapping("/template")
+	public ResponseEntity getThreadTemplate(@RequestParam("boardId") Integer boardId) {
+		Thread template = forumService.getThreadTemplate(boardId, super.zfgcUser());
 		return ResponseEntity.ok(template);
+	}
+	
+	@PostMapping
+	public ResponseEntity saveThread(@RequestParam("boardId") Integer boardId, Thread thread) {
+		Thread saved = forumService.saveThread(thread, super.zfgcUser());
+		return ResponseEntity.ok(saved);
 	}
 	
 	@GetMapping("/{threadId}")
 	public ResponseEntity getThread(@PathVariable("threadId") Integer threadId, @RequestParam("numPerPage") Integer numPerPage, @RequestParam("pageNo") Integer pageNo) {
-		return ResponseEntity.ok(forumService.getThread(threadId, numPerPage, pageNo, super.zfgcUser()));
+		return ResponseEntity.ok(forumService.getThread(threadId, pageNo, numPerPage, super.zfgcUser()));
 	}
 	
 	@PostMapping("/{threadId}")

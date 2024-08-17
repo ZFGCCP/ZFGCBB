@@ -43,10 +43,13 @@ public class ForumDataProvider extends AbstractDataProvider {
 	private BoardDao boardDao;
 	
 	@Autowired
-	private CategoryDao categoryDao;
+	private CategoryDataProvider categoryDataProvider;
 	
 	@Autowired
 	private ThreadDao threadDao;
+	
+	@Autowired
+	private ThreadDataProvider threadDataProvider;
 	
 	@Autowired
 	private BoardPermissionViewDao boardPermissionDao;
@@ -59,27 +62,25 @@ public class ForumDataProvider extends AbstractDataProvider {
 		
 		CategoryDboExample exC = new CategoryDboExample();
 		exC.createCriteria().andParentBoardIdEqualTo(boardId);
-		List<Category> categories = super.convertDboListToModel(categoryDao.get(exC), Category.class);
-		
-		categories.forEach(cat ->{
-			BoardDboExample ex = new BoardDboExample();
-			ex.createCriteria().andCategoryIdEqualTo(cat.getCategoryId());
-			cat.setBoards(convertDboListToModel(boardDao.get(ex), Board.class));
-		});
-		
-		ThreadDboExample exT = new ThreadDboExample();
-		exT.createCriteria().andBoardIdEqualTo(boardId);
-		List<Thread> unstickyThreads = super.convertDboListToModel(threadDao.get(exT), Thread.class);
-		exT.createCriteria().andPinnedFlagEqualTo(true);
-		List<Thread> stickyThreads = super.convertDboListToModel(threadDao.get(exT), Thread.class);
+		List<Category> categories = categoryDataProvider.getCategories(exC);
+
+		List<Thread> unstickyThreads = threadDataProvider.getThreadsByBoardId(boardId, false);
+		List<Thread> stickyThreads = threadDataProvider.getThreadsByBoardId(boardId, true);
 	
 		forum.setThreads(unstickyThreads);
 		forum.setStickyThreads(stickyThreads);
 		forum.setCategories(categories);
+		forum.setCategoryId(boardDbo.getCategoryId());
 		
 		//load up permissions for the board
 		forum.setBoardPermissions(getBoardPermissions(boardId));
 		
+		ThreadDboExample threadEx = new ThreadDboExample();
+		threadEx.createCriteria().andBoardIdEqualTo(boardId).andPinnedFlagEqualTo(false);
+		Long threadCount = threadDao.getMapper().countByExample(threadEx);
+		forum.setThreadCount(threadCount);
+		
+
 		return forum;
 	}
 	

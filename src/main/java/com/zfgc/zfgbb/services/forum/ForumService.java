@@ -110,7 +110,7 @@ public class ForumService extends AbstractService {
 	public Thread getThread(Integer threadId, Integer page, Integer count, User zfgcUser) {
 		Thread thread = threadDataProvider.getThread(threadId, page, count);
 		
-		super.secureObject(thread, zfgcUser);
+		//super.secureObject(thread, zfgcUser);
 		
 		//parse messages
 		thread.getMessages().forEach(message -> {
