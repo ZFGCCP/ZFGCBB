@@ -8,11 +8,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.switchuser.SwitchUserFilter;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @EnableWebSecurity
@@ -37,7 +35,7 @@ public class SecurityConfig{
 		//test key for now
 		SecretKeySpec key = new SecretKeySpec(authKey.getBytes(), "HMACSHA256");
 		
-		http.httpBasic().disable().csrf().disable().authorizeRequests().antMatchers("//*.map", 
+		http.httpBasic().disable().csrf().disable().authorizeRequests().requestMatchers("//*.map", 
 				 "/**").permitAll().and().authorizeRequests().anyRequest().authenticated().and()
 		    .oauth2ResourceServer().jwt().decoder(NimbusJwtDecoder.withSecretKey(key).build());
 		

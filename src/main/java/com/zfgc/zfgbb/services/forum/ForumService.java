@@ -58,29 +58,10 @@ public class ForumService extends AbstractService {
 		super.secureObject(permissionCheck, zfgcUser);
 		
 		Message message = null;
-		if(messageId != null) {
-			message = messageDataProvider.getMessage(messageId);
-		}
-		else {
-			message = new Message();
-			message.setOwnerId(zfgcUser.getUserId());
-			message.setThreadId(threadId);
-		}
-		
-		//add a new history record
-		message.getHistory().forEach(hist -> {
-			try {
-				hist.setMessageText(bbCodeService.parseText(hist.getMessageText()));
-			} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
-				e.printStackTrace();
-				throw new RuntimeException(e);
-			}
-			hist.setCurrentFlag(false);
-		});
-		MessageHistory hist = new MessageHistory();
-		hist.setCurrentFlag(true);
-		hist.setMessageId(messageId);
-		message.getHistory().add(hist);
+		message = new Message();
+		message.setOwnerId(zfgcUser.getUserId());
+		message.setThreadId(threadId);
+		message.getCurrentMessage().setCurrentFlag(true);
 		
 		return message;
 		

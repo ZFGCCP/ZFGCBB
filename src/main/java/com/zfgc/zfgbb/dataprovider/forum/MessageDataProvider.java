@@ -34,9 +34,9 @@ public class MessageDataProvider extends AbstractDataProvider {
 	public Message getMessage(Integer messageId) {
 		Message message = mapper.map(messageDao.get(messageId), Message.class);
 		MessageHistoryDboExample ex = new MessageHistoryDboExample();
-		ex.createCriteria().andMessageIdEqualTo(messageId);
+		ex.createCriteria().andMessageIdEqualTo(messageId).andCurrentFlagEqualTo(true);
 		List<MessageHistory> history = super.convertDboListToModel(messageHistoryDao.get(ex), MessageHistory.class);
-		message.setHistory(history);
+		message.setCurrentMessage(history.get(0));
 		
 		return message;
 	}
@@ -51,7 +51,7 @@ public class MessageDataProvider extends AbstractDataProvider {
 		historyDbo = messageHistoryDao.save(historyDbo);
 		
 		Message result = mapper.map(messageDbo, Message.class);
-		result.getHistory().add(mapper.map(historyDbo, MessageHistory.class));
+		result.setCurrentMessage(mapper.map(historyDbo, MessageHistory.class));
 		
 		return result;
 	}
@@ -69,7 +69,8 @@ public class MessageDataProvider extends AbstractDataProvider {
 						 .map(message -> {
 							 Message msg = mapper.map(message, Message.class);
 							 MessageHistory hist = mapper.map(message, MessageHistory.class);
-							 msg.getHistory().add(hist);
+							 hist.setUnparsedText(hist.getMessageText());
+							 msg.setCurrentMessage(hist);
 							 return msg;
 						 }).collect(Collectors.toList());
 						 
@@ -80,29 +81,29 @@ public class MessageDataProvider extends AbstractDataProvider {
 	
 	public Message postMessageToThread(Integer threadId, Message message) {
 		Preconditions.checkNotNull(message, "message cannot be null.");
-		Preconditions.checkNotNull(message.getHistory(), "message history cannot be null.");
+		Preconditions.checkNotNull(message.getCurrentMessage(), "message history cannot be null.");
 		Preconditions.checkNotNull(threadId, "threadId cannot be null.");
 		//ensure we have the right thread set
 		message.setThreadId(threadId);
 		MessageDbo db = mapper.map(message, MessageDbo.class);
 		
 		//insert a message history record
-		MessageHistoryDbo histDb = mapper.map(message.getHistory().stream().findFirst().orElseThrow(), 
+		MessageHistoryDbo histDb = mapper.map(message.getCurrentMessage(), 
 											  MessageHistoryDbo.class);
 		
 		histDb = messageHistoryDao.save(histDb);
 		
 		Message result = mapper.map(messageDao.save(db), Message.class);
-		result.getHistory().add(mapper.map(histDb, MessageHistory.class));
+		result.setCurrentMessage(mapper.map(histDb, MessageHistory.class));
 		
 		return result;
 	}
 	
 	public Message editMessage(Message message) {
 		Preconditions.checkNotNull(message, "message cannot be null.");
-		Preconditions.checkNotNull(message.getHistory(), "message history cannot be null.");
+		Preconditions.checkNotNull(message.getCurrentMessage(), "message history cannot be null.");
 		
-		MessageHistoryDbo histDb = mapper.map(Streams.findLast(message.getHistory().stream()), MessageHistoryDbo.class);
+		MessageHistoryDbo histDb = mapper.map(message, MessageHistoryDbo.class);
 		messageHistoryDao.save(histDb);
 		
 		return getMessage(message.getMessageId());

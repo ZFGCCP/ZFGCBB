@@ -8,6 +8,7 @@ public class MessageHistory extends BaseModel {
 	private Integer messageHistoryId;
 	private Integer messageId;
 	private String messageText;
+	private String unparsedText;
 	private Boolean currentFlag;
 	
 	public Integer getMessageHistoryId() {
@@ -41,5 +42,11 @@ public class MessageHistory extends BaseModel {
 	}
 	public void setCurrentFlag(Boolean currentFlag) {
 		this.currentFlag = currentFlag;
+	}
+	public String getUnparsedText() {
+		return unparsedText;
+	}
+	public void setUnparsedText(String unparsedText) {
+		this.unparsedText = unparsedText;
 	}
 }

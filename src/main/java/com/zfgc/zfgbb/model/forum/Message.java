@@ -14,7 +14,7 @@ public class Message extends BaseModel {
 	private Integer ownerId;
 	private Integer threadId;
 	
-	private List<MessageHistory> history = new ArrayList<>();
+	private MessageHistory currentMessage = new MessageHistory();
 	
 	public Integer getMessageId() {
 		return messageId;
@@ -49,22 +49,18 @@ public class Message extends BaseModel {
 	public void setThreadId(Integer threadId) {
 		this.threadId = threadId;
 	}
-
-	public List<MessageHistory> getHistory() {
-		return history;
-	}
-
-	public void setHistory(List<MessageHistory> history) {
-		this.history = history;
-	}
-	
-	public MessageHistory getCurrentMessage() {
-		return history.stream().findFirst().orElseThrow();
-	}
 	
 	@JsonIgnore
 	public LocalDateTime getLatestMessageTs() {
-		return getCurrentMessage().getCreatedTs();
+		return currentMessage.getCreatedTs();
+	}
+
+	public MessageHistory getCurrentMessage() {
+		return currentMessage;
+	}
+
+	public void setCurrentMessage(MessageHistory currentMessage) {
+		this.currentMessage = currentMessage;
 	}
 	
 }
