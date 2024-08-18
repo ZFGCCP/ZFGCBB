@@ -16,8 +16,6 @@ public class Message extends BaseModel {
 	private Integer threadId;
 	private Integer postInThread;
 	
-	private User createdUser;
-	
 	private MessageHistory currentMessage = new MessageHistory();
 	
 	public Integer getMessageId() {
@@ -65,22 +63,6 @@ public class Message extends BaseModel {
 
 	public void setCurrentMessage(MessageHistory currentMessage) {
 		this.currentMessage = currentMessage;
-	}
-
-	public Integer getPostInThread() {
-		return postInThread;
-	}
-
-	public void setPostInThread(Integer postInThread) {
-		this.postInThread = postInThread;
-	}
-
-	public User getCreatedUser() {
-		return createdUser;
-	}
-
-	public void setCreatedUser(User createdUser) {
-		this.createdUser = createdUser;
 	}
 	
 }
