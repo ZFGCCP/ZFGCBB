@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.4.0-RC1</version>
+		<version>3.3.2-SNAPSHOT</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.zfgc</groupId>
@@ -90,6 +90,17 @@
     		<groupId>com.google.guava</groupId>
     		<artifactId>guava</artifactId>
     		<version>33.3.1-jre</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.flywaydb</groupId>
+			<artifactId>flyway-core</artifactId>
+		</dependency>
+		
+		<dependency>
+		    <groupId>org.flywaydb</groupId>
+		    <artifactId>flyway-database-postgresql</artifactId>
+		    <scope>runtime</scope>
 		</dependency>
 		
 		<dependency>
