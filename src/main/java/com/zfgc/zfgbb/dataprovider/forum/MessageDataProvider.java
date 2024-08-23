@@ -48,6 +48,7 @@ public class MessageDataProvider extends AbstractDataProvider {
 		
 		MessageHistory history = message.getCurrentMessage();
 		MessageHistoryDbo historyDbo = mapper.map(history, MessageHistoryDbo.class);
+		historyDbo.setMessageText(history.getUnparsedText());
 		historyDbo = messageHistoryDao.save(historyDbo);
 		
 		Message result = mapper.map(messageDbo, Message.class);

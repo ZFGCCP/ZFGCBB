@@ -25,7 +25,7 @@ public abstract class AbstractDao<DbExample, DbMapper, Dbo extends AbstractDbo> 
 		else {
 			//get record from database
 			Dbo existing = get(toSave.getPkId());
-			if(existing.getUpdatedTime().compareTo(toSave.getUpdatedTime()) > 0) {
+			if(existing.getUpdatedTime().isAfter(toSave.getUpdatedTime())) {
 				//concurrency problem, get this garbo outta here
 				throw new ConcurrentModificationException();
 			}
