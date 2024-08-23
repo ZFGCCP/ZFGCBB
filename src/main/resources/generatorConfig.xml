@@ -5,7 +5,7 @@
   <properties resource="application.properties"/>
   <context id="zfgc3_context" targetRuntime="MyBatis3">
 
-    <jdbcConnection connectionURL="jdbc:postgresql://localhost:5432/zfgbb"
+    <jdbcConnection connectionURL="jdbc:postgresql://localhost:5432/zfgc_dev"
     				driverClass="org.postgresql.Driver"
     				password="postgres"
     				userId="postgres"/>
@@ -95,7 +95,7 @@
     </table> -->
     
     <!-- <table schema="zfgbb" tableName="current_message_view" domainObjectName="CurrentMessageDbo">
-		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime"/>
+
     </table> -->
     
     <!-- <table schema="zfgbb" tableName="message" domainObjectName="MessageDbo">
