@@ -52,4 +52,10 @@ public class MessageHistory extends BaseModel {
 	public void setUnparsedText(String unparsedText) {
 		this.unparsedText = unparsedText;
 	}
+	public Integer getIpAddressId() {
+		return ipAddressId;
+	}
+	public void setIpAddressId(Integer ipAddressId) {
+		this.ipAddressId = ipAddressId;
+	}
 }

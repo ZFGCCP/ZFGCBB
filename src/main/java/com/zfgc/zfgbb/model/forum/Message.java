@@ -64,5 +64,13 @@ public class Message extends BaseModel {
 	public void setCurrentMessage(MessageHistory currentMessage) {
 		this.currentMessage = currentMessage;
 	}
+
+	public Integer getPostInThread() {
+		return postInThread;
+	}
+
+	public void setPostInThread(Integer postInThread) {
+		this.postInThread = postInThread;
+	}
 	
 }

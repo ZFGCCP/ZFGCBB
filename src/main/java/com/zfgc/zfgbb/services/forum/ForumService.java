@@ -24,7 +24,6 @@ import com.zfgc.zfgbb.services.core.IpService;
 import com.zfgc.zfgbb.model.forum.Thread;
 import com.zfgc.zfgbb.model.forum.ThreadSplit;
 import com.zfgc.zfgbb.model.meta.IpAddress;
-import com.zfgc.zfgbb.model.users.Permission;
 
 @Service
 @Transactional
@@ -45,9 +44,8 @@ public class ForumService extends AbstractService {
 	@Autowired
 	private IpService ipService;
 	
-	public Forum getForum(User zfgcUser) {
-		Forum forum = forumDataProvider.getForum();
-		List<Integer> userPerms = zfgcUser.getPermissions().stream().map(Permission::getPermissionId).toList();
+	public Forum getForum(Integer boardId, User zfgcUser) {
+		Forum forum = forumDataProvider.getForum(boardId);
 		
 		forum.getCategories().stream().filter(c -> c.getBoards() != null).forEach(c -> {
 			List<BoardSummary> remove = new ArrayList<>();
@@ -187,7 +185,7 @@ public class ForumService extends AbstractService {
 		IpAddress ip = ipService.getClientIp();
 		message.getCurrentMessage().setIpAddressId(ip.getId());
 		
-		message.setPostInThread(postCount.intValue());
+		message.setPostInThread(thread.getMessages().size());
 		
 		return messageDataProvider.saveMessage(message);
 	}
