@@ -13,6 +13,7 @@ public class Message extends BaseModel {
 	private Integer messageId;
 	private Integer ownerId;
 	private Integer threadId;
+	private Integer postInThread;
 	
 	private MessageHistory currentMessage = new MessageHistory();
 	
@@ -61,6 +62,14 @@ public class Message extends BaseModel {
 
 	public void setCurrentMessage(MessageHistory currentMessage) {
 		this.currentMessage = currentMessage;
+	}
+
+	public Integer getPostInThread() {
+		return postInThread;
+	}
+
+	public void setPostInThread(Integer postInThread) {
+		this.postInThread = postInThread;
 	}
 	
 }
