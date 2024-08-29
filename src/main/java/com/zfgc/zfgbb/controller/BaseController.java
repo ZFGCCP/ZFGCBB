@@ -21,6 +21,8 @@ public class BaseController {
 			return createGuest();
 		}
 		
+		
+		
 		return (User) ((Authentication) userPrincipal).getPrincipal();
 	}
 	

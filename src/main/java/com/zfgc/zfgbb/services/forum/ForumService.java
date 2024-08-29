@@ -12,8 +12,10 @@ import com.zfgc.zfgbb.model.forum.Forum;
 import com.zfgc.zfgbb.model.forum.Message;
 import com.zfgc.zfgbb.model.forum.MessageHistory;
 import com.zfgc.zfgbb.services.AbstractService;
+import com.zfgc.zfgbb.services.core.IpService;
 import com.zfgc.zfgbb.model.forum.Thread;
 import com.zfgc.zfgbb.model.forum.ThreadSplit;
+import com.zfgc.zfgbb.model.meta.IpAddress;
 
 @Service
 @Transactional
@@ -30,6 +32,9 @@ public class ForumService extends AbstractService {
 	
 	@Autowired
 	private MessageDataProvider messageDataProvider;
+	
+	@Autowired
+	private IpService ipService;
 	
 	public Forum getForum(Integer boardId, User zfgcUser) {
 		Forum forum = forumDataProvider.getForum(boardId);
@@ -53,9 +58,9 @@ public class ForumService extends AbstractService {
 	}
 	
 	public Message getMessageTemplate(Integer boardId, Integer threadId, Integer messageId, User zfgcUser) {
-		Thread permissionCheck = new Thread();
+		/*Thread permissionCheck = new Thread();
 		permissionCheck.setBoardPermissions(forumDataProvider.getBoardPermissions(boardId));
-		super.secureObject(permissionCheck, zfgcUser);
+		super.secureObject(permissionCheck, zfgcUser);*/
 		
 		Message message = null;
 		message = new Message();
@@ -109,7 +114,14 @@ public class ForumService extends AbstractService {
 	
 	public Message saveMessage(Message message, User user) {
 		Thread thread = threadDataProvider.getThread(message.getThreadId());
+		Long postCount = messageDataProvider.getTotalPostsInThread(thread.getThreadId());
+		message.setPostInThread(postCount.intValue());
 		super.secureObject(thread, user);
+		
+		IpAddress ip = ipService.getClientIp();
+		message.getCurrentMessage().setIpAddressId(ip.getId());
+		
+		message.setPostInThread(thread.getMessages().size());
 		
 		return messageDataProvider.saveMessage(message);
 	}

@@ -10,6 +10,7 @@ public class MessageHistory extends BaseModel {
 	private String messageText;
 	private String unparsedText;
 	private Boolean currentFlag;
+	private Integer ipAddressId;
 	
 	public Integer getMessageHistoryId() {
 		return messageHistoryId;
@@ -48,5 +49,11 @@ public class MessageHistory extends BaseModel {
 	}
 	public void setUnparsedText(String unparsedText) {
 		this.unparsedText = unparsedText;
+	}
+	public Integer getIpAddressId() {
+		return ipAddressId;
+	}
+	public void setIpAddressId(Integer ipAddressId) {
+		this.ipAddressId = ipAddressId;
 	}
 }

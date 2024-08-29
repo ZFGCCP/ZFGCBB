@@ -47,6 +47,7 @@ public class MessageDataProvider extends AbstractDataProvider {
 		messageDbo = messageDao.save(messageDbo);
 		
 		MessageHistory history = message.getCurrentMessage();
+		history.setMessageId(messageDbo.getMessageId());
 		MessageHistoryDbo historyDbo = mapper.map(history, MessageHistoryDbo.class);
 		historyDbo.setMessageText(history.getUnparsedText());
 		historyDbo = messageHistoryDao.save(historyDbo);
@@ -132,5 +133,11 @@ public class MessageDataProvider extends AbstractDataProvider {
 			msg.setThreadId(newThreadId);
 			messageDao.save(msg);
 		});
+	}
+	
+	public Long getTotalPostsInThread(Integer threadId) {
+		MessageDboExample ex = new MessageDboExample();
+		ex.createCriteria().andThreadIdEqualTo(threadId);
+		return messageDao.getMapper().countByExample(ex);
 	}
 }
