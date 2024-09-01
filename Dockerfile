@@ -1,18 +1,15 @@
-FROM maven:3.8.1-openjdk-17 AS build
+FROM maven:3.9-eclipse-temurin-17 AS build
 
 RUN mkdir -p /usr/src/zfgcbb
+COPY . /usr/src/zfgcbb
 
 WORKDIR /usr/src/zfgcbb
 
-COPY . .
+RUN mvn clean compile package -Dmaven.test.skip=true -X
 
-RUN mvn clean package -Dmaven.test.skip=true
+FROM tomcat:jre17-temurin-jammy AS deploy
 
-FROM tomcat:latest AS deploy
-
-RUN mkdir -p /usr/src/zfgcbb
-
-COPY --from=build /usr/src/zfgcbb/target/zfgbb.war /usr/local/tomcat/webapps/ROOT.war
+COPY --from=build /usr/src/zfgcbb/target/*.war /usr/local/tomcat/webapps/
 
 EXPOSE 8080
 

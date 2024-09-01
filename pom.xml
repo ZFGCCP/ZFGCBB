@@ -105,7 +105,6 @@
 	</dependencies>
 
 	<build>
-		<finalName>zfgcbb</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
