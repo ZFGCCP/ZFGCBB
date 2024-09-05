@@ -13,6 +13,8 @@ import com.zfgc.zfgbb.dao.ThreadDao;
 import com.zfgc.zfgbb.dao.forum.CurrentMessageDao;
 import com.zfgc.zfgbb.dao.forum.MessageDao;
 import com.zfgc.zfgbb.dao.forum.MessageHistoryDao;
+import com.zfgc.zfgbb.dao.forum.PollDao;
+import com.zfgc.zfgbb.dao.forum.PollQuestionDao;
 import com.zfgc.zfgbb.dao.users.UserDao;
 import com.zfgc.zfgbb.dataprovider.AbstractDataProvider;
 import com.zfgc.zfgbb.dbo.BoardPermissionViewDboExample;
@@ -21,12 +23,18 @@ import com.zfgc.zfgbb.dbo.MessageDbo;
 import com.zfgc.zfgbb.dbo.MessageDboExample;
 import com.zfgc.zfgbb.dbo.MessageHistoryDbo;
 import com.zfgc.zfgbb.dbo.MessageHistoryDboExample;
+import com.zfgc.zfgbb.dbo.PollDbo;
+import com.zfgc.zfgbb.dbo.PollDboExample;
+import com.zfgc.zfgbb.dbo.PollQuestionDbo;
+import com.zfgc.zfgbb.dbo.PollQuestionDboExample;
 import com.zfgc.zfgbb.dbo.ThreadDbo;
 import com.zfgc.zfgbb.dbo.ThreadDboExample;
 import com.zfgc.zfgbb.dbo.UserDboExample;
 import com.zfgc.zfgbb.model.User;
 import com.zfgc.zfgbb.model.forum.Message;
 import com.zfgc.zfgbb.model.forum.MessageHistory;
+import com.zfgc.zfgbb.model.forum.Poll;
+import com.zfgc.zfgbb.model.forum.PollQuestion;
 import com.zfgc.zfgbb.model.forum.Thread;
 import com.zfgc.zfgbb.model.forum.ThreadSplit;
 import com.zfgc.zfgbb.model.users.Permission;
@@ -44,6 +52,12 @@ public class ThreadDataProvider extends AbstractDataProvider {
 	private BoardPermissionViewDao boardPermissionDao;
 	
 	@Autowired
+	private PollDao pollDao;
+	
+	@Autowired
+	private PollQuestionDao pollQuestionDao;
+	
+	@Autowired
 	private UserDao userDao;
 	
 	public Thread getThread(Integer threadId, Integer page, Integer count) {
@@ -57,7 +71,28 @@ public class ThreadDataProvider extends AbstractDataProvider {
 			
 			//get permissions for the parent board
 			result.setBoardPermissions(getBoardPermissions(result.getBoardId()));
+			
+			//get poll info
+			result.setPollInfo(getPollInfo(threadId));
 		}
+		return result;
+	}
+	
+	public Poll getPollInfo(Integer threadId) {
+		PollDboExample pollEx = new PollDboExample();
+		pollEx.createCriteria().andThreadIdEqualTo(threadId);
+		PollDbo pollDb = pollDao.get(pollEx).stream().findFirst().orElse(null);
+		Poll result = null;
+		if(pollDb != null) {
+			result = mapper.map(pollDb, Poll.class);
+			
+			PollQuestionDboExample ex = new PollQuestionDboExample();
+			ex.createCriteria().andPollIdEqualTo(result.getId());
+			
+			List<PollQuestionDbo> answers = pollQuestionDao.get(ex);
+			result.setAnswers(super.convertDboListToModel(answers, PollQuestion.class));
+		}
+		
 		return result;
 	}
 	
@@ -92,17 +127,22 @@ public class ThreadDataProvider extends AbstractDataProvider {
 		
 		//create the thread dbo first
 		threadDbo = threadDao.save(threadDbo);
+		thread.setThreadId(threadDbo.getThreadId());
+		thread.setCreatedTs(threadDbo.getCreatedTime());
+		thread.setUpdatedTs(threadDbo.getUpdatedTime());
 		
-		Message headMessage = thread.getMessages().stream().findFirst().orElse(null);
-		Thread result = mapper.map(threadDbo, Thread.class);
-		if(headMessage != null) {
-			headMessage = messageDataProvider.saveMessage(headMessage);
-		
-			result = mapper.map(threadDbo, Thread.class);
-		
-			result.getMessages().add(headMessage);
+		if(thread.getPollInfo() != null) {
+			PollDbo poll = mapper.map(thread.getPollInfo(), PollDbo.class);
+			pollDao.save(poll);
+			
+			thread.getPollInfo().getAnswers().forEach(ans -> {
+				ans.setPollId(poll.getPollId());
+				PollQuestionDbo answerDb = mapper.map(ans, PollQuestionDbo.class);
+				pollQuestionDao.save(answerDb);
+			});
 		}
-		return result;
+		
+		return getThread(thread.getId());
 	}
 	
 	public List<Permission> getBoardPermissions(Integer boardId){

@@ -74,8 +74,8 @@ public class ForumService extends AbstractService {
 	
 	public Thread saveThread(Thread thread, User zfgcUser) {
 		//first, lets make sure the user actually can post to this board
-		thread.setBoardPermissions(forumDataProvider.getBoardPermissions(thread.getBoardId()));
-		super.secureObject(thread, zfgcUser);
+		//thread.setBoardPermissions(forumDataProvider.getBoardPermissions(thread.getBoardId()));
+		//super.secureObject(thread, zfgcUser);
 		
 		Thread saved = threadDataProvider.getThread(thread.getThreadId(), 1, 1);
 		
@@ -89,6 +89,9 @@ public class ForumService extends AbstractService {
 		
 		//finally, save the thread
 		thread = threadDataProvider.saveThread(thread);
+		if(saved == null) {
+			saveMessage(thread.getMessages().get(0), zfgcUser);
+		}
 		
 		return thread;
 	}
@@ -121,7 +124,7 @@ public class ForumService extends AbstractService {
 		IpAddress ip = ipService.getClientIp();
 		message.getCurrentMessage().setIpAddressId(ip.getId());
 		
-		message.setPostInThread(thread.getMessages().size());
+		message.setPostInThread(postCount.intValue());
 		
 		return messageDataProvider.saveMessage(message);
 	}
