@@ -3,7 +3,7 @@
 <generatorConfiguration>
 
   <properties resource="application.properties"/>
-  <classPathEntry location="C:/Users/onise/.m2/repository/org/postgresql/postgresql/42.3.3/postgresql-42.3.3.jar"/>
+  <classPathEntry location="${mbg.jdbc.driver-location}"/>
   <context id="zfgc3_context" targetRuntime="MyBatis3">
 
     <jdbcConnection connectionURL="jdbc:postgresql://localhost:5432/zfgc_dev"
