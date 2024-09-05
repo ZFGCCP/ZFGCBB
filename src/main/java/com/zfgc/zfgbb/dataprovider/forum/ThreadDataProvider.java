@@ -12,6 +12,9 @@ import org.springframework.stereotype.Repository;
 
 import com.zfgc.zfgbb.dao.BoardPermissionViewDao;
 import com.zfgc.zfgbb.dao.ThreadDao;
+import com.zfgc.zfgbb.dao.forum.CurrentMessageDao;
+import com.zfgc.zfgbb.dao.forum.MessageDao;
+import com.zfgc.zfgbb.dao.forum.MessageHistoryDao;
 import com.zfgc.zfgbb.dao.forum.PollDao;
 import com.zfgc.zfgbb.dao.forum.PollQuestionDao;
 import com.zfgc.zfgbb.dao.users.UserDao;
@@ -22,6 +25,8 @@ import com.zfgc.zfgbb.dbo.BoardPermissionViewDboExample;
 import com.zfgc.zfgbb.dbo.LatestMessageInThreadViewDbo;
 import com.zfgc.zfgbb.dbo.LatestMessageInThreadViewDboExample;
 import com.zfgc.zfgbb.dbo.MessageDboExample;
+import com.zfgc.zfgbb.dbo.MessageHistoryDbo;
+import com.zfgc.zfgbb.dbo.MessageHistoryDboExample;
 import com.zfgc.zfgbb.dbo.PollDbo;
 import com.zfgc.zfgbb.dbo.PollDboExample;
 import com.zfgc.zfgbb.dbo.PollQuestionDbo;
@@ -35,6 +40,7 @@ import com.zfgc.zfgbb.mappers.ThreadDboMapper;
 import com.zfgc.zfgbb.model.User;
 import com.zfgc.zfgbb.model.forum.LatestMessage;
 import com.zfgc.zfgbb.model.forum.Message;
+import com.zfgc.zfgbb.model.forum.MessageHistory;
 import com.zfgc.zfgbb.model.forum.Poll;
 import com.zfgc.zfgbb.model.forum.PollQuestion;
 import com.zfgc.zfgbb.model.forum.Thread;
@@ -85,11 +91,6 @@ public class ThreadDataProvider extends AbstractDataProvider {
 			
 			//get poll info
 			result.setPollInfo(getPollInfo(threadId));
-			
-			MessageDboExample ex = new MessageDboExample();
-			ex.createCriteria().andThreadIdEqualTo(threadId);
-			long msgCount = messageMapper.countByExample(ex);
-			result.setPageCount((int)Math.ceil((double)msgCount / (double)count));
 		}
 		return result;
 	}
@@ -112,14 +113,8 @@ public class ThreadDataProvider extends AbstractDataProvider {
 		return result;
 	}
 	
-	public List<Thread> getThreadsByBoardId(Integer boardId, Integer pageNo, Integer threadsPerPage, Boolean sticky){
-		//get a high level view of the threads for this board based on page number
-		LatestMessageInThreadViewDboExample exT = new LatestMessageInThreadViewDboExample();
-		if(pageNo != null && threadsPerPage != null) {
-			exT.setLimit(threadsPerPage);
-			exT.setOffset((pageNo - 1) * threadsPerPage);
-		}
-		exT.setOrderByClause("last_post_ts desc");
+	public List<Thread> getThreadsByBoardId(Integer boardId, Boolean sticky){
+		ThreadDboExample exT = new ThreadDboExample();
 		exT.createCriteria().andBoardIdEqualTo(boardId).andPinnedFlagEqualTo(sticky);
 		
 		//map them all by threadId
