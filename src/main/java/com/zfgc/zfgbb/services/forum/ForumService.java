@@ -185,7 +185,7 @@ public class ForumService extends AbstractService {
 		IpAddress ip = ipService.getClientIp();
 		message.getCurrentMessage().setIpAddressId(ip.getId());
 		
-		message.setPostInThread(thread.getMessages().size());
+		message.setPostInThread(postCount.intValue());
 		
 		return messageDataProvider.saveMessage(message);
 	}
