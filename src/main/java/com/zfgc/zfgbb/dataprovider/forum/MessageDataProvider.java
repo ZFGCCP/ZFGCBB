@@ -146,6 +146,8 @@ public class MessageDataProvider extends AbstractDataProvider {
 	public Long getTotalPostsInThread(Integer threadId) {
 		MessageDboExample ex = new MessageDboExample();
 		ex.createCriteria().andThreadIdEqualTo(threadId);
-		return messageDao.getMapper().countByExample(ex);
+		Long count = messageDao.getMapper().countByExample(ex);
+		
+		return count;
 	}
 }

@@ -3,6 +3,7 @@
 <generatorConfiguration>
 
   <properties resource="application.properties"/>
+  <classPathEntry location="C:/Users/onise/.m2/repository/org/postgresql/postgresql/42.3.3/postgresql-42.3.3.jar"/>
   <context id="zfgc3_context" targetRuntime="MyBatis3">
 
     <jdbcConnection connectionURL="jdbc:postgresql://localhost:5432/zfgc_dev"
@@ -18,58 +19,17 @@
     
 
     <!-- tables -->
-    <table schema="zfgbb" tableName="latest_message_in_thread_view" domainObjectName="LatestMessageInThreadViewDbo">
-		<columnOverride column="created_ts" jdbcType="TIMESTAMP" javaType="java.time.LocalDateTime"/>
-		<columnOverride column="last_post_ts" jdbcType="TIMESTAMP" javaType="java.time.LocalDateTime"/>
-    </table>
-    
-    <!-- <table schema="zfgbb" tableName="all_messages_in_thread_view" domainObjectName="AllMessagesInThreadViewDbo">
-    	<columnOverride column="post_ts" jdbcType="TIMESTAMP" javaType="java.time.LocalDateTime"/>
-    </table> -->
-    
-    <!-- <table schema="zfgbb" tableName="board_summary" domainObjectName="BoardSummaryViewDbo">
-		<columnOverride column="latest_message_created_ts" jdbcType="TIMESTAMP" javaType="java.time.LocalDateTime"/>
-    </table> -->
-    
-    <!-- <table schema="zfgbb" tableName="child_board_view" domainObjectName="ChildBoardViewDbo">
-    </table> -->
-    
-    <!-- <table schema="zfgbb" tableName="content_resource" domainObjectName="ContentResourceDbo">
-		<generatedKey column="content_resource_id" sqlStatement="JDBC" identity="true" />
-		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime" isGeneratedAlways="true"/>
-		<columnOverride column="updated_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime" isGeneratedAlways="true"/>
-    </table> -->
-    
-    
-    <!-- <table schema="zfgbb" tableName="avatar" domainObjectName="AvatarDbo">
-		<generatedKey column="avatar_id" sqlStatement="JDBC" identity="true" />
-		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime" isGeneratedAlways="true"/>
-		<columnOverride column="updated_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime" isGeneratedAlways="true"/>
-    </table> -->
-    
-    <!-- <table schema="zfgbb" tableName="file_attachments" domainObjectName="FileAttachmentDbo">
-		<generatedKey column="file_attachment_id" sqlStatement="JDBC" identity="true" />
-		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime" isGeneratedAlways="true"/>
-		<columnOverride column="updated_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime" isGeneratedAlways="true"/>
-    </table> -->
-    
-    
-    <!-- <table schema="zfgbb" tableName="user_bio_info" domainObjectName="UserBioInfoDbo">
-		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime" isGeneratedAlways="true"/>
-		<columnOverride column="updated_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime" isGeneratedAlways="true"/>
-    </table> -->
-    
-    <!-- <table schema="zfgbb" tableName="poll" domainObjectName="PollDbo">
+    <table schema="zfgbb" tableName="poll" domainObjectName="PollDbo">
 		<generatedKey column="poll_id" sqlStatement="JDBC" identity="true" />
 		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime" isGeneratedAlways="true"/>
 		<columnOverride column="updated_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime" isGeneratedAlways="true"/>
-    </table> -->
+    </table>
     
-    <!-- <table schema="zfgbb" tableName="poll_question" domainObjectName="PollQuestionDbo">
+    <table schema="zfgbb" tableName="poll_question" domainObjectName="PollQuestionDbo">
 		<generatedKey column="poll_question_id" sqlStatement="JDBC" identity="true" />
 		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime" isGeneratedAlways="true"/>
 		<columnOverride column="updated_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime" isGeneratedAlways="true"/>
-    </table> -->
+    </table>
     
     <!-- <table schema="zfgbb" tableName="message_history" domainObjectName="MessageHistoryDbo">
 		<generatedKey column="message_history_id" sqlStatement="JDBC" identity="true" />
