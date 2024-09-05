@@ -8,8 +8,8 @@
 
     <jdbcConnection connectionURL="jdbc:postgresql://localhost:5432/zfgc_dev"
     				driverClass="org.postgresql.Driver"
-    				password="${mbg.jdbc.password}"
-    				userId="${mbg.jdbc.username}"/>
+    				password="postgres"
+    				userId="postgres"/>
     				
     <javaModelGenerator targetPackage="com.zfgc.zfgbb.dbo" targetProject="zfgbb">
     </javaModelGenerator>
@@ -19,6 +19,18 @@
     
 
     <!-- tables -->
+    <table schema="zfgbb" tableName="poll" domainObjectName="PollDbo">
+		<generatedKey column="poll_id" sqlStatement="JDBC" identity="true" />
+		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime" isGeneratedAlways="true"/>
+		<columnOverride column="updated_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime" isGeneratedAlways="true"/>
+    </table>
+    
+    <table schema="zfgbb" tableName="poll_question" domainObjectName="PollQuestionDbo">
+		<generatedKey column="poll_question_id" sqlStatement="JDBC" identity="true" />
+		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime" isGeneratedAlways="true"/>
+		<columnOverride column="updated_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime" isGeneratedAlways="true"/>
+    </table>
+    
     <!-- <table schema="zfgbb" tableName="message_history" domainObjectName="MessageHistoryDbo">
 		<generatedKey column="message_history_id" sqlStatement="JDBC" identity="true" />
 		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime" isGeneratedAlways="true"/>

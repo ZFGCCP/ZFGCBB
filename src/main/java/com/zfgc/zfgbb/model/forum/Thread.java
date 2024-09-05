@@ -24,6 +24,8 @@ public class Thread extends BaseModel implements Securable {
     private List<Permission> boardPermissions = new ArrayList<>();
     private List<Message> messages = new ArrayList<>();
     
+    private Poll pollInfo;
+    
 	public Integer getThreadId() {
 		return threadId;
 	}
@@ -91,5 +93,11 @@ public class Thread extends BaseModel implements Securable {
 	@JsonIgnore
 	public List<Permission> getPermissions() {
 		return getBoardPermissions();
+	}
+	public Poll getPollInfo() {
+		return pollInfo;
+	}
+	public void setPollInfo(Poll pollInfo) {
+		this.pollInfo = pollInfo;
 	}
 }
