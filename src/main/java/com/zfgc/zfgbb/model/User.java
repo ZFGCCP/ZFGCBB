@@ -21,6 +21,8 @@ public class User extends BaseModel implements UserDetails {
 	private String userName;
 	private Boolean activeFlag;
 	private EmailAddress email;
+	private String ssoKey;
+	private String password;
 	
 	@JsonIgnore
 	private List<Permission> permissions = new ArrayList<>();
@@ -46,16 +48,10 @@ public class User extends BaseModel implements UserDetails {
 					      .collect(Collectors.toList());
 	}
 
-	@Override
-	public String getPassword() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	@Override
 	public String getUsername() {
-		// TODO Auto-generated method stub
-		return null;
+		return userName;
 	}
 
 	@Override
@@ -130,6 +126,39 @@ public class User extends BaseModel implements UserDetails {
 
 	public void setUserName(String userName) {
 		this.userName = userName;
+	}
+
+	public EmailAddress getEmail() {
+		return email;
+	}
+
+	public void setEmail(EmailAddress email) {
+		this.email = email;
+	}
+
+	public Boolean getActiveFlag() {
+		return activeFlag;
+	}
+
+	public void setActiveFlag(Boolean activeFlag) {
+		this.activeFlag = activeFlag;
+	}
+
+	public String getSsoKey() {
+		return ssoKey;
+	}
+
+	public void setSsoKey(String ssoKey) {
+		this.ssoKey = ssoKey;
+	}
+
+	@Override
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 	
 }

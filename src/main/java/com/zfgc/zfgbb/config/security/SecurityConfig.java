@@ -6,8 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.HttpBasicConfigurer;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.switchuser.SwitchUserFilter;
@@ -35,12 +37,20 @@ public class SecurityConfig{
 		//test key for now
 		SecretKeySpec key = new SecretKeySpec(authKey.getBytes(), "HMACSHA256");
 		
-		http.httpBasic().disable().csrf().disable().authorizeRequests().requestMatchers("//*.map", 
+		http.httpBasic(httpBasic -> httpBasic.disable())
+			.csrf(csrf -> csrf.disable())
+			.authorizeHttpRequests(req -> req.requestMatchers("//*.map", "/**").permitAll())
+			.authorizeHttpRequests(req -> req.anyRequest().authenticated())
+			.oauth2ResourceServer(oauth -> oauth.jwt(jwt -> jwt.decoder(NimbusJwtDecoder.withSecretKey(key).build())));
+		
+		/*http.httpBasic().disable().csrf().disable().authorizeRequests().requestMatchers("//*.map", 
 				 "/**").permitAll().and().authorizeRequests().anyRequest().authenticated().and()
-		    .oauth2ResourceServer().jwt().decoder(NimbusJwtDecoder.withSecretKey(key).build());
+		    .oauth2ResourceServer().jwt().decoder(NimbusJwtDecoder.withSecretKey(key).build());*/
 		
 		http.addFilterAfter(jwtAuthTokenFilterBean(), SwitchUserFilter.class);
 		return http.build();
 
     }
+	
+	
  }
