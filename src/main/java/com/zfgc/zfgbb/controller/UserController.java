@@ -12,14 +12,19 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.zfgc.zfgbb.config.security.OauthUsersDetailsServiceImpl;
+import com.zfgc.zfgbb.model.User;
 import com.zfgc.zfgbb.model.users.AuthCredentials;
+import com.zfgc.zfgbb.services.core.UserService;
 
 @RestController
 @RequestMapping("/users")
 public class UserController extends BaseController {
 	
 	@Autowired
-	private OauthUsersDetailsServiceImpl usersService;
+	private OauthUsersDetailsServiceImpl oauthService;
+	
+	@Autowired
+	private UserService userService;
 	
 	@GetMapping("/loggedInUser")
 	public ResponseEntity getLoggedInUser() {
@@ -28,8 +33,13 @@ public class UserController extends BaseController {
 	
 	@PostMapping("auth/login")
 	public ResponseEntity login(@RequestBody AuthCredentials credentials) {
-		String result = usersService.getLoginToken(credentials);
+		String result = oauthService.getLoginToken(credentials);
 		return ResponseEntity.status(HttpStatus.OK).body(result);
 		
+	}
+	
+	@PostMapping("/register")
+	public ResponseEntity registerNewUser(@RequestBody User user) {
+		return ResponseEntity.status(HttpStatus.OK).body(userService.createNewUser(user));
 	}
 }
