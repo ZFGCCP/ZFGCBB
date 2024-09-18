@@ -13,6 +13,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.zfgc.zfgbb.model.meta.IpAddress;
 import com.zfgc.zfgbb.model.users.EmailAddress;
 import com.zfgc.zfgbb.model.users.Permission;
+import com.zfgc.zfgbb.model.users.UserBioInfo;
 
 public class User extends BaseModel implements UserDetails {
 	@JsonIgnore
@@ -29,6 +30,7 @@ public class User extends BaseModel implements UserDetails {
 	
 	private IpAddress currentIpAddress;
 	private List<IpAddress> allKnownIpAddresses = new ArrayList<>();
+	private UserBioInfo bioInfo;
 	
 	
 	public List<Permission> getPermissions() {
@@ -159,6 +161,14 @@ public class User extends BaseModel implements UserDetails {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public UserBioInfo getBioInfo() {
+		return bioInfo;
+	}
+
+	public void setBioInfo(UserBioInfo bioInfo) {
+		this.bioInfo = bioInfo;
 	}
 	
 }

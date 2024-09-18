@@ -7,15 +7,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.zfgc.zfgbb.dao.users.EmailAddressDao;
+import com.zfgc.zfgbb.dao.users.UserBioInfoDao;
 import com.zfgc.zfgbb.dao.users.UserDao;
 import com.zfgc.zfgbb.dao.UserPermissionViewDao;
 import com.zfgc.zfgbb.dataprovider.AbstractDataProvider;
 import com.zfgc.zfgbb.dbo.EmailAddressDbo;
+import com.zfgc.zfgbb.dbo.UserBioInfoDbo;
 import com.zfgc.zfgbb.dbo.UserDbo;
 import com.zfgc.zfgbb.dbo.UserDboExample;
 import com.zfgc.zfgbb.dbo.UserPermissionViewDboExample;
 import com.zfgc.zfgbb.model.User;
 import com.zfgc.zfgbb.model.users.Permission;
+import com.zfgc.zfgbb.model.users.UserBioInfo;
 
 @Repository
 public class UserDataProvider extends AbstractDataProvider {
@@ -29,21 +32,15 @@ public class UserDataProvider extends AbstractDataProvider {
 	@Autowired
 	private EmailAddressDao emailDao;
 	
-	public User getUser(String ssoKey) {
+	@Autowired
+	private UserBioInfoDao bioInfoDao;
+	
+	public User getUser(String userName) {
 		UserDboExample ex = new UserDboExample();
-		ex.createCriteria().andSsoKeyEqualTo(ssoKey).andActiveFlagEqualTo(true);
+		ex.createCriteria().andUserNameEqualTo(userName).andActiveFlagEqualTo(true);
 		UserDbo userDb = userDao.get(ex).stream().findFirst().orElse(createGuest());
-		
-		User user = mapper.map(userDb, User.class);
 
-		//todo: setup guest permissions
-		UserPermissionViewDboExample upEx = new UserPermissionViewDboExample();
-		upEx.createCriteria().andUserIdEqualTo(user.getUserId());
-		List<Permission> permissions = convertDboListToModel(userPermissionDao.get(upEx), Permission.class);
-
-		user.setPermissions(permissions);
-		
-		return user;
+		return getUser(userDb.getPkId());
 	}
 	
 	public User getUser(Integer userId) {
@@ -60,12 +57,20 @@ public class UserDataProvider extends AbstractDataProvider {
 
 		user.setPermissions(permissions);
 		
+		UserBioInfoDbo bioInfoDbo = bioInfoDao.get(userId);
+		user.setBioInfo(mapper.map(bioInfoDbo, UserBioInfo.class));
+		
 		return user;
 	}
 	
 	public User createUser(User user) {
 		UserDbo userDbo = mapper.map(user, UserDbo.class);
 		userDao.save(userDbo);
+		
+		//create bio info
+		UserBioInfoDbo bioInfo = mapper.map(user.getBioInfo(), UserBioInfoDbo.class);
+		bioInfo.setUserId(userDbo.getPkId());
+		bioInfoDao.save(bioInfo);
 		
 		EmailAddressDbo emailDbo = mapper.map(user.getEmail(), EmailAddressDbo.class);
 		emailDbo.setUserId(userDbo.getPkId());
