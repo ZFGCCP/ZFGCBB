@@ -27,6 +27,8 @@ public class User extends BaseModel implements UserDetails {
 	private EmailAddress email;
 	private String ssoKey;
 	private String password;
+	
+	@JsonIgnore
 	private List<Permission> permissions = new ArrayList<>();
 	
 	private IpAddress currentIpAddress;
@@ -164,31 +166,6 @@ public class User extends BaseModel implements UserDetails {
 
 	public void setPassword(String password) {
 		this.password = password;
-	}
-
-	public UserBioInfo getBioInfo() {
-		return bioInfo;
-	}
-
-	public void setBioInfo(UserBioInfo bioInfo) {
-		this.bioInfo = bioInfo;
-	}
-	
-	@JsonIgnore
-	public boolean hasPermission(String permission) {
-		if(permissions != null) {
-			return permissions.stream().anyMatch(pr -> pr.getPermissionCode().equals(permission));
-		}
-		
-		return false;
-	}
-
-	public Avatar getAvatar() {
-		return avatar;
-	}
-
-	public void setAvatar(Avatar avatar) {
-		this.avatar = avatar;
 	}
 	
 }
