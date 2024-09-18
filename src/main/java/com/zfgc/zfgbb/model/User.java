@@ -35,8 +35,6 @@ public class User extends BaseModel implements UserDetails {
 	private List<IpAddress> allKnownIpAddresses = new ArrayList<>();
 	private UserBioInfo bioInfo;
 	
-	private Avatar avatar;
-	
 	
 	public List<Permission> getPermissions() {
 		return permissions;
@@ -166,6 +164,14 @@ public class User extends BaseModel implements UserDetails {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public UserBioInfo getBioInfo() {
+		return bioInfo;
+	}
+
+	public void setBioInfo(UserBioInfo bioInfo) {
+		this.bioInfo = bioInfo;
 	}
 	
 }
