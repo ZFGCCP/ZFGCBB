@@ -36,9 +36,10 @@ public class Oauth2AuthorizationFilter extends GenericFilterBean {
       
 		  //check here what authority user came from and transform to an sso key here
 		  //for now we only support clausius auth, but facebook and google are to come
-		  String ssoKey = "CLAUSIUS:" + ZfgcSecurityUtils.generateMd5(((Jwt)context.getAuthentication().getPrincipal()).getClaimAsString("user_name"));
+		  //String ssoKey = "CLAUSIUS:" + ZfgcSecurityUtils.generateMd5(((Jwt)context.getAuthentication().getPrincipal()).getClaimAsString("user_name"));
+		  String userName = ((Jwt)context.getAuthentication().getPrincipal()).getClaimAsString("user_name");
 		  
-		  UserDetails user = oauthUsersDetailsServiceImpl.loadUserByUsername(ssoKey); 
+		  UserDetails user = oauthUsersDetailsServiceImpl.loadUserByUsername(userName); 
 		  UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
 		  context.setAuthentication(authentication);
 	  }

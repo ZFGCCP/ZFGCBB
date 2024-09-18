@@ -50,4 +50,9 @@ public class UserService {
 			throw new RuntimeException("Failed to create user " + user.getUsername() + " at identity provider. Error code: " + resp.getStatusCode().value());
 		}
 	}
+	
+	public User loadUser(Integer userId) {
+		User user = userDataProvider.getUser(userId);
+		return user;
+	}
 }
