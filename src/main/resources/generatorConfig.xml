@@ -3,7 +3,6 @@
 <generatorConfiguration>
 
   <properties resource="application.properties"/>
-  <classPathEntry location="C:/Users/onise/.m2/repository/org/postgresql/postgresql/42.3.3/postgresql-42.3.3.jar"/>
   <context id="zfgc3_context" targetRuntime="MyBatis3">
 
     <jdbcConnection connectionURL="jdbc:postgresql://localhost:5432/zfgc_dev"
@@ -19,17 +18,22 @@
     
 
     <!-- tables -->
-    <table schema="zfgbb" tableName="poll" domainObjectName="PollDbo">
+    <!-- <table schema="zfgbb" tableName="user_bio_info" domainObjectName="UserBioInfoDbo">
+		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime" isGeneratedAlways="true"/>
+		<columnOverride column="updated_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime" isGeneratedAlways="true"/>
+    </table> -->
+    
+    <!-- <table schema="zfgbb" tableName="poll" domainObjectName="PollDbo">
 		<generatedKey column="poll_id" sqlStatement="JDBC" identity="true" />
 		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime" isGeneratedAlways="true"/>
 		<columnOverride column="updated_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime" isGeneratedAlways="true"/>
-    </table>
+    </table> -->
     
-    <table schema="zfgbb" tableName="poll_question" domainObjectName="PollQuestionDbo">
+    <!-- <table schema="zfgbb" tableName="poll_question" domainObjectName="PollQuestionDbo">
 		<generatedKey column="poll_question_id" sqlStatement="JDBC" identity="true" />
 		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime" isGeneratedAlways="true"/>
 		<columnOverride column="updated_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime" isGeneratedAlways="true"/>
-    </table>
+    </table> -->
     
     <!-- <table schema="zfgbb" tableName="message_history" domainObjectName="MessageHistoryDbo">
 		<generatedKey column="message_history_id" sqlStatement="JDBC" identity="true" />
@@ -43,11 +47,11 @@
 		<columnOverride column="updated_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime" isGeneratedAlways="true"/>
     </table> -->
     
-    <!-- <table schema="zfgbb" tableName="user" domainObjectName="UserDbo">
+    <table schema="zfgbb" tableName="user" domainObjectName="UserDbo">
 		<generatedKey column="user_id" sqlStatement="JDBC" identity="true" />
 		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime" isGeneratedAlways="true"/>
 		<columnOverride column="updated_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime" isGeneratedAlways="true"/>
-    </table> -->
+    </table>
     
     <!-- <table schema="zfgbb" tableName="current_message_view" domainObjectName="CurrentMessageDbo">
 
