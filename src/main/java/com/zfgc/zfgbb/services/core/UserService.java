@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
-import com.zfgc.zfgbb.config.annotations.BbService;
 import com.zfgc.zfgbb.dataprovider.users.UserDataProvider;
 import com.zfgc.zfgbb.model.User;
 
