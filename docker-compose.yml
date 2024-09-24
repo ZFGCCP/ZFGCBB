@@ -1,14 +1,25 @@
 services:
   postgresql:
-    image: postgres:14
-    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: database
+    container_name: zfgcbb_postgresql
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=123456
+      - POSTGRES_DB=zfgcbb
     ports:
       - "5432:5432"
     volumes:
       - data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready" ,"-d", "zfgcbb"]
+      interval: 30s
+      timeout: 60s
+      retries: 5
+      start_period: 80s  
+
   zfgcbb:
     build:
       context: .
@@ -19,12 +30,10 @@ services:
     volumes:
       - logs:/usr/src/app/logs
     environment:
-      - JAVA_OPTS=-Xms128m -Xmx512m
-      - SPRING_PROFILES_ACTIVE=prod
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgresql:5432/zfgcbb?useSSL=false&useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://zfgcbb_postgresql:5432/zfgcbb
       - SPRING_DATASOURCE_USERNAME=postgres   
       - SPRING_DATASOURCE_PASSWORD=123456
-      - SPRING_DATASOURCE_DRIVER_CLASS_NAME=org.postgresql.Driver
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=create-drop
     depends_on:
       - postgresql
 
