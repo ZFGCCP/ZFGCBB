@@ -1,4 +1,4 @@
-package com.zfgc.zfgbb.exception;
+package com.zfgc.zfgbb.exception.handlers;
 
 import java.util.ConcurrentModificationException;
 
@@ -7,9 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-@ControllerAdvice
 public class RuntimeExceptionHandler {
-
+	
 	/*@ExceptionHandler(value=RuntimeException.class)
 	public ResponseEntity defaultErrorHandler(HttpServletRequest req, Exception e) {
 		//LOGGER.error("An unexpected error occured.", e);

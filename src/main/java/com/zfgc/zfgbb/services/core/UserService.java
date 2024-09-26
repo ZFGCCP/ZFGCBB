@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import com.zfgc.zfgbb.dataprovider.users.UserDataProvider;
+import com.zfgc.zfgbb.exception.ZfgcUnauthorizedException;
 import com.zfgc.zfgbb.model.User;
 
 @Service
@@ -53,5 +54,19 @@ public class UserService {
 	public User loadUser(Integer userId) {
 		User user = userDataProvider.getUser(userId);
 		return user;
+	}
+	
+	public User saveUserProfile(User user, User zfgcUser) {
+		
+		//check admin permissions. A non-profile admin can only edit their own profile, and they cannot edit permissions.
+		if(!zfgcUser.hasPermission("ZFGC_USER_PROFILE_ADMIN")) {
+			user.setPermissions(null);
+			
+			if(!zfgcUser.getUserId().equals(user.getUserId())) {
+				throw new ZfgcUnauthorizedException("User attempted to save another user's profile.", zfgcUser);
+			}
+		}
+		
+		return userDataProvider.saveUserProfile(user);
 	}
 }
