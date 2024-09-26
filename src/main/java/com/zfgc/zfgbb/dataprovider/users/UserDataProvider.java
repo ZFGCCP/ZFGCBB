@@ -102,7 +102,7 @@ public class UserDataProvider extends AbstractDataProvider {
 			bioInfoDao.save(bioInfoDbo);
 		}
 		
-		return getUser(userDbo.getUserId(), null);
+		return getUser(userDbo.getUserId());
 	}
 	
 }
