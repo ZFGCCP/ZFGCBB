@@ -87,4 +87,16 @@ public class UserDataProvider extends AbstractDataProvider {
 		return user;
 	}
 	
+	public User saveUserProfile(User user) {
+		UserDbo userDbo = mapper.map(user, UserDbo.class);
+		userDbo = userDao.save(userDbo);
+		
+		if(user.getBioInfo() != null) {
+			UserBioInfoDbo bioInfoDbo = mapper.map(user.getBioInfo(), UserBioInfoDbo.class);
+			bioInfoDao.save(bioInfoDbo);
+		}
+		
+		return getUser(userDbo.getUserId());
+	}
+	
 }
