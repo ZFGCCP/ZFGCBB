@@ -18,4 +18,5 @@ select zfgbb.create_permission(1, 'ZFGC User', 'ZFGC_USER');
 select zfgbb.create_permission(2, 'ZFGC Guest', 'ZFGC_GUEST');
 select zfgbb.create_permission(3, 'User Profile Viewer', 'ZFGC_PROFILE_VIEWER');
 select zfgbb.create_permission(4, 'User Profile Editor', 'ZFGC_PROFILE_EDITOR');
+select zfgbb.create_permission(5, 'User Profile Admin', 'ZFGC_PROFILE_ADMIN');
 
