@@ -174,4 +174,13 @@ public class User extends BaseModel implements UserDetails {
 		this.bioInfo = bioInfo;
 	}
 	
+	@JsonIgnore
+	public boolean hasPermission(String permission) {
+		if(permissions != null) {
+			return permissions.stream().anyMatch(pr -> pr.getPermissionCode().equals(permission));
+		}
+		
+		return false;
+	}
+	
 }
