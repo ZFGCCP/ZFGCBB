@@ -23,11 +23,11 @@
 		<columnOverride column="updated_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime" isGeneratedAlways="true"/>
     </table> -->
     
-    <!-- <table schema="zfgbb" tableName="poll" domainObjectName="PollDbo">
+    <table schema="zfgbb" tableName="poll" domainObjectName="PollDbo">
 		<generatedKey column="poll_id" sqlStatement="JDBC" identity="true" />
 		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime" isGeneratedAlways="true"/>
 		<columnOverride column="updated_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime" isGeneratedAlways="true"/>
-    </table> -->
+    </table>
     
     <!-- <table schema="zfgbb" tableName="poll_question" domainObjectName="PollQuestionDbo">
 		<generatedKey column="poll_question_id" sqlStatement="JDBC" identity="true" />
@@ -47,11 +47,11 @@
 		<columnOverride column="updated_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime" isGeneratedAlways="true"/>
     </table> -->
     
-    <table schema="zfgbb" tableName="user" domainObjectName="UserDbo">
+    <!-- <table schema="zfgbb" tableName="user" domainObjectName="UserDbo">
 		<generatedKey column="user_id" sqlStatement="JDBC" identity="true" />
 		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime" isGeneratedAlways="true"/>
 		<columnOverride column="updated_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime" isGeneratedAlways="true"/>
-    </table>
+    </table> -->
     
     <!-- <table schema="zfgbb" tableName="current_message_view" domainObjectName="CurrentMessageDbo">
 
@@ -111,17 +111,17 @@
 		<columnOverride column="updated_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime" isGeneratedAlways="true"/>
     </table> -->
    
-   	<!-- <table schema="zfgbb" tableName="thread" domainObjectName="ThreadDbo">
+   	<table schema="zfgbb" tableName="thread" domainObjectName="ThreadDbo">
 		<generatedKey column="thread_ID" sqlStatement="JDBC" identity="true" />
 		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime" isGeneratedAlways="true"/>
 		<columnOverride column="updated_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime" isGeneratedAlways="true"/>
-    </table> -->
+    </table>
    
-     <!-- <table schema="zfgbb" tableName="BOARD" domainObjectName="BoardDbo">
+     <table schema="zfgbb" tableName="BOARD" domainObjectName="BoardDbo">
 		<generatedKey column="BOARD_ID" sqlStatement="JDBC" identity="true" />
 		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime" isGeneratedAlways="true"/>
 		<columnOverride column="updated_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime" isGeneratedAlways="true"/>
-    </table> -->
+    </table>
     
     <!-- <table schema="zfgbb" tableName="category" domainObjectName="CategoryDbo">
 		<generatedKey column="category_id" sqlStatement="JDBC" identity="true" />
