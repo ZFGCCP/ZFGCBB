@@ -1,24 +1,27 @@
 services:
   postgresql:
+    container_name: zfgbb_postgresql
+    hostname: zfgbb_postgresql
     build:
       context: .
       dockerfile: Dockerfile
       target: database
-    container_name: zfgbb_postgresql
     env_file:
-      - .env
+      - .env.docker
     ports:
       - "${POSTGRES_PORT:-5432}:${POSTGRES_PORT:-5432}"
     volumes:
       - data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "sh -c 'pg_isready -U ${POSTGRES_USER} -d ${ZFGBB_DATABASE}'"]
+      test: ["CMD-SHELL", "sh -c 'pg_isready -U ${POSTGRES_USER:-postgres} -d ${ZFGBB_DATABASE:-zfgc_dev}'"]
       interval: 30s
       timeout: 60s
       retries: 5
       start_period: 80s  
 
   zfgbb:
+    container_name: zfgbb
+    hostname: zfgbb
     build:
       context: .
       dockerfile: Dockerfile
@@ -28,7 +31,7 @@ services:
     volumes:
       - logs:/usr/src/app/logs
     env_file:
-      - .env
+      - .env.docker
     depends_on:
       - postgresql
 

@@ -2,6 +2,8 @@
 
 Bringin back the Drama Llama from the dead!
 
+[![CI](https://github.com/ZFGCCP/ZFGCBB/actions/workflows/ci.yml/badge.svg)](https://github.com/ZFGCCP/ZFGCBB/actions/workflows/ci.yml)
+
 ## Table of Contents
 
 - [ZFGBB Backend](#zfgbb-backend)
@@ -10,6 +12,11 @@ Bringin back the Drama Llama from the dead!
     - [Prerequisites](#prerequisites)
       - [Docker](#docker)
       - [Standing up just the database](#standing-up-just-the-database)
+    - [Developing](#developing)
+    - [Building](#building)
+    - [Running Tests](#running-tests)
+    - [Running MyBatis Generator](#running-mybatis-generator)
+  - [License](#license)
 
 ## Getting Started
 
@@ -36,3 +43,46 @@ docker compose up -d
 ```bash
 docker compuse up -d postgresql
 ```
+
+### Developing
+
+To run the application in development mode, run the following command:
+
+```bash
+mvn clean run package -Dmaven.test.skip=true
+```
+
+This will start the application in development mode, and you can access it at `http://localhost:8080`.
+
+### Building
+
+To build the application, run the following command:
+
+```bash
+mvn clean compile package -Dmaven.test.skip=true
+```
+
+This will create a `.war` file in the `target` directory.
+
+### Running Tests
+
+To run the tests, run the following command:
+
+```bash
+mvn test
+```
+
+This will run all the tests in the [src/test](src/test) directory.
+
+### Running MyBatis Generator
+
+To run the MyBatis generator, run the following command:
+
+```bash
+```
+
+This will generate the MyBatis mappers and Java models based on the database schema.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
