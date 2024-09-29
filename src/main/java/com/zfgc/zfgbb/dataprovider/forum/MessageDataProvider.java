@@ -81,6 +81,9 @@ public class MessageDataProvider extends AbstractDataProvider {
 							 MessageHistory hist = mapper.map(message, MessageHistory.class);
 							 hist.setUnparsedText(hist.getMessageText());
 							 msg.setCurrentMessage(hist);
+							 
+							 msg.setCreatedUser(userDataProvider.getUser(msg.getOwnerId(), null));
+							 
 							 return msg;
 						 }).collect(Collectors.toList());
 						 

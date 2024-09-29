@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
+import com.zfgc.zfgbb.config.loadoption.user.FullUserLoadOptions;
 import com.zfgc.zfgbb.dataprovider.users.UserDataProvider;
 import com.zfgc.zfgbb.exception.ZfgcUnauthorizedException;
 import com.zfgc.zfgbb.model.User;
@@ -52,7 +53,7 @@ public class UserService {
 	}
 	
 	public User loadUser(Integer userId) {
-		User user = userDataProvider.getUser(userId);
+		User user = userDataProvider.getUser(userId, new FullUserLoadOptions());
 		return user;
 	}
 	
