@@ -9,6 +9,7 @@ Bringin back the Drama Llama from the dead!
   - [Getting Started](#getting-started)
     - [Prerequisites](#prerequisites)
       - [Docker](#docker)
+      - [Standing up just the database](#standing-up-just-the-database)
 
 ## Getting Started
 
@@ -28,4 +29,10 @@ Copy the `.env.example` file to `.env` and fill in the values, then run docker c
 ```bash
 cp .env.example .env
 docker compose up -d
+```
+
+#### Standing up just the database
+
+```bash
+docker compuse up -d postgresql
 ```
