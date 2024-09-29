@@ -19,8 +19,10 @@ public class Thread extends BaseModel implements Securable {
     private Integer createdUserId;
     
     private User createdUser;
+    private Integer postCount;
+    private Integer viewCount;
     
-    @JsonIgnore
+	@JsonIgnore
     private List<Permission> boardPermissions = new ArrayList<>();
     private List<Message> messages = new ArrayList<>();
     
@@ -99,5 +101,18 @@ public class Thread extends BaseModel implements Securable {
 	}
 	public void setPollInfo(Poll pollInfo) {
 		this.pollInfo = pollInfo;
+	}
+	
+    public Integer getPostCount() {
+		return postCount;
+	}
+	public void setPostCount(Integer postCount) {
+		this.postCount = postCount;
+	}
+	public Integer getViewCount() {
+		return viewCount;
+	}
+	public void setViewCount(Integer viewCount) {
+		this.viewCount = viewCount;
 	}
 }

@@ -10,11 +10,14 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.zfgc.zfgbb.model.meta.IpAddress;
+import com.zfgc.zfgbb.model.users.Avatar;
 import com.zfgc.zfgbb.model.users.EmailAddress;
 import com.zfgc.zfgbb.model.users.Permission;
 import com.zfgc.zfgbb.model.users.UserBioInfo;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class User extends BaseModel implements UserDetails {
 	@JsonIgnore
 	private Integer userId;
@@ -31,6 +34,8 @@ public class User extends BaseModel implements UserDetails {
 	private IpAddress currentIpAddress;
 	private List<IpAddress> allKnownIpAddresses = new ArrayList<>();
 	private UserBioInfo bioInfo;
+	
+	private Avatar avatar;
 	
 	
 	public List<Permission> getPermissions() {
@@ -178,6 +183,14 @@ public class User extends BaseModel implements UserDetails {
 		}
 		
 		return false;
+	}
+
+	public Avatar getAvatar() {
+		return avatar;
+	}
+
+	public void setAvatar(Avatar avatar) {
+		this.avatar = avatar;
 	}
 	
 }

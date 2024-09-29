@@ -11,12 +11,15 @@ import com.google.common.collect.Streams;
 import com.zfgc.zfgbb.dao.forum.CurrentMessageDao;
 import com.zfgc.zfgbb.dao.forum.MessageDao;
 import com.zfgc.zfgbb.dao.forum.MessageHistoryDao;
+import com.zfgc.zfgbb.dao.users.UserDao;
 import com.zfgc.zfgbb.dataprovider.AbstractDataProvider;
+import com.zfgc.zfgbb.dataprovider.users.UserDataProvider;
 import com.zfgc.zfgbb.dbo.CurrentMessageDboExample;
 import com.zfgc.zfgbb.dbo.MessageDbo;
 import com.zfgc.zfgbb.dbo.MessageDboExample;
 import com.zfgc.zfgbb.dbo.MessageHistoryDbo;
 import com.zfgc.zfgbb.dbo.MessageHistoryDboExample;
+import com.zfgc.zfgbb.model.User;
 import com.zfgc.zfgbb.model.forum.Message;
 import com.zfgc.zfgbb.model.forum.MessageHistory;
 
@@ -30,6 +33,9 @@ public class MessageDataProvider extends AbstractDataProvider {
 
 	@Autowired
 	private CurrentMessageDao currentMessageDao;
+	
+	@Autowired
+	private UserDataProvider userDataProvider;
 	
 	public Message getMessage(Integer messageId) {
 		Message message = mapper.map(messageDao.get(messageId), Message.class);
@@ -73,6 +79,9 @@ public class MessageDataProvider extends AbstractDataProvider {
 							 MessageHistory hist = mapper.map(message, MessageHistory.class);
 							 hist.setUnparsedText(hist.getMessageText());
 							 msg.setCurrentMessage(hist);
+							 
+							 msg.setCreatedUser(userDataProvider.getUser(msg.getOwnerId(), null));
+							 
 							 return msg;
 						 }).collect(Collectors.toList());
 						 

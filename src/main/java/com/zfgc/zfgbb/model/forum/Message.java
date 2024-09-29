@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.zfgc.zfgbb.model.BaseModel;
+import com.zfgc.zfgbb.model.User;
 
 public class Message extends BaseModel {
 	@JsonIgnore
@@ -14,6 +15,8 @@ public class Message extends BaseModel {
 	private Integer ownerId;
 	private Integer threadId;
 	private Integer postInThread;
+	
+	private User createdUser;
 	
 	private MessageHistory currentMessage = new MessageHistory();
 	
@@ -70,6 +73,14 @@ public class Message extends BaseModel {
 
 	public void setPostInThread(Integer postInThread) {
 		this.postInThread = postInThread;
+	}
+
+	public User getCreatedUser() {
+		return createdUser;
+	}
+
+	public void setCreatedUser(User createdUser) {
+		this.createdUser = createdUser;
 	}
 	
 }
