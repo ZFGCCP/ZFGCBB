@@ -150,15 +150,6 @@ public class ThreadDataProvider extends AbstractDataProvider {
 			AllMessagesInThreadViewDbo latestDetails = mappedMessageDetails.get(th.getThreadId()).get(0);
 			th.setCreatedUser(super.mapper.map(userDao.get(th.getCreatedUserId()), User.class));
 			th.setPostCount(messageDataProvider.getTotalPostsInThread(th.getThreadId()).intValue());
-			
-			LatestMessageInThreadViewDbo latestDbo = messagesByThreadId.get(th.getThreadId());
-			if(latestDbo != null) {
-				th.setLatestMessage(mapper.map(latestDbo, LatestMessage.class));
-				th.getLatestMessage().setOwnerName(latestDetails.getLastPostedUser());
-			}
-			
-			//as we get done, clear out the details to free up memory
-			mappedMessageDetails.remove(th.getThreadId());
 		});
 		
 		return result;

@@ -16,6 +16,8 @@ import com.zfgc.zfgbb.config.loadoption.user.FullUserLoadOptions;
 import com.zfgc.zfgbb.config.loadoption.user.LoggedInUserLoadOptions;
 import com.zfgc.zfgbb.dao.UserPermissionViewDao;
 import com.zfgc.zfgbb.dataprovider.AbstractDataProvider;
+import com.zfgc.zfgbb.dbo.AvatarDbo;
+import com.zfgc.zfgbb.dbo.AvatarDboExample;
 import com.zfgc.zfgbb.dbo.EmailAddressDbo;
 import com.zfgc.zfgbb.dbo.UserBioInfoDbo;
 import com.zfgc.zfgbb.dbo.UserDbo;
@@ -41,15 +43,22 @@ public class UserDataProvider extends AbstractDataProvider {
 	@Autowired
 	private UserBioInfoDao bioInfoDao;
 	
+	@Autowired
+	private AvatarDao avatarDao;
+	
 	public User getUser(String userName) {
 		UserDboExample ex = new UserDboExample();
 		ex.createCriteria().andUserNameEqualTo(userName).andActiveFlagEqualTo(true);
 		UserDbo userDb = userDao.get(ex).stream().findFirst().orElse(createGuest());
 
-		return getUser(userDb.getPkId());
+		return getUser(userDb.getPkId(), new LoggedInUserLoadOptions());
 	}
 	
-	public User getUser(Integer userId) {
+	public User getUser(Integer userId, BasicUserLoadOptions loadOptions) {
+		if(loadOptions == null) {
+			loadOptions = new BasicUserLoadOptions();
+		}
+		
 		UserDboExample ex = new UserDboExample();
 		ex.createCriteria().andUserIdEqualTo(userId).andActiveFlagEqualTo(true);
 		UserDbo userDb = userDao.get(ex).stream().findFirst().orElse(createGuest());
@@ -57,14 +66,28 @@ public class UserDataProvider extends AbstractDataProvider {
 		User user = mapper.map(userDb, User.class);
 
 		//todo: setup guest permissions
-		UserPermissionViewDboExample upEx = new UserPermissionViewDboExample();
-		upEx.createCriteria().andUserIdEqualTo(user.getUserId());
-		List<Permission> permissions = convertDboListToModel(userPermissionDao.get(upEx), Permission.class);
-
-		user.setPermissions(permissions);
+		if(Boolean.TRUE.equals(loadOptions.loadPermissions())){
+			UserPermissionViewDboExample upEx = new UserPermissionViewDboExample();
+			upEx.createCriteria().andUserIdEqualTo(user.getUserId());
+			List<Permission> permissions = convertDboListToModel(userPermissionDao.get(upEx), Permission.class);
+	
+			user.setPermissions(permissions);
+		}
 		
-		UserBioInfoDbo bioInfoDbo = bioInfoDao.get(userId);
-		user.setBioInfo(mapper.map(bioInfoDbo, UserBioInfo.class));
+		if(Boolean.TRUE.equals(loadOptions.loadBio())) {
+			UserBioInfoDbo bioInfoDbo = bioInfoDao.get(userId);
+			user.setBioInfo(mapper.map(bioInfoDbo, UserBioInfo.class));
+		}
+		
+		if(Boolean.TRUE.equals(loadOptions.loadAvatar())) {
+			AvatarDboExample avatarEx = new AvatarDboExample();
+			avatarEx.createCriteria().andUserIdEqualTo(userId)
+									 .andActiveFlagEqualTo(true);
+			
+			Optional<AvatarDbo> avDb = avatarDao.get(avatarEx).stream().findFirst();
+			Avatar av = avDb.map((a) -> mapper.map(a, Avatar.class)).orElse(null);
+			user.setAvatar(av);
+		}
 		
 		return user;
 	}
@@ -82,7 +105,7 @@ public class UserDataProvider extends AbstractDataProvider {
 		emailDbo.setUserId(userDbo.getPkId());
 		emailDao.save(emailDbo);
 		
-		return getUser(userDbo.getPkId());
+		return getUser(userDbo.getPkId(), new FullUserLoadOptions());
 	}
 	
 	public UserDbo createGuest() {
@@ -102,7 +125,7 @@ public class UserDataProvider extends AbstractDataProvider {
 			bioInfoDao.save(bioInfoDbo);
 		}
 		
-		return getUser(userDbo.getUserId());
+		return getUser(userDbo.getUserId(), null);
 	}
 	
 }
