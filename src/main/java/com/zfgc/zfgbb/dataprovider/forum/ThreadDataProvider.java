@@ -104,6 +104,7 @@ public class ThreadDataProvider extends AbstractDataProvider {
 		
 		result.forEach(th -> {
 			th.setCreatedUser(super.mapper.map(userDao.get(th.getCreatedUserId()), User.class));
+			th.setPostCount(messageDataProvider.getTotalPostsInThread(th.getThreadId()).intValue());
 		});
 		
 		return result;
