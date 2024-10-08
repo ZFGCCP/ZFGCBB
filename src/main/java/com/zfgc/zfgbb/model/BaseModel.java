@@ -1,6 +1,7 @@
 package com.zfgc.zfgbb.model;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -27,6 +28,13 @@ public abstract class BaseModel {
 	
 	public void setCreatedTs(LocalDateTime createdTs) {
 		this.createdTs = createdTs;
+	}
+	
+	public String getCreatedTsAsString() {
+		if(createdTs != null) {
+			return createdTs.format(DateTimeFormatter.ofPattern("MM/dd/YYYY HH:mm:SS"));
+		}
+		return "";
 	}
 	
 }

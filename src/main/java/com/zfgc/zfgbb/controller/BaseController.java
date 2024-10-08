@@ -33,6 +33,7 @@ public class BaseController {
 		guest.setUserId(-1);
 		guestPerm.setId(2);
 		guestPerm.setPermissionCode("ZFGC_GUEST");
+		
 		guest.getPermissions().add(guestPerm);
 		
 		return guest;
