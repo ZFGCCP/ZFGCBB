@@ -27,8 +27,6 @@ public class User extends BaseModel implements UserDetails {
 	private EmailAddress email;
 	private String ssoKey;
 	private String password;
-	
-	@JsonIgnore
 	private List<Permission> permissions = new ArrayList<>();
 	
 	private IpAddress currentIpAddress;

@@ -51,6 +51,9 @@ select zfgbb.create_permission(2, 'ZFGC Guest', 'ZFGC_GUEST');
 select zfgbb.create_permission(3, 'User Profile Viewer', 'ZFGC_PROFILE_VIEWER');
 select zfgbb.create_permission(4, 'User Profile Editor', 'ZFGC_PROFILE_EDITOR');
 select zfgbb.create_permission(5, 'User Profile Admin', 'ZFGC_PROFILE_ADMIN');
+select zfgbb.create_permission(6, 'Message Viewer', 'ZFGC_MESSAGE_VIEWER');
+select zfgbb.create_permission(7, 'Message Editor', 'ZFGC_MESSAGE_EDITOR');
+select zfgbb.create_permission(8, 'Message Admin', 'ZFGC_MESSAGE_ADMIN');
 
 select zfgbb.create_permission_group(1, 'Member', '', -1, null);
 select zfgbb.create_permission_group(2, 'Admin', '', -1, 1);
