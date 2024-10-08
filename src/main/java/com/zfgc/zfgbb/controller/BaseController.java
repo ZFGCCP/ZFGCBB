@@ -34,10 +34,6 @@ public class BaseController {
 		guestPerm.setId(2);
 		guestPerm.setPermissionCode("ZFGC_GUEST");
 		
-		Permission readPerm = new Permission();
-		readPerm.setId(9);
-		readPerm.setPermissionCode("ZFGC_READ_ONLY");
-		
 		guest.getPermissions().add(guestPerm);
 		guest.getPermissions().add(readPerm);
 		
