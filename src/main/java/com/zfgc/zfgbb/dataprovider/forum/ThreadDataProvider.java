@@ -19,6 +19,8 @@ import com.zfgc.zfgbb.dao.users.UserDao;
 import com.zfgc.zfgbb.dataprovider.AbstractDataProvider;
 import com.zfgc.zfgbb.dbo.BoardPermissionViewDboExample;
 import com.zfgc.zfgbb.dbo.CurrentMessageDboExample;
+import com.zfgc.zfgbb.dbo.LatestMessageInThreadViewDbo;
+import com.zfgc.zfgbb.dbo.LatestMessageInThreadViewDboExample;
 import com.zfgc.zfgbb.dbo.MessageDbo;
 import com.zfgc.zfgbb.dbo.MessageDboExample;
 import com.zfgc.zfgbb.dbo.MessageHistoryDbo;
@@ -30,7 +32,9 @@ import com.zfgc.zfgbb.dbo.PollQuestionDboExample;
 import com.zfgc.zfgbb.dbo.ThreadDbo;
 import com.zfgc.zfgbb.dbo.ThreadDboExample;
 import com.zfgc.zfgbb.dbo.UserDboExample;
+import com.zfgc.zfgbb.mappers.LatestMessageInThreadViewDboMapper;
 import com.zfgc.zfgbb.model.User;
+import com.zfgc.zfgbb.model.forum.LatestMessage;
 import com.zfgc.zfgbb.model.forum.Message;
 import com.zfgc.zfgbb.model.forum.MessageHistory;
 import com.zfgc.zfgbb.model.forum.Poll;
@@ -59,6 +63,9 @@ public class ThreadDataProvider extends AbstractDataProvider {
 	
 	@Autowired
 	private UserDao userDao;
+	
+	@Autowired
+	private LatestMessageInThreadViewDboMapper latestMessageMapper;
 	
 	public Thread getThread(Integer threadId, Integer page, Integer count) {
 		ThreadDbo threadDb = threadDao.get(threadId);
@@ -105,6 +112,13 @@ public class ThreadDataProvider extends AbstractDataProvider {
 		result.forEach(th -> {
 			th.setCreatedUser(super.mapper.map(userDao.get(th.getCreatedUserId()), User.class));
 			th.setPostCount(messageDataProvider.getTotalPostsInThread(th.getThreadId()).intValue());
+			
+			LatestMessageInThreadViewDboExample ex = new LatestMessageInThreadViewDboExample(); 
+			ex.createCriteria().andThreadIdEqualTo(th.getThreadId());
+			LatestMessageInThreadViewDbo latestDbo = latestMessageMapper.selectByExample(ex).stream().findFirst().orElse(null);
+			if(latestDbo != null) {
+				th.setLatestMessage(mapper.map(latestDbo, LatestMessage.class));
+			}
 		});
 		
 		return result;

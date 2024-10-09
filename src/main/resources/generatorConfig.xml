@@ -18,11 +18,15 @@
     
 
     <!-- tables -->
-    <table schema="zfgbb" tableName="content_resource" domainObjectName="ContentResourceDbo">
+    <table schema="zfgbb" tableName="latest_message_in_thread_view" domainObjectName="LatestMessageInThreadViewDbo">
+		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime"/>
+    </table>
+    
+    <!-- <table schema="zfgbb" tableName="content_resource" domainObjectName="ContentResourceDbo">
 		<generatedKey column="content_resource_id" sqlStatement="JDBC" identity="true" />
 		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime" isGeneratedAlways="true"/>
 		<columnOverride column="updated_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime" isGeneratedAlways="true"/>
-    </table>
+    </table> -->
     
     
     <!-- <table schema="zfgbb" tableName="avatar" domainObjectName="AvatarDbo">
