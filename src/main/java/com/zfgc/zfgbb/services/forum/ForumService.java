@@ -39,7 +39,7 @@ public class ForumService extends AbstractService {
 	public Forum getForum(Integer boardId, User zfgcUser) {
 		Forum forum = forumDataProvider.getForum(boardId);
 		
-		super.secureObject(forum, zfgcUser);
+		//super.secureObject(forum, zfgcUser);
 		
 		return forum;
 	}
