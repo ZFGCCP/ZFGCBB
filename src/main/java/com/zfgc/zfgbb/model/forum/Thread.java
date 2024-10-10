@@ -26,6 +26,8 @@ public class Thread extends BaseModel implements Securable {
     private List<Permission> boardPermissions = new ArrayList<>();
     private List<Message> messages = new ArrayList<>();
     
+    private LatestMessage latestMessage;
+    
     private Poll pollInfo;
     
 	public Integer getThreadId() {
@@ -114,5 +116,11 @@ public class Thread extends BaseModel implements Securable {
 	}
 	public void setViewCount(Integer viewCount) {
 		this.viewCount = viewCount;
+	}
+	public LatestMessage getLatestMessage() {
+		return latestMessage;
+	}
+	public void setLatestMessage(LatestMessage latestMessage) {
+		this.latestMessage = latestMessage;
 	}
 }
