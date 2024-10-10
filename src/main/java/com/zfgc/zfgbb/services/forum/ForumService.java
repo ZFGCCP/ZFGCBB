@@ -46,28 +46,7 @@ public class ForumService extends AbstractService {
 	public Forum getForum(Integer boardId, User zfgcUser) {
 		Forum forum = forumDataProvider.getForum(boardId);
 		
-		forum.getCategories().stream().filter(c -> c.getBoards() != null).forEach(c -> {
-			List<BoardSummary> remove = new ArrayList<>();
-			c.getBoards().forEach(b -> {
-				AtomicBoolean found = new AtomicBoolean(false);
-				if(b.getBoardPerms() != null) {
-					b.getBoardPerms().forEach(bp -> {
-						if(userPerms.contains(bp.getPermissionId())) {
-							found.set(true);
-						}
-					});
-				}
-				
-				if(found.get() == false) {
-					remove.add(b);
-				}
-			});
-			c.getBoards().removeAll(remove);
-		});
 		//super.secureObject(forum, zfgcUser);
-		
-		forum.setCategories(forum.getCategories().stream()
-												 .filter(c -> c.getBoards() != null && !c.getBoards().isEmpty()).toList());
 		
 		return forum;
 	}
