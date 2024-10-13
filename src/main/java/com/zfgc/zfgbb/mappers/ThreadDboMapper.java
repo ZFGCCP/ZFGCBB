@@ -72,5 +72,5 @@ public interface ThreadDboMapper {
 	 */
 	int updateByPrimaryKey(ThreadDbo record);
 
-	List<ThreadDbo> selectByExampleWithRange(@Param("example")ThreadDboExample example, @Param("start")Integer start, @Param("num") Integer num);
+	List<ThreadDbo> selectByExampleWithRange(ThreadDboExample example);
 }
