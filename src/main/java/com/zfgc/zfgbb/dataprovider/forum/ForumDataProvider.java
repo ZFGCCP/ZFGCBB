@@ -54,7 +54,7 @@ public class ForumDataProvider extends AbstractDataProvider {
 	@Autowired
 	private BoardPermissionViewDao boardPermissionDao;
 	
-	public Forum getForum(Integer boardId) {
+	public Forum getForum(Integer boardId, Integer pageNo, Integer threadsPerPage) {
 		Forum forum = new Forum();
 		
 		BoardDbo boardDbo = boardDao.get(boardId);
@@ -64,8 +64,8 @@ public class ForumDataProvider extends AbstractDataProvider {
 		exC.createCriteria().andParentBoardIdEqualTo(boardId);
 		List<Category> categories = categoryDataProvider.getCategories(exC);
 
-		List<Thread> unstickyThreads = threadDataProvider.getThreadsByBoardId(boardId, false);
-		List<Thread> stickyThreads = threadDataProvider.getThreadsByBoardId(boardId, true);
+		List<Thread> unstickyThreads = threadDataProvider.getThreadsByBoardId(boardId, pageNo, threadsPerPage, false);
+		List<Thread> stickyThreads = threadDataProvider.getThreadsByBoardId(boardId, null, null, true);
 	
 		forum.setThreads(unstickyThreads);
 		forum.setStickyThreads(stickyThreads);
