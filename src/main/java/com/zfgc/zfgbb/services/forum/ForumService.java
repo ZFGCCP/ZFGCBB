@@ -44,8 +44,8 @@ public class ForumService extends AbstractService {
 	@Autowired
 	private IpService ipService;
 	
-	public Forum getForum(Integer boardId, User zfgcUser) {
-		Forum forum = forumDataProvider.getForum(boardId);
+	public Forum getForum(Integer boardId, Integer pageNo, User zfgcUser) {
+		Forum forum = forumDataProvider.getForum(boardId, pageNo, 10);
 		
 		//super.secureObject(forum, zfgcUser);
 		

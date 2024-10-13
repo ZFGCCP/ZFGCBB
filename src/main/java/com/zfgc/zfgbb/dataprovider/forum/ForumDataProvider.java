@@ -52,8 +52,18 @@ public class ForumDataProvider extends AbstractDataProvider {
 	@Autowired
 	private BoardPermissionViewDao boardPermissionDao;
 	
-	@Autowired
-	private BoardSummaryViewDboMapper boardSummaryMapper;
+	public Forum getForum(Integer boardId, Integer pageNo, Integer threadsPerPage) {
+		Forum forum = new Forum();
+		
+		BoardDbo boardDbo = boardDao.get(boardId);
+		forum.setBoardName(boardDbo.getBoardName());
+		
+		CategoryDboExample exC = new CategoryDboExample();
+		exC.createCriteria().andParentBoardIdEqualTo(boardId);
+		List<Category> categories = categoryDataProvider.getCategories(exC);
+
+		List<Thread> unstickyThreads = threadDataProvider.getThreadsByBoardId(boardId, pageNo, threadsPerPage, false);
+		List<Thread> stickyThreads = threadDataProvider.getThreadsByBoardId(boardId, null, null, true);
 	
 	@Autowired
 	private ChildBoardViewDboMapper childBoardMapper;
