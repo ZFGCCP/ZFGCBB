@@ -22,11 +22,6 @@ public class BoardController extends BaseController {
 	
 	@GetMapping("/{boardId}")
 	public ResponseEntity getBoard(@PathVariable("boardId") Integer boardId, @RequestParam(name="pageNo",required=false) Integer pageNo) {
-		return ResponseEntity.ok(forumService.getBoard(boardId, pageNo, super.zfgcUser()));
-	}
-	
-	@GetMapping("/forum")
-	public ResponseEntity getForum() {
-		return ResponseEntity.ok(forumService.getForum(super.zfgcUser()));
+		return ResponseEntity.ok(forumService.getForum(boardId, pageNo, super.zfgcUser()));
 	}
 }
