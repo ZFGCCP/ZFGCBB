@@ -1,5 +1,7 @@
 package com.zfgc.zfgbb.model.forum;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.zfgc.zfgbb.model.BaseModel;
 
@@ -10,8 +12,29 @@ public class Board extends BaseModel {
 	private String boardName;
 	private String description;
 	private Integer categoryId;
-	private Integer forumId;
+	private Integer parentBoardId;
+	private Long threadCount;
 	
+	private List<Thread> stickyThreads;
+	private List<Thread> unStickyThreads;
+	private List<BoardSummary> childBoards;
+	
+	public List<Thread> getStickyThreads() {
+		return stickyThreads;
+	}
+
+	public void setStickyThreads(List<Thread> stickyThreads) {
+		this.stickyThreads = stickyThreads;
+	}
+
+	public List<Thread> getUnStickyThreads() {
+		return unStickyThreads;
+	}
+
+	public void setUnStickyThreads(List<Thread> unStickyThreads) {
+		this.unStickyThreads = unStickyThreads;
+	}
+
 	@Override
 	public Integer getId() {
 		return boardId;
@@ -46,14 +69,6 @@ public class Board extends BaseModel {
 		this.description = description;
 	}
 
-	public Integer getForumId() {
-		return forumId;
-	}
-
-	public void setForumId(Integer forumId) {
-		this.forumId = forumId;
-	}
-
 	public Integer getCategoryId() {
 		return categoryId;
 	}
@@ -61,6 +76,38 @@ public class Board extends BaseModel {
 	public void setCategoryId(Integer categoryId) {
 		this.categoryId = categoryId;
 	}
+
+	public Integer getParentBoardId() {
+		return parentBoardId;
+	}
+
+	public void setParentBoardId(Integer parentBoardId) {
+		this.parentBoardId = parentBoardId;
+	}
+
+	public Long getThreadCount() {
+		return threadCount;
+	}
+
+	public void setThreadCount(Long threadCount) {
+		this.threadCount = threadCount;
+	}
+
+	public List<BoardSummary> getChildBoards() {
+		return childBoards;
+	}
+
+	public void setChildBoards(List<BoardSummary> childBoards) {
+		this.childBoards = childBoards;
+	}
+	
+	public Long getPageCount() {
+		if(threadCount == null) {
+			return 1L;
+		}
+		return (long) Math.ceil(threadCount.doubleValue() / 10.0);
+	}
+
 
 
 }

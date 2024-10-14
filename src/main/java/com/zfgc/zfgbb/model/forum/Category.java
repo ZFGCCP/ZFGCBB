@@ -13,7 +13,7 @@ public class Category extends BaseModel {
 	private String description;
 	private Integer parentCategoryId;
 	
-	private List<Board> boards = new ArrayList<>();
+	private List<BoardSummary> boards = new ArrayList<>();
 	
 	public Integer getCategoryId() {
 		return categoryId;
@@ -48,10 +48,10 @@ public class Category extends BaseModel {
 	public void setId(Integer id) {
 		categoryId = id;
 	}
-	public List<Board> getBoards() {
+	public List<BoardSummary> getBoards() {
 		return boards;
 	}
-	public void setBoards(List<Board> boards) {
+	public void setBoards(List<BoardSummary> boards) {
 		this.boards = boards;
 	}
 }
