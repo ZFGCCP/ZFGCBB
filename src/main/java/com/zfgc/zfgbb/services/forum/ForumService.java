@@ -8,6 +8,7 @@ import com.zfgc.zfgbb.dataprovider.forum.ForumDataProvider;
 import com.zfgc.zfgbb.dataprovider.forum.MessageDataProvider;
 import com.zfgc.zfgbb.dataprovider.forum.ThreadDataProvider;
 import com.zfgc.zfgbb.model.User;
+import com.zfgc.zfgbb.model.forum.Board;
 import com.zfgc.zfgbb.model.forum.Forum;
 import com.zfgc.zfgbb.model.forum.Message;
 import com.zfgc.zfgbb.model.forum.MessageHistory;
@@ -36,12 +37,16 @@ public class ForumService extends AbstractService {
 	@Autowired
 	private IpService ipService;
 	
-	public Forum getForum(Integer boardId, Integer pageNo, User zfgcUser) {
-		Forum forum = forumDataProvider.getForum(boardId, pageNo, 10);
+	public Forum getForum(User zfgcUser) {
+		Forum forum = forumDataProvider.getForum();
 		
 		//super.secureObject(forum, zfgcUser);
 		
 		return forum;
+	}
+	
+	public Board getBoard(Integer boardId, Integer pageNo, User zfgcUser) {
+		return forumDataProvider.getBoard(boardId, pageNo, pageNo);
 	}
 	
 	public Thread getThreadTemplate(Integer boardId, User zfgcUser) {
