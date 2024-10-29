@@ -2,6 +2,7 @@ package com.zfgc.zfgbb.model.forum;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -19,6 +20,8 @@ public class BoardSummary {
     private String latestMessageUserName;
     private Integer categoryId;
     private Integer parentBoardId;
+    
+    private List<ChildBoard> childBoards;
     
     @JsonIgnore
     private LocalDateTime latestMessageCreatedTs;
@@ -107,5 +110,11 @@ public class BoardSummary {
 	}
 	public void setCategoryId(Integer categoryId) {
 		this.categoryId = categoryId;
+	}
+	public List<ChildBoard> getChildBoards() {
+		return childBoards;
+	}
+	public void setChildBoards(List<ChildBoard> childBoards) {
+		this.childBoards = childBoards;
 	}
 }
