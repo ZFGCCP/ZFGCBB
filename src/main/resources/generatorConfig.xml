@@ -18,9 +18,12 @@
     
 
     <!-- tables -->
-    <table schema="zfgbb" tableName="board_summary" domainObjectName="BoardSummaryViewDbo">
-		<columnOverride column="latest_message_created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime"/>
+    <table schema="zfgbb" tableName="child_board_view" domainObjectName="ChildBoardViewDbo">
     </table>
+    
+    <!-- <table schema="zfgbb" tableName="board_summary" domainObjectName="BoardSummaryViewDbo">
+		<columnOverride column="latest_message_created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime"/>
+    </table> -->
     
     <!-- <table schema="zfgbb" tableName="latest_message_in_thread_view" domainObjectName="LatestMessageInThreadViewDbo">
 		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime"/>

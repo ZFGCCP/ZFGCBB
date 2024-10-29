@@ -21,8 +21,10 @@ import com.zfgc.zfgbb.dbo.BoardPermissionViewDbo;
 import com.zfgc.zfgbb.dbo.BoardPermissionViewDboExample;
 import com.zfgc.zfgbb.dbo.BoardSummaryViewDboExample;
 import com.zfgc.zfgbb.dbo.CategoryDboExample;
+import com.zfgc.zfgbb.dbo.ChildBoardViewDboExample;
 import com.zfgc.zfgbb.dbo.ThreadDboExample;
 import com.zfgc.zfgbb.mappers.BoardSummaryViewDboMapper;
+import com.zfgc.zfgbb.mappers.ChildBoardViewDboMapper;
 import com.zfgc.zfgbb.model.forum.Board;
 import com.zfgc.zfgbb.model.forum.BoardSummary;
 import com.zfgc.zfgbb.model.forum.Category;
@@ -52,6 +54,9 @@ public class ForumDataProvider extends AbstractDataProvider {
 	@Autowired
 	private BoardSummaryViewDboMapper boardSummaryMapper;
 	
+	@Autowired
+	private ChildBoardViewDboMapper childBoardMapper;
+	
 	public Board getBoard(Integer boardId, Integer pageNo, Integer threadsPerPage) {
 		BoardDbo boardDbo = boardDao.get(boardId);
 		Board board = mapper.map(boardDbo, Board.class);
@@ -66,12 +71,30 @@ public class ForumDataProvider extends AbstractDataProvider {
 		threadEx.createCriteria().andBoardIdEqualTo(boardId).andPinnedFlagEqualTo(false);
 		Long threadCount = threadDao.getMapper().countByExample(threadEx);
 		board.setThreadCount(threadCount);
-	
-		BoardSummaryViewDboExample bEx = new BoardSummaryViewDboExample();
-		bEx.createCriteria().andParentBoardIdEqualTo(boardId);
-		board.setChildBoards(boardSummaryMapper.selectByExample(bEx).stream().map(b -> mapper.map(b, BoardSummary.class)).collect(Collectors.toList()));
+
+		board.setChildBoards(getBoardSummaries(board.getBoardId()));
 		
 		return board;
+	}
+	
+	private List<BoardSummary> getBoardSummaries(Integer parentBoardId){
+		BoardSummaryViewDboExample bEx = new BoardSummaryViewDboExample();
+		bEx.createCriteria().andParentBoardIdEqualTo(parentBoardId);
+		List<BoardSummary> result = (boardSummaryMapper.selectByExample(bEx).stream().map(b -> mapper.map(b, BoardSummary.class)).collect(Collectors.toList()));
+		
+		ChildBoardViewDboExample cEx = new ChildBoardViewDboExample();
+		cEx.createCriteria().andParentBoardIdEqualTo(parentBoardId);
+		
+		Map<Integer, List<ChildBoard>> childBoards = childBoardMapper.selectByExample(cEx).stream()
+																					.map(c -> mapper.map(c, ChildBoard.class))
+																					.collect(Collectors.groupingBy(ChildBoard::getParentBoardId));
+		
+		result.forEach(bs -> {
+			bs.setChildBoards(childBoards.get(bs.getBoardId()));
+		});
+		
+		
+		return result;
 	}
 	
 	public Forum getForum() {
