@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.zfgc</groupId>
 	<artifactId>zfgbb</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0-SNAPSHOT</version>
 	<packaging>war</packaging>
 	<name>zfgbb</name>
 	<description>Demo project for Spring Boot</description>
