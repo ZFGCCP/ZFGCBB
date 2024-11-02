@@ -1,8 +1,6 @@
 package com.zfgc.zfgbb.dataprovider.forum;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -13,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import com.zfgc.zfgbb.dao.BoardDao;
 import com.zfgc.zfgbb.dao.BoardPermissionViewDao;
+import com.zfgc.zfgbb.dao.CategoryDao;
 import com.zfgc.zfgbb.dao.ThreadDao;
 import com.zfgc.zfgbb.dataprovider.AbstractDataProvider;
 import com.zfgc.zfgbb.dbo.BoardDbo;
@@ -78,12 +77,16 @@ public class ForumDataProvider extends AbstractDataProvider {
 	}
 	
 	private List<BoardSummary> getBoardSummaries(Integer parentBoardId){
+		return getBoardSummaries(Arrays.asList(parentBoardId));
+	}
+	
+	private List<BoardSummary> getBoardSummaries(List<Integer> parentBoardId){
 		BoardSummaryViewDboExample bEx = new BoardSummaryViewDboExample();
-		bEx.createCriteria().andParentBoardIdEqualTo(parentBoardId);
+		bEx.createCriteria().andParentBoardIdIn(parentBoardId);
 		List<BoardSummary> result = (boardSummaryMapper.selectByExample(bEx).stream().map(b -> mapper.map(b, BoardSummary.class)).collect(Collectors.toList()));
 		
 		ChildBoardViewDboExample cEx = new ChildBoardViewDboExample();
-		cEx.createCriteria().andParentBoardIdEqualTo(parentBoardId);
+		cEx.createCriteria().andParentBoardIdIn(parentBoardId);
 		
 		Map<Integer, List<ChildBoard>> childBoards = childBoardMapper.selectByExample(cEx).stream()
 																					.map(c -> mapper.map(c, ChildBoard.class))
@@ -97,6 +100,28 @@ public class ForumDataProvider extends AbstractDataProvider {
 		return result;
 	}
 	
+	private List<BoardSummary> getBoardSummariesByCategory(List<Integer> categoryId){
+		BoardSummaryViewDboExample bEx = new BoardSummaryViewDboExample();
+		bEx.createCriteria().andCategoryIdIn(categoryId);
+		List<BoardSummary> result = (boardSummaryMapper.selectByExample(bEx).stream().map(b -> mapper.map(b, BoardSummary.class)).collect(Collectors.toList()));
+		
+		if(!result.isEmpty()) {
+			ChildBoardViewDboExample cEx = new ChildBoardViewDboExample();
+			cEx.createCriteria().andParentBoardIdIn(result.stream().map(BoardSummary::getBoardId).collect(Collectors.toList()));
+			
+			Map<Integer, List<ChildBoard>> childBoards = childBoardMapper.selectByExample(cEx).stream()
+																						.map(c -> mapper.map(c, ChildBoard.class))
+																						.collect(Collectors.groupingBy(ChildBoard::getParentBoardId));
+			
+			result.forEach(bs -> {
+				bs.setChildBoards(childBoards.get(bs.getBoardId()));
+			});
+		}
+		
+		
+		return result;
+	}
+	
 	public Forum getForum() {
 		Forum forum = new Forum();
 		
@@ -105,7 +130,7 @@ public class ForumDataProvider extends AbstractDataProvider {
 		
 		CategoryDboExample exC = new CategoryDboExample();
 		exC.createCriteria().andParentBoardIdEqualTo(0);
-		List<Category> categories = categoryDataProvider.getCategories(exC);
+		List<Category> categories = getCategories(exC);
 
 		forum.setCategories(categories);
 		
@@ -115,12 +140,11 @@ public class ForumDataProvider extends AbstractDataProvider {
 		return forum;
 	}
 	
-	public List<Category> getCategories(Integer parentBoardId){
-		CategoryDboExample exC = new CategoryDboExample();
-		exC.createCriteria().andParentBoardIdEqualTo(parentBoardId);
+	public List<Category> getCategories(CategoryDboExample exC){
 		List<Category> categories = super.convertDboListToModel(categoryDao.get(exC), Category.class);
+		List<Integer> categoryIds = categories.stream().map(Category::getCategoryId).collect(Collectors.toList());
 		
-		Map<Integer, List<BoardSummary>> summaries = getBoardSummaries(Arrays.asList(parentBoardId)).stream().filter(x -> x.getCategoryId() != null).collect(Collectors.groupingBy(BoardSummary::getCategoryId));
+		Map<Integer, List<BoardSummary>> summaries = getBoardSummariesByCategory(categoryIds).stream().collect(Collectors.groupingBy(BoardSummary::getCategoryId));
 		
 		categories.forEach(cat ->{
 			cat.setBoards(summaries.get(cat.getCategoryId()));
