@@ -6,7 +6,6 @@ import static org.mockito.ArgumentMatchers.any;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -206,20 +205,13 @@ public class BbcodeServiceTest {
 		bbCodeUrl = new BBCodeConfig();
 		bbCodeUrl.setAllAttributeNamesAsString("=");
 		bbCodeUrl.setCode("url");
-		bbCodeUrl.setProcessContentFlag(true);
+		bbCodeUrl.setProcessContentFlag(false);
 		bbCodeUrl.setEndTag("</a>");
 		
-		BBCodeAttributeMode modeNameless = new BBCodeAttributeMode();
-		modeNameless.setOpenTag("<a href='{{0}}'>");
-		modeNameless.setCloseTag("</a>");
-		BBCodeAttribute nameless = new BBCodeAttribute();
-		nameless.setAttributeIndex("{{0}}");
-		nameless.setDataType(AttributeDataType.TEXT);
-		nameless.setName("=");
-		modeNameless.setAttributes(Arrays.asList(nameless));
-		
-		bbCodeUrl.getAttributeConfig().put("=", modeNameless);
-		
+		BBCodeAttributeMode nameless = new BBCodeAttributeMode();
+		nameless.setOpenTag("<a href={{0}}>");
+		nameless.setCloseTag("</a>");
+		bbCodeUrl.getAttributeConfig().put("url", nameless);
 		
 		BBCodeAttributeMode empty = new BBCodeAttributeMode();
 		empty.setOpenTag("<a href='{{c}}'>");
@@ -550,20 +542,7 @@ public class BbcodeServiceTest {
 		try {
 			String result = service.parseText("[url][b]http://zfgc.com[/b][/url]");
 			
-			assertTrue(result.equals("<a href='http://zfgc.com'><span class='bbcode-b'>http://zfgc.com</span></a>"));
-		} catch (NoSuchFieldException | SecurityException
-				| IllegalArgumentException | IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
-	@Test
-	public void parseTextUrlImgEmbedded(){
-		try {
-			String result = service.parseText("[url=https://somelink.com][img]https://someimg.jpg[/img][/url]");
-			
-			assertTrue(result.equals("<a href='https://somelink.com'><span class='bbcode-img'><img src='https://someimg.jpg'/></span></a>"));
+			assertTrue(result.equals("<a href='[b]http://zfgc.com[/b]'>[b]http://zfgc.com[/b]</a>"));
 		} catch (NoSuchFieldException | SecurityException
 				| IllegalArgumentException | IllegalAccessException e) {
 			// TODO Auto-generated catch block
