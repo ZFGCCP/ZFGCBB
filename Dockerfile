@@ -1,20 +1,24 @@
 FROM maven:3.9-eclipse-temurin-17 AS build
 
-RUN mkdir -p /usr/src/zfgcbb
-COPY . /usr/src/zfgcbb
+RUN mkdir -p /usr/src/zfgbb
+ADD . /usr/src/zfgbb
 
-WORKDIR /usr/src/zfgcbb
+WORKDIR /usr/src/zfgbb
 
 RUN mvn clean compile package -Dmaven.test.skip=true
 
-FROM postgres:16 AS database
-
-#RUN echo "CREATE DATABASE zfgcbb; CREATE USER $SPRING_DATASOURCE_USERNAME; GRANT ALL PRIVILEGES ON DATABASE zfgcbb TO $SPRING_DATASOURCE_USERNAME;" > /docker-entrypoint-initdb.d/init.sql
-
+# FIXME: This image should be switched to gcr.io/distroless/java-base-debian12 because it is much smaller. For now, this will work.
 FROM tomcat:jre17-temurin-jammy AS deploy
 
-COPY --from=build /usr/src/zfgcbb/target/*.war /usr/local/tomcat/webapps/
+COPY --from=build /usr/src/zfgbb/target/*.war /usr/local/tomcat/webapps/
 
-EXPOSE 8080
+EXPOSE ${ZFGBB_BACKEND_PORT:-8080}
 
 CMD ["catalina.sh", "run"]
+
+FROM postgres:16 AS database
+
+ADD ./scripts/sql/provisioning/1-zfgbb.initialize-database.sh /docker-entrypoint-initdb.d/1-zfgbb.initialize-database.sh
+
+# We exclude .sql from the file name so that it gets ignored by the init script.
+ADD ./scripts/sql/provisioning/2-provision-database.sql /docker-entrypoint-initdb.d/2-provision-database 
