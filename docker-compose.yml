@@ -1,42 +1,42 @@
 services:
   postgresql:
+    container_name: zfgbb_postgresql
+    hostname: zfgbb_postgresql
     build:
       context: .
       dockerfile: Dockerfile
       target: database
-    container_name: zfgcbb_postgresql
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=123456
-      - POSTGRES_DB=zfgcbb
+    env_file:
+      - .env.docker
     ports:
-      - "5432:5432"
+      - "${POSTGRES_PORT:-5432}:${POSTGRES_PORT:-5432}"
     volumes:
       - data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready" ,"-d", "zfgcbb"]
+      test: ["CMD-SHELL", "sh -c 'pg_isready -U ${POSTGRES_USER:-postgres} -d ${ZFGBB_DATABASE:-zfgc_dev}'"]
       interval: 30s
       timeout: 60s
       retries: 5
       start_period: 80s  
 
-  zfgcbb:
+  zfgbb:
+    container_name: zfgbb
+    hostname: zfgbb
     build:
       context: .
       dockerfile: Dockerfile
       target: deploy
     ports:
-      - "8080:8080"
+      - "${ZFGBB_BACKEND_PORT:-8080}:${ZFGBB_BACKEND_PORT:-8080}"
     volumes:
       - logs:/usr/src/app/logs
-    environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://zfgcbb_postgresql:5432/zfgcbb
-      - SPRING_DATASOURCE_USERNAME=postgres   
-      - SPRING_DATASOURCE_PASSWORD=123456
-      - SPRING_JPA_HIBERNATE_DDL_AUTO=create-drop
+    env_file:
+      - .env.docker
     depends_on:
       - postgresql
 
 volumes:
   data:
   logs:
+
+# Add docker config option
