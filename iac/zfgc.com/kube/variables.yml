@@ -1,0 +1,1 @@
+namespace: "zfg-bb-dev"  # Can be overridden by setting the NAMESPACE environment variable

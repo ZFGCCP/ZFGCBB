@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: apache-php-config
+  namespace: $(NAMESPACE)
+data:
+  apache.conf: |
+    # Apache config
+    ServerName zfgc.com
+  php.ini: |
+    # PHP config
