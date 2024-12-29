@@ -15,12 +15,15 @@ spec:
     spec:
       containers:
         - name: postgres
-          image: postgres:13
+          image: postgres:16
           env:
             - name: POSTGRES_PASSWORD
-              value: "password"
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: password
             - name: POSTGRES_DB
-              value: "mydb"
+              value: "mydb" # FIXME: we'll move this to a config later
 ---
 apiVersion: v1
 kind: Volume
