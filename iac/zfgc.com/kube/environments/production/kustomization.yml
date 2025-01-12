@@ -1,4 +1,0 @@
-namespace: zfg-bb-prod
-resources:
-  - ../../base
-  - ../../services

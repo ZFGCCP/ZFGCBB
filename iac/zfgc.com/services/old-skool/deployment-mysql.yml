@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql
+  namespace: ${NAMESPACE}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+        - name: mysql
+          image: "mysql:5.7"
+          envFrom:
+            - secretRef:
+                name: old-skool-secrets
+          volumeMounts:
+            - name: mysql-data
+              mountPath: ${MYSQL_DIRECTORY}
+      volumes:
+        - name: mysql-data
+          hostPath:
+            path: ${MYSQL_DIRECTORY}

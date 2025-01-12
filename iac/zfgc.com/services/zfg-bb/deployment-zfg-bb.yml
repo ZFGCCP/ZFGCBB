@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zfg-bb
+  namespace: ${NAMESPACE}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: zfg-bb
+  template:
+    metadata:
+      labels:
+        app: zfg-bb
+    spec:
+      containers:
+        - name: tomcat
+          image: "tomcat:9-jdk11-openjdk"
+          envFrom:
+            - secretRef:
+                name: zfg-bb-secrets
+          volumeMounts:
+            - name: postgres-data
+              mountPath: ${POSTGRES_DIRECTORY}
+        - name: spring-java
+          image: ${ZFGBB_IMAGE_NAME}
+          ports:
+            - containerPort: 8080
+      volumes:
+        - name: postgres-data
+          hostPath:
+            path: ${POSTGRES_DIRECTORY}

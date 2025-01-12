@@ -1,0 +1,21 @@
+resources:
+- ../../base
+- ../../services/zfg-bb
+
+namespace: dev-${NAMESPACE}
+
+configMapGenerator:
+- literals:
+  - hostDir=/dev/path/to/tomcat
+  name: tomcat-config
+- literals:
+  - hostDir=/dev/path/to/postgres
+  name: postgres-config
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+replacements:
+- source:
+    fieldPath: metadata.name
+    kind: Namespace
+    name: dev-${NAMESPACE}
