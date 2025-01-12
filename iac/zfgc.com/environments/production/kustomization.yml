@@ -1,0 +1,39 @@
+resources:
+- ../../base
+- ../../services
+
+namespace: prod-${NAMESPACE}
+
+configMapGenerator:
+- literals:
+  - hostDir=/prod/path/to/apache
+  name: apache-config
+- literals:
+  - hostDir=/prod/path/to/mysql
+  name: mysql-config
+- literals:
+  - hostDir=/prod/path/to/tomcat
+  name: tomcat-config
+- literals:
+  - hostDir=/prod/path/to/postgres
+  name: postgres-config
+      
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+patches:
+- patch: |
+    - op: remove
+      path: /spec/rules/0
+    - op: remove
+      path: /spec/rules/1
+  target:
+    group: networking.k8s.io
+    kind: Ingress
+    name: my-ingress
+    version: v1
+replacements:
+- source:
+    fieldPath: metadata.name
+    kind: Namespace
+    name: prod-${NAMESPACE}
+        

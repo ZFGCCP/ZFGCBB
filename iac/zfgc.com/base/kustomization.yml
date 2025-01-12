@@ -1,0 +1,38 @@
+namespace: $(NAMESPACE)
+
+resources:
+- namespace.yaml
+- old-skool/
+- zfg-bb/
+
+configMapGenerator:
+- literals:
+  - apache.directory=$(APACHE_DIRECTORY)
+  - mysql.directory=$(MYSQL_DIRECTORY)
+  name: old-skool-config
+- literals:
+  - postgres.directory=$(POSTGRES_DIRECTORY)
+  name: zfg-bb-config
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+replacements:
+- source:
+    kind: Namespace
+    name: $(NAMESPACE)
+    version: v1
+- source:
+    fieldPath: data.apache.directory
+    kind: ConfigMap
+    name: old-skool-config
+    version: v1
+- source:
+    fieldPath: data.mysql.directory
+    kind: ConfigMap
+    name: old-skool-config
+    version: v1
+- source:
+    fieldPath: data.postgres.directory
+    kind: ConfigMap
+    name: zfg-bb-config
+    version: v1

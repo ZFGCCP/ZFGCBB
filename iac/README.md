@@ -1,25 +1,59 @@
-# Infrastructure as Code
+# zfgc.com
 
-This directory contains the infrastructure as code for the ZFGCBB project.
+Pizza.
 
-## Table of Contents
+## Environment Setup
 
-- [Infrastructure as Code](#infrastructure-as-code)
-  - [Table of Contents](#table-of-contents)
-  - [Requirements](#requirements)
-  - [Getting Started](#getting-started)
-  - [License](#license)
+### Install Dependencies
 
-## Requirements
+   ```bash
+   cd iac/zfgc.com
+   ./scripts/bootstrap.sh
+   ```
 
-- [Docker](https://docs.docker.com/get-docker/)
-- [Kubectl](https://kubernetes.io/docs/tasks/tools/)
-- [Kustomize](https://kustomize.io/)
+1. **Docker**: Ensure Docker is installed to build/test containers locally - [Get Docker](https://docs.docker.com/get-docker/).
 
-## Getting Started
+### Project Configuration
 
-For now, just look at [](zfgc.com/kube/README.md)
+1. **Secrets Management**:
+   - Store sensitive data like database passwords securely.
+   - Add MySQL and PostgreSQL passwords as secrets in your GitHub repository:
+
+     - **MySQL Password**: Under `Settings > Secrets and variables > Actions > New repository secret`.
+       - Name: `MYSQL_PASSWORD`
+       - Value: Your MySQL password.
+
+     - **PostgreSQL Password**: Under `Settings > Secrets and variables > Actions > New repository secret`.
+       - Name: `POSTGRES_PASSWORD`
+       - Value: Your PostgreSQL password.
+
+## Deployment Process
+
+### Deploying Locally with minikube
+
+Run the following command to start minikube:
+
+```bash
+./iac/zfgc.com/scripts/start-minikube.sh
+
+./iac/zfgc.com/scripts/setup-test.sh
+```
+
+## Notes
+
+- **Customizing Values**:
+  Modify `kustomize.env` and environment-specific overlays as needed for different settings.
+  
+- **Service Endpoints**:
+  Verify networking settings to ensure appropriate service access.
+
+- **Troubleshooting**:
+  Check logs using `kubectl logs` for any deployment-related issues.
+
+## Contributions
+
+Feel free to contribute to the project by forking the repository, making changes, and submitting a pull request.
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](../LICENSE) file for details.
+This project is licensed under the MIT License.
