@@ -1,38 +1,23 @@
 namespace: $(NAMESPACE)
-
 resources:
-- namespace.yaml
-- old-skool/
-- zfg-bb/
+  - apache-deployment.yaml
+  - mysql-deployment.yaml
+  - postgres-deployment.yaml
+  - zfg-bb-deployment.yaml
+  - ingress.yaml
 
 configMapGenerator:
-- literals:
-  - apache.directory=$(APACHE_DIRECTORY)
-  - mysql.directory=$(MYSQL_DIRECTORY)
-  name: old-skool-config
-- literals:
-  - postgres.directory=$(POSTGRES_DIRECTORY)
-  name: zfg-bb-config
+  - name: old-skool-config
+    files:
+      - .env
+  - name: zfg-bb-config
+    files:
+      - .env
 
-apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomization
-replacements:
-- source:
-    kind: Namespace
-    name: $(NAMESPACE)
-    version: v1
-- source:
-    fieldPath: data.apache.directory
-    kind: ConfigMap
-    name: old-skool-config
-    version: v1
-- source:
-    fieldPath: data.mysql.directory
-    kind: ConfigMap
-    name: old-skool-config
-    version: v1
-- source:
-    fieldPath: data.postgres.directory
-    kind: ConfigMap
-    name: zfg-bb-config
-    version: v1
+secretGenerator:
+  - name: old-skool-secrets
+    literals:
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+  - name: zfg-bb-secrets
+    literals:
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
