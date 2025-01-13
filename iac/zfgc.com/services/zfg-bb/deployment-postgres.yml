@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: postgres
-  namespace: $(NAMESPACE)
+  #namespace: ${NAMESPACE}
 spec:
   replicas: 1
   selector:
@@ -20,8 +20,8 @@ spec:
         - name: POSTGRES_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: postgres-secret
-              key: password
+              name: zfg-bb-secrets
+              key: POSTGRES_PASSWORD
         ports:
         - containerPort: 5432
         volumeMounts:
@@ -30,4 +30,4 @@ spec:
       volumes:
       - name: postgres-vol
         hostPath:
-          path: $(postgres.directory)
+          path: ./dist/zfg-bb/postgres_data

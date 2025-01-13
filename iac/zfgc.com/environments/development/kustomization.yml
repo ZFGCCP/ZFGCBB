@@ -1,21 +1,51 @@
+namespace: zfg-bb-develop
 resources:
+- namespace.yml
 - ../../base
 - ../../services/zfg-bb
 
-namespace: dev-${NAMESPACE}
-
 configMapGenerator:
-- literals:
-  - hostDir=/dev/path/to/tomcat
-  name: tomcat-config
-- literals:
-  - hostDir=/dev/path/to/postgres
-  name: postgres-config
+- behavior: merge
+  envs:
+  - .env
+  name: old-skool-config
+- behavior: merge
+  envs:
+  - .env
+  name: zfg-bb-config
+
+secretGenerator:
+- behavior: merge
+  envs:
+  - .env
+  name: old-skool-secrets
+  type: Opaque
+- behavior: merge
+  envs:
+  - .env
+  name: zfg-bb-secrets
+  type: Opaque
+
+# replacements:
+# - source:
+#     fieldPath: data.NAMESPACE
+#     kind: ConfigMap
+#     name: old-skool-config
+#   targets:
+#   - fieldPaths:
+#     - metadata.namespace
+#     select:
+#       name: zfg-bb
+# - source:
+#     fieldPath: data.NAMESPACE
+#     kind: ConfigMap
+#     name: zfg-bb-config
+#   targets:
+#   - fieldPaths:
+#     - metadata.name
+#     select:
+#       kind: Namespace
+#      # name: zfg-bb
 
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-replacements:
-- source:
-    fieldPath: metadata.name
-    kind: Namespace
-    name: dev-${NAMESPACE}
