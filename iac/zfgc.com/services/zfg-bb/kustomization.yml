@@ -1,7 +1,0 @@
-namespace: zfg-bb
-resources:
-  #- configmap.yml
-  #- secrets.yml
-  - deployment-postgres.yml
-  - deployment-zfg-bb.yml
-  - service-postgres.yml

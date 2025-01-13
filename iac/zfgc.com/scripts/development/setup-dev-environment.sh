@@ -32,7 +32,7 @@ mkdir -p "$DIST_DIR"
 
 # Define the directories for services under dist
 OLD_SKOOL_DIR="$DIST_DIR/old-skool"
-ZFG_BB_DIR="$DIST_DIR/zfg-bb"
+ZFG_BB_DIR="$DIST_DIR/zfgbb"
 MYSQL_DIR="$OLD_SKOOL_DIR/mysql_data"
 POSTGRES_DIR="$ZFG_BB_DIR/postgres_data"
 APACHE_VHOSTS_DIR="$OLD_SKOOL_DIR/apache_vhosts"
@@ -62,7 +62,7 @@ MYSQL_DIRECTORY=$MYSQL_DIR
 POSTGRES_DIRECTORY=$POSTGRES_DIR
 APACHE_VHOST_CONFIG_DIRECTORY=$APACHE_VHOSTS_DIR
 
-ZFGBB_IMAGE_NAME=zfg-bb:latest
+ZFGBB_IMAGE_NAME=zfgbb:latest
 MYSQL_PASSWORD=$MYSQL_PASSWORD
 POSTGRES_PASSWORD=$POSTGRES_PASSWORD
 EOL
@@ -78,7 +78,7 @@ MYSQL_PASSWORD=$(openssl rand -base64 32)
 MYSQL_PASSWORD=$(kubectl create secret generic old-skool-secrets --from-literal=MYSQL_PASSWORD=${MYSQL_PASSWORD} --dry-run=client -o yaml | awk '/MYSQL_PASSWORD:/ {print $2}')
 echo "Creating PostgreSQL secret..."
 POSTGRES_PASSWORD=$(openssl rand -base64 32)
-POSTGRES_PASSWORD=$(kubectl create secret generic zfg-bb-secrets --from-literal=POSTGRES_PASSWORD=${POSTGRES_PASSWORD} --dry-run=client -o yaml | awk '/POSTGRES_PASSWORD:/ {print $2}')
+POSTGRES_PASSWORD=$(kubectl create secret generic zfgbb-secrets --from-literal=POSTGRES_PASSWORD=${POSTGRES_PASSWORD} --dry-run=client -o yaml | awk '/POSTGRES_PASSWORD:/ {print $2}')
 if [ -f "$ENV_FILE" ]; then
     rm "$ENV_FILE"
 fi
