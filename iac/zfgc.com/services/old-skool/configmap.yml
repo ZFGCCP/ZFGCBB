@@ -1,8 +1,0 @@
-kind: ConfigMap
-apiVersion: v1
-metadata:
-  name: old-skool-config
-  namespace: $(NAMESPACE)
-data:
-  apache.directory: /var/www/default-apache
-  mysql.directory: /var/lib/default-mysql

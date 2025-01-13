@@ -1,23 +1,33 @@
-namespace: $(NAMESPACE)
+namespace: zfg-bb
 resources:
-  - apache-deployment.yaml
-  - mysql-deployment.yaml
-  - postgres-deployment.yaml
-  - zfg-bb-deployment.yaml
-  - ingress.yaml
+  #- namespace.yml
+  - ingress.yml
+
+# configMapGenerator:
+# - name: old-skool-config
+#   literals:
+#     - apacheDirectory=/default/path
+#     - apacheVhostConfig=/default/vhost
+
+# secretGenerator:
+# - name: old-skool-secret
+#   literals:
+#     - mysqlPassword=default-mysql-password
+
+# - name: zfg-bb-secret
+#   literals:
+#     - postgresPassword=default-postgres-password
 
 configMapGenerator:
   - name: old-skool-config
-    files:
-      - .env
+    #env: .env
   - name: zfg-bb-config
-    files:
-      - .env
+    #env: .env
 
 secretGenerator:
   - name: old-skool-secrets
-    literals:
-      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+    #env: .env  # Reference to the environment file
+    type: Opaque
   - name: zfg-bb-secrets
-    literals:
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    #env: .env  # Reference to the environment file
+    type: Opaque

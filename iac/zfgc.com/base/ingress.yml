@@ -2,7 +2,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: my-ingress
-  namespace: my-namespace
+#  namespace: zfg-bb
 spec:
   rules:
   - host: zfgc.com

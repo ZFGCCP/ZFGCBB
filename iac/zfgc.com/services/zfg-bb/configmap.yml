@@ -1,7 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: zfg-bb-config
-  namespace: $(NAMESPACE)
-data:
-  postgres.directory: /var/lib/default-postgres
