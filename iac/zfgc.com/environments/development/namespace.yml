@@ -1,4 +1,4 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: zfg-bb-develop
+  name: zfgbb-develop

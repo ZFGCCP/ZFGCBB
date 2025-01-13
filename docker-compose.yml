@@ -1,3 +1,4 @@
+name: zfgbb
 services:
   postgresql:
     container_name: zfgbb_postgresql
@@ -20,8 +21,8 @@ services:
       start_period: 80s  
 
   zfgbb:
-    container_name: zfgbb
-    hostname: zfgbb
+    container_name: zfgbb_api
+    hostname: zfgbb_api
     build:
       context: .
       dockerfile: Dockerfile

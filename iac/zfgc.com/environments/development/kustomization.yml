@@ -1,8 +1,8 @@
-namespace: zfg-bb-develop
+namespace: zfgbb-develop
 resources:
 - namespace.yml
 - ../../base
-- ../../services/zfg-bb
+- ../../services/zfgbb
 
 configMapGenerator:
 - behavior: merge
@@ -12,7 +12,7 @@ configMapGenerator:
 - behavior: merge
   envs:
   - .env
-  name: zfg-bb-config
+  name: zfgbb-config
 
 secretGenerator:
 - behavior: merge
@@ -23,7 +23,7 @@ secretGenerator:
 - behavior: merge
   envs:
   - .env
-  name: zfg-bb-secrets
+  name: zfgbb-secrets
   type: Opaque
 
 # replacements:
@@ -35,17 +35,17 @@ secretGenerator:
 #   - fieldPaths:
 #     - metadata.namespace
 #     select:
-#       name: zfg-bb
+#       name: zfgbb
 # - source:
 #     fieldPath: data.NAMESPACE
 #     kind: ConfigMap
-#     name: zfg-bb-config
+#     name: zfgbb-config
 #   targets:
 #   - fieldPaths:
 #     - metadata.name
 #     select:
 #       kind: Namespace
-#      # name: zfg-bb
+#      # name: zfgbb
 
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization

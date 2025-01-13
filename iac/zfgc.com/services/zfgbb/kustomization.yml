@@ -1,0 +1,5 @@
+namespace: zfgbb
+resources:
+  - deployment-postgres.yml
+  - deployment-zfgbb.yml
+  - service-postgres.yml

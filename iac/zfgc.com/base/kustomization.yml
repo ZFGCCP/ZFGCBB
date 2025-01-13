@@ -1,4 +1,4 @@
-namespace: zfg-bb
+namespace: zfgbb
 resources:
   #- namespace.yml
   - ingress.yml
@@ -14,20 +14,20 @@ resources:
 #   literals:
 #     - mysqlPassword=default-mysql-password
 
-# - name: zfg-bb-secret
+# - name: zfgbb-secret
 #   literals:
 #     - postgresPassword=default-postgres-password
 
 configMapGenerator:
   - name: old-skool-config
     #env: .env
-  - name: zfg-bb-config
+  - name: zfgbb-config
     #env: .env
 
 secretGenerator:
   - name: old-skool-secrets
     #env: .env  # Reference to the environment file
     type: Opaque
-  - name: zfg-bb-secrets
+  - name: zfgbb-secrets
     #env: .env  # Reference to the environment file
     type: Opaque
