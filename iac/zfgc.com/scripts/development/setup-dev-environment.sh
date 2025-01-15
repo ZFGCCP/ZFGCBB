@@ -6,15 +6,6 @@ if [ "${BASH_SOURCE[0]}" == "${0}" ]; then
     exit 1
 fi
 
-# SCRIPT_DIR=$(dirname "$0")
-
-# # # Set the project base directory
-# # PROJECT_DIR=$(realpath "$SCRIPT_DIR/../..")
-# # PROJECT_ENVIRONMENT=$1
-
-# source "$SCRIPT_DIR/../../../scripts/common/check-minikube.sh"
-# source "$SCRIPT_DIR/../../../scripts/common/check-project-dir.sh"
-
 setup() {
     PROJECT_DIR=$1
     PROJECT_ENVIRONMENT=$2
@@ -28,7 +19,6 @@ setup() {
     echo "Creating dist directory at $DIST_DIR..."
     mkdir -p "$DIST_DIR"
 
-    # Define the directories for services under dist
     OLD_SKOOL_DIR="$DIST_DIR/old-skool"
     ZFG_BB_DIR="$DIST_DIR/zfgbb"
     MYSQL_DIR="$OLD_SKOOL_DIR/mysql_data"
@@ -72,10 +62,10 @@ EOL
 
     echo "Creating MySQL secret..."
     MYSQL_PASSWORD=$(openssl rand -base64 32)
-    MYSQL_PASSWORD=$(kubectl create secret generic old-skool-secrets --from-literal=MYSQL_PASSWORD=${MYSQL_PASSWORD} --dry-run=client -o yaml | awk '/MYSQL_PASSWORD:/ {print $2}')
+    MYSQL_PASSWORD=$(kubectl create secret generic old-skool-secrets --from-literal=MYSQL_PASSWORD="${MYSQL_PASSWORD}" --dry-run=client -o yaml | awk '/MYSQL_PASSWORD:/ {print $2}')
     echo "Creating PostgreSQL secret..."
     POSTGRES_PASSWORD=$(openssl rand -base64 32)
-    POSTGRES_PASSWORD=$(kubectl create secret generic zfgbb-secrets --from-literal=POSTGRES_PASSWORD=${POSTGRES_PASSWORD} --dry-run=client -o yaml | awk '/POSTGRES_PASSWORD:/ {print $2}')
+    POSTGRES_PASSWORD=$(kubectl create secret generic zfgbb-secrets --from-literal=POSTGRES_PASSWORD="${POSTGRES_PASSWORD}" --dry-run=client -o yaml | awk '/POSTGRES_PASSWORD:/ {print $2}')
     if [ -f "$ENV_FILE" ]; then
         rm "$ENV_FILE"
     fi
