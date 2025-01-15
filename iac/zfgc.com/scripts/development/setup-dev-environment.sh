@@ -1,28 +1,21 @@
 #!/bin/bash
 
-kubectl config use-context minikube
-# Check if the project directory is provided as an argument
 if [ -z "$1" ]; then
-    echo "Error: No project directory provided."
+    echo "Error: No project environment provided."
     exit 1
 fi
+
+SCRIPT_DIR=$(dirname "$0")
 
 # Set the project base directory
-PROJECT_DIR=$(realpath "$1")
+PROJECT_DIR=$(realpath "$SCRIPT_DIR/../..")
+PROJECT_ENVIRONMENT=$1
 
-# Check if zfgc.com is a directory
-if [ ! -d "$PROJECT_DIR/zfgc.com" ]; then
-    echo "Error: Project directory is not a zfgc.com directory."
-    exit 1
-fi
+source "$SCRIPT_DIR/../../../scripts/common/check-minikube.sh"
+source "$SCRIPT_DIR/../../../scripts/common/check-project-dir.sh"
 
-# Check if minikube is running
-MINIKUBE_STATUS=$(minikube status --format '{{.Host}}')
-if [ "$MINIKUBE_STATUS" != "Running" ]; then
-    minikube start --driver=docker
-    eval $(minikube docker-env)
-    docker compose build
-fi
+check_project_dir "$PROJECT_DIR" "$PROJECT_ENVIRONMENT"
+check_minikube
 
 DIST_DIR="$PROJECT_DIR/dist"
 
@@ -47,12 +40,12 @@ mkdir -p "$POSTGRES_DIR"
 
 mkdir -p "$APACHE_VHOSTS_DIR"
 
-ENV_FILE="$PROJECT_DIR/zfgc.com/environments/development/.env"
+ENV_FILE="$PROJECT_DIR/environments/$PROJECT_ENVIRONMENT/.env"
 
 create_env_file() {
     MYSQL_PASSWORD=$1
     POSTGRES_PASSWORD=$2
-    TARGET_ENV_FILE="$PROJECT_DIR/zfgc.com/environments/development/.env"
+    TARGET_ENV_FILE="$PROJECT_DIR/environments/$PROJECT_ENVIRONMENT/.env"
 
     echo "Generating .env file at $TARGET_ENV_FILE..."
     touch "$TARGET_ENV_FILE"
