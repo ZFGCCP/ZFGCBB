@@ -31,14 +31,14 @@ Pizza.
 
 ### Scripts
 
-This project uses bash scripts to automate various tasks.
+This project uses bash scripts to automate various tasks. Running the scripts requires the `bash` shell. Without passing any parameters, the scripts will display usage instructions.
 
 #### [setup.sh](./scripts/development/setup.sh)
 
 This script sets up the development environment for the project.
 
 ```bash
-./iac/scripts/development/setup.sh <project-directory> <environment>
+./scripts/development/setup.sh <project-directory> <environment>
 ```
 
 #### [apply.sh](./scripts/development/apply.sh)
@@ -46,7 +46,7 @@ This script sets up the development environment for the project.
 This script applies the manifests for the specified environment.
 
 ```bash
-./iac/scripts/development/apply.sh <project-directory> <environment>
+./scripts/development/apply.sh <project-directory> <environment>
 ```
 
 #### [status.sh](./scripts/development/status.sh)
@@ -54,7 +54,7 @@ This script applies the manifests for the specified environment.
 This script displays the status of the specified namespace.
 
 ```bash
-./iac/scripts/development/status.sh <namespace>
+./scripts/development/status.sh <namespace>
 ```
 
 #### [destroy.sh](./scripts/development/destroy.sh)
@@ -62,19 +62,12 @@ This script displays the status of the specified namespace.
 To destroy the development environment, run the following command:
 
 ```bash
-./iac/scripts/development/destroy.sh <project-directory> <environment>
+./scripts/development/destroy.sh <project-directory> <environment>
 ```
 
 ## Notes
 
-- **Customizing Values**:
-  Modify `kustomize.env` and environment-specific overlays as needed for different settings.
-  
-- **Service Endpoints**:
-  Verify networking settings to ensure appropriate service access.
-
-- **Troubleshooting**:
-  Check logs using `kubectl logs` for any deployment-related issues.
+TODO.
 
 ## Contributions
 

@@ -12,7 +12,7 @@ check_minikube() {
     if [ "$MINIKUBE_STATUS" != "Running" ]; then
         echo "Minikube is not running. Starting minikube..."
         minikube start --driver=docker
-        eval $(minikube docker-env)
+        eval "$(minikube docker-env)"
         kubectl config use-context minikube
         docker compose build
     fi
