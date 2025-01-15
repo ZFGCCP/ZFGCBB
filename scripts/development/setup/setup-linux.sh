@@ -82,6 +82,7 @@ if [ "$(lsb_release -si)" == "Ubuntu" ]; then
 elif [ "$(lsb_release -si)" == "Arch" ]; then
     install_arch
 else 
+    install_unknown
 fi
 
 echo "Starting Docker..."

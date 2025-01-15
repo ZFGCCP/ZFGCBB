@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: old-skool
-  namespace: ${NAMESPACE}
 spec:
   replicas: 1
   selector:
@@ -18,24 +17,20 @@ spec:
           image: "httpd:latest"
           volumeMounts:
             - name: apache-content
-              mountPath: ${APACHE_DIRECTORY}
+              mountPath: /usr/local/apache2/htdocs
             - name: vhost-config
-              mountPath: ${APACHE_VHOST_CONFIG_DIRECTORY}
+              mountPath: /usr/local/apache2/conf/extra
         - name: mysql
           image: "mysql:5.7"
           envFrom:
             - secretRef:
                 name: old-skool-secrets
-          volumeMounts:
-            - name: mysql-data
-              mountPath: ${MYSQL_DIRECTORY}
       volumes:
         - name: apache-content
           hostPath:
             path: ${APACHE_DIRECTORY}
+            type: DirectoryOrCreate
         - name: vhost-config
           hostPath:
             path: ${APACHE_VHOST_CONFIG_DIRECTORY}
-        - name: mysql-data
-          hostPath:
-            path: ${MYSQL_DIRECTORY}
+            type: DirectoryOrCreate

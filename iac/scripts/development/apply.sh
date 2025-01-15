@@ -23,7 +23,19 @@ check_minikube
 
 cd "$PROJECT_DIR/environments/$PROJECT_ENVIRONMENT"
 
-kubectl kustomize . -v 9
+# load the .env file into environment variables
+source ./.env
+# load the .env.secret file into environment variables
+source ./.env.secret
+
+# export the environment variables
+export $(cut -d= -f1 ./.env)
+export $(cut -d= -f1 ./.env.secret)
+
+#source ./.env
+
+kubectl kustomize . -v 9 | envsubst
+
 echo ""
 echo "Press any key to continue..."
 read -n 1 -s
@@ -95,8 +107,8 @@ echo "
 
 echo "Applying kustomize build..."
 
-
-kustomize build . | kubectl apply -f -
+# Use envsubst to replace environment variables in the kustomization.yml file
+kustomize build . | envsubst | kubectl apply -f -
 cd -
 
 echo "Deployments have been applied."

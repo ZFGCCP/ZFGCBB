@@ -1,4 +1,4 @@
-namespace: zfgbb
+# namespace: zfgbb
 resources:
   #- namespace.yml
   - ingress.yml
