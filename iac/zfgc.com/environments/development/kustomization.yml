@@ -1,4 +1,5 @@
 namespace: zfgbb-develop
+
 resources:
 - namespace.yml
 - ../../base
@@ -25,40 +26,6 @@ secretGenerator:
   - .env.secret
   name: zfgbb-secrets
   type: Opaque
-
-# replacements:
-#   - source:
-#       kind: Deployment
-#       name: postgres
-#       # We want to replace the host path with the actual path
-#       fieldPath: spec.template.spec.volumes[?(@.name=="postgres-vol")].hostPath.path
-#     targets:
-#       - select:
-#           kind: Deployment
-#           name: zfgbb
-#         fieldPaths:
-#           - spec.template.spec.containers[?(@.name=="postgres")].volumeMounts[?(@.name=="postgres-vol")].mountPath
-
-# replacements:
-# - source:
-#     fieldPath: data.NAMESPACE
-#     kind: ConfigMap
-#     name: old-skool-config
-#   targets:
-#   - fieldPaths:
-#     - metadata.namespace
-#     select:
-#       name: zfgbb
-# - source:
-#     fieldPath: data.NAMESPACE
-#     kind: ConfigMap
-#     name: zfgbb-config
-#   targets:
-#   - fieldPaths:
-#     - metadata.name
-#     select:
-#       kind: Namespace
-#      # name: zfgbb
 
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
