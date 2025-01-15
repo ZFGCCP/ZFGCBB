@@ -51,10 +51,28 @@ POSTGRES_DIRECTORY=$POSTGRES_DIR
 APACHE_VHOST_CONFIG_DIRECTORY=$APACHE_VHOSTS_DIR
 
 ZFGBB_IMAGE_NAME=zfgbb:latest
-MYSQL_PASSWORD=$MYSQL_PASSWORD
-POSTGRES_PASSWORD=$POSTGRES_PASSWORD
 EOL
         echo ".env file generated successfully at $ENV_FILE"
+
+        touch "$TARGET_ENV_FILE.secret"
+        cat > "$TARGET_ENV_FILE.secret" <<EOL
+MYSQL_USER=root
+MYSQL_PASSWORD=$MYSQL_PASSWORD
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=$POSTGRES_PASSWORD
+ZFGBB_DATABASE=zfgc_dev
+ZFGBB_USER=zfgbb_user
+ZFGBB_USER_PASSWORD=123456 #FIXME: this is just a placeholder
+
+SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/zfgc_dev
+SPRING_DATASOURCE_USERNAME=zfgbb_user   
+SPRING_DATASOURCE_PASSWORD=123456
+
+mbg_jdbc_url=jdbc:postgresql://localhost:5432/zfgc_dev
+mbg_jdbc_username=zfgbb_user
+mbg_jdbc_password=123456
+EOL
+        echo ".env file generated successfully at $ENV_FILE.secret"
     }
 
     # Output directories
@@ -68,6 +86,10 @@ EOL
     POSTGRES_PASSWORD=$(kubectl create secret generic zfgbb-secrets --from-literal=POSTGRES_PASSWORD="${POSTGRES_PASSWORD}" --dry-run=client -o yaml | awk '/POSTGRES_PASSWORD:/ {print $2}')
     if [ -f "$ENV_FILE" ]; then
         rm "$ENV_FILE"
+    fi
+
+    if [ -f "$ENV_FILE.secret" ]; then
+        rm "$ENV_FILE.secret"
     fi
 
     create_env_file "$MYSQL_PASSWORD" "$POSTGRES_PASSWORD"

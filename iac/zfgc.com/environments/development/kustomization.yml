@@ -22,9 +22,22 @@ secretGenerator:
   type: Opaque
 - behavior: merge
   envs:
-  - .env
+  - .env.secret
   name: zfgbb-secrets
   type: Opaque
+
+# replacements:
+#   - source:
+#       kind: Deployment
+#       name: postgres
+#       # We want to replace the host path with the actual path
+#       fieldPath: spec.template.spec.volumes[?(@.name=="postgres-vol")].hostPath.path
+#     targets:
+#       - select:
+#           kind: Deployment
+#           name: zfgbb
+#         fieldPaths:
+#           - spec.template.spec.containers[?(@.name=="postgres")].volumeMounts[?(@.name=="postgres-vol")].mountPath
 
 # replacements:
 # - source:

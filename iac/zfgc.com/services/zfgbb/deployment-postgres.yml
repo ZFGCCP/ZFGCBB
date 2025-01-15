@@ -22,6 +22,7 @@ spec:
             secretKeyRef:
               name: zfgbb-secrets
               key: POSTGRES_PASSWORD
+        - name: POSTGRES_USER
         ports:
         - containerPort: 5432
         volumeMounts:
@@ -30,4 +31,5 @@ spec:
       volumes:
       - name: postgres-vol
         hostPath:
-          path: ./dist/zfgbb/postgres_data
+          path: "${POSTGRES_DIRECTORY}"
+          type: DirectoryOrCreate

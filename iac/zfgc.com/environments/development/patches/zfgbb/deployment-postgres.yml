@@ -1,0 +1,17 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zfgbb
+spec:
+  template:
+    spec:
+      containers:
+        - name: postgres
+          volumeMounts:
+            - name: postgres-vol
+              mountPath: /var/lib/postgresql/data
+      volumes:
+        - name: postgres-vol
+          hostPath: 
+            path:
+              envFrom: 
