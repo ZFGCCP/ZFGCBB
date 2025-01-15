@@ -27,16 +27,42 @@ Pizza.
        - Name: `POSTGRES_PASSWORD`
        - Value: Your PostgreSQL password.
 
-## Deployment Process
+## Development Process
 
-### Deploying Locally with minikube
+### Scripts
 
-Run the following command to start minikube:
+This project uses bash scripts to automate various tasks.
+
+#### [setup.sh](./scripts/development/setup.sh)
+
+This script sets up the development environment for the project.
 
 ```bash
-./iac/zfgc.com/scripts/start-minikube.sh
+./iac/scripts/development/setup.sh <project-directory> <environment>
+```
 
-./iac/zfgc.com/scripts/setup-test.sh
+#### [apply.sh](./scripts/development/apply.sh)
+
+This script applies the manifests for the specified environment.
+
+```bash
+./iac/scripts/development/apply.sh <project-directory> <environment>
+```
+
+#### [status.sh](./scripts/development/status.sh)
+
+This script displays the status of the specified namespace.
+
+```bash
+./iac/scripts/development/status.sh <namespace>
+```
+
+#### [destroy.sh](./scripts/development/destroy.sh)
+
+To destroy the development environment, run the following command:
+
+```bash
+./iac/scripts/development/destroy.sh <project-directory> <environment>
 ```
 
 ## Notes

@@ -1,6 +1,16 @@
 #!/bin/bash
 set -e
 
+# Check if there are no arguments
+if [ $# -eq 0 ]; then
+    cat <<EOF
+Usage: $0 <namespace>
+
+Example: $0 zfgbb-develop
+EOF
+    exit 1
+fi
+
 ENVIRONMENT_TARGET=$1 || "zfgbb-develop"
 
 SCRIPT_DIR=$(dirname "$0")
