@@ -1,33 +1,14 @@
-# namespace: zfgbb
+
 resources:
   #- namespace.yml
   - ingress.yml
 
-# configMapGenerator:
-# - name: old-skool-config
-#   literals:
-#     - apacheDirectory=/default/path
-#     - apacheVhostConfig=/default/vhost
-
-# secretGenerator:
-# - name: old-skool-secret
-#   literals:
-#     - mysqlPassword=default-mysql-password
-
-# - name: zfgbb-secret
-#   literals:
-#     - postgresPassword=default-postgres-password
-
 configMapGenerator:
   - name: old-skool-config
-    #env: .env
   - name: zfgbb-config
-    #env: .env
 
 secretGenerator:
   - name: old-skool-secrets
-    #env: .env  # Reference to the environment file
     type: Opaque
   - name: zfgbb-secrets
-    #env: .env  # Reference to the environment file
     type: Opaque

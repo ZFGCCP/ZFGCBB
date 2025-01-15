@@ -32,4 +32,5 @@ build/
 ### VS Code ###
 .vscode/
 dist/
-iac/**/.env
+**/.env
+**/.env.secret
