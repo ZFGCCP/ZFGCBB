@@ -4,28 +4,7 @@ Pizza.
 
 ## Environment Setup
 
-### Install Dependencies
-
-   ```bash
-   cd iac/zfgc.com
-   ./scripts/bootstrap.sh
-   ```
-
-1. **Docker**: Ensure Docker is installed to build/test containers locally - [Get Docker](https://docs.docker.com/get-docker/).
-
-### Project Configuration
-
-1. **Secrets Management**:
-   - Store sensitive data like database passwords securely.
-   - Add MySQL and PostgreSQL passwords as secrets in your GitHub repository:
-
-     - **MySQL Password**: Under `Settings > Secrets and variables > Actions > New repository secret`.
-       - Name: `MYSQL_PASSWORD`
-       - Value: Your MySQL password.
-
-     - **PostgreSQL Password**: Under `Settings > Secrets and variables > Actions > New repository secret`.
-       - Name: `POSTGRES_PASSWORD`
-       - Value: Your PostgreSQL password.
+To setup your environment, follow the [setup instructions](../README.md#setup) in the main README.
 
 ## Development Process
 
@@ -65,14 +44,33 @@ To destroy the development environment, run the following command:
 ./scripts/development/destroy.sh <project-directory> <environment>
 ```
 
-## Notes
+## Workflow
 
-TODO.
+The workflow for developing the application is as follows:
 
-## Contributions
+1. Run the [setup script](#setupsh) to configure the environment for `develop` environment.
+   - `./scripts/development/setup.sh zfgc.com develop`
+2. Run the [apply script](#applysh) to apply the manifests for the `develop` environment.
+   - `./scripts/development/apply.sh zfgc.com develop`
+  
+You can check the status of the deployment using the [status script](#statussh):
+
+```bash
+./scripts/development/status.sh zfgc.com develop
+```
+
+### Cleaning Up
+
+To clean up the development environment, run the following command:
+
+```bash
+./scripts/development/destroy.sh zfgc.com develop
+```
+
+### Contributing
 
 Feel free to contribute to the project by forking the repository, making changes, and submitting a pull request.
 
-## License
+## Notes
 
-This project is licensed under the MIT License.
+TODO.

@@ -109,7 +109,7 @@ This will generate the MyBatis mappers and Java models based on the database sch
 
 ## IaC (Infrastructure as Code)
 
-We implement a [Kubernetes Project](./iac/README.md) to deploy the application to a Kubernetes cluster. This also contains configuration for the legacy zfgc.com environment under the `old-skool` service. More details can be found in the [IaC README](./iac/README.md).
+We implement a [Kubernetes Project](./iac/) to deploy the application to a Kubernetes cluster. This also contains configuration for the legacy zfgc.com environment under the `old-skool` service. More details can be found in the [IaC README](./iac/).
 
 ## License
 

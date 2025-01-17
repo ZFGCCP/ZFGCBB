@@ -19,5 +19,5 @@ source "$SOURCE_DIR/../common/check-minikube.sh"
 source "$SOURCE_DIR/../common/check-project-dir.sh"
 
 
-source "$PROJECT_DIR/scripts/development/setup-dev-environment.sh"
+source "$PROJECT_DIR/scripts/setup-environment-files.sh"
 setup "$PROJECT_DIR" "$PROJECT_ENVIRONMENT"
