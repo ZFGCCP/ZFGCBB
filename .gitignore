@@ -29,8 +29,13 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 
-### VS Code ###
-.vscode/
+### Build Files ###
 dist/
+
+### Environment Files ###
 **/.env
 **/.env.secret
+*.env
+*.env.secret
+!.env.docker
+!.env.local

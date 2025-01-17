@@ -5,16 +5,16 @@
   <properties resource="application.properties"/>
   <context id="zfgc3_context" targetRuntime="MyBatis3">
 
-    <jdbcConnection connectionURL="jdbc:postgresql://localhost:5432/zfgbb"
-    				driverClass="org.postgresql.Driver"
-    				password="postgres"
-    				userId="postgres"/>
+    <jdbcConnection connectionURL="${mbg.jdbc.url}"
+    				driverClass="${mbg.jdbc.driver-class-name}"
+    				password="${mbg.jdbc.password}"
+    				userId="${mbg.jdbc.username}"/>
     				
-    <javaModelGenerator targetPackage="com.zfgc.zfgbb.dbo" targetProject="zfgbb">
+    <javaModelGenerator targetPackage="${mbg.target-project.mapper}" targetProject="${mbg.target-project.domain}">
     </javaModelGenerator>
-    <sqlMapGenerator targetPackage="com.zfgc.zfgbb.mappers" targetProject="zfgbb">
+    <sqlMapGenerator targetPackage="${mbg.target-project.mapper}" targetProject="${mbg.target-project.domain}">
     </sqlMapGenerator>
-    <javaClientGenerator targetPackage="com.zfgc.zfgbb.mappers" targetProject="zfgbb" type="XMLMAPPER" />
+    <javaClientGenerator targetPackage="${mbg.target-project.mapper}" targetProject="${mbg.target-project.domain}" type="XMLMAPPER" />
     
 
     <!-- tables -->

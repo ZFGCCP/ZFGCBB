@@ -42,7 +42,7 @@ public class ZfgbbApplication {
 		return new WebMvcConfigurer() {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping("/**").allowedOrigins("http://localhost:5173","http://zfgc.com");
+				registry.addMapping("/**").allowedOrigins("http://localhost:5173","http://dev3.zfgc.com", "http://www.zfgc.com", "https://www.zfgc.com", "http://zfgc.com", "https://zfgc.com");
 			}
 		};
 	}

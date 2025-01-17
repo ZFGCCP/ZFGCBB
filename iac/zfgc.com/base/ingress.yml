@@ -13,7 +13,7 @@ spec:
           service:
             name: old-skool
             port:
-              number: 80
+              number: 8080
   - host: crystalrook.com
     http:
       paths:
@@ -23,7 +23,7 @@ spec:
           service:
             name: old-skool
             port:
-              number: 80
+              number: 8080
   - host: pizzatime.zfgc.com
     http:
       paths:
@@ -33,4 +33,4 @@ spec:
           service:
             name: zfgbb
             port:
-              number: 80
+              number: 8081
