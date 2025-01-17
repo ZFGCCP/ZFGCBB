@@ -23,16 +23,11 @@ check_minikube
 
 cd "$PROJECT_DIR/environments/$PROJECT_ENVIRONMENT"
 
-# load the .env file into environment variables
 source ./.env
-# load the .env.secret file into environment variables
 source ./.env.secret
 
-# export the environment variables
 export $(cut -d= -f1 ./.env)
 export $(cut -d= -f1 ./.env.secret)
-
-#source ./.env
 
 kubectl kustomize . -v 9 | envsubst
 
@@ -40,8 +35,6 @@ echo ""
 echo "Press any key to continue..."
 read -n 1 -s
 clear
-
-#kustomize edit fix
 
 echo "
            █████████████████████████████████████████████████████            █████████               
