@@ -1,5 +1,5 @@
 namespace: zfgbb
 resources:
-  - deployment-postgres.yml
-  - deployment-zfgbb.yml
-  - service-postgres.yml
+  - ../shared/postgres
+  - deployment.yml
+  - service.yml
