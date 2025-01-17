@@ -16,9 +16,9 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
          as some drivers deny compatibility but still work -->
 <setting name="useGeneratedKeys" value="false"/>
 </settings>
-<!-- 
+
 <typeAliases>
-<package name="com.zfgc.dbobj"/>
-</typeAliases> -->
+<package name="com.zfgc.zfgbb.mappers"/>
+</typeAliases>
 
 </configuration>
