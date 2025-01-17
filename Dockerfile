@@ -3,6 +3,8 @@ FROM maven:3.9-eclipse-temurin-17 AS build
 WORKDIR /usr/src
 ADD ./mvn* ./
 ADD ./pom.xml ./
+RUN mvn install -Dmaven.test.skip=true
+
 ADD ./src ./src
 
 RUN mvn clean compile package -Dmaven.test.skip=true
