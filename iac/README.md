@@ -90,6 +90,8 @@ The workspace is setup to group domains and services together.
 
 ### Domain Structure
 
+See [Kustomize Docs](https://kubernetes.io/docs/tasks/manage-kubernetes-objects/kustomization/) if you're unfamiliar with Kustomize. For quick reference, `kustomization.yml` is a manifest file that combines multiple other manifest files into a single file. We use [apply.sh](#applysh) to target a speific `kustomization.yml` file located in the [environments](./environments/) directory.
+
 ```text
 domain-name.tld
 ├── base - Defines the base resources for the domain, such as ingress and namespace.
@@ -100,14 +102,13 @@ domain-name.tld
 │   ├── [git-branch-name]
 │   │   ├── kustomization.yml
 │   │   ├── namespace.yml
-│   ├── deployment-apache.yml
-│   ├── deployment-mysql.yml
-│   ├── deployment-postgres.yml
-│   ├── deployment-zfgbb.yml
+│   ├── deployment-[name].yml
+│   ├── deployment-[dependency-service-A].yml
 │   ├── kustomization.yml
-│   ├── namespace.yml
-│   ├── secret-mysql.yml
-│   └── secret-postgres.yml
+│   ├── secret-[name].yml
+│   └── secret-[dependency-service-A].yml
+│   ├── service-[name].yml
+│   ├── service-[dependency-service-A].yml
 ├── services - Defines the service manifests for the domain.
 │   ├── [name]
 │   │   ├── deployment-[name].yml
