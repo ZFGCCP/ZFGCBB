@@ -2,15 +2,18 @@ name: zfgbb
 services:
   postgresql:
     container_name: zfgbb_postgresql
-    hostname: zfgbb_postgresql
+    # hostname: zfgbb_postgresql
     build:
       context: .
       dockerfile: Dockerfile
       target: database
     env_file:
+      - .env.local
       - .env.docker
     ports:
       - "${POSTGRES_PORT:-5432}:${POSTGRES_PORT:-5432}"
+    networks:
+      - zfgbb
     volumes:
       - data:/var/lib/postgresql/data
     healthcheck:
@@ -19,25 +22,55 @@ services:
       timeout: 60s
       retries: 5
       start_period: 80s  
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+  
+  pgadmin:
+    container_name: zfgbb_pgadmin
+    # hostname: zfgbb_pgadmin
+    image: dpage/pgadmin4:8.14.0
+    environment:
+      PGADMIN_LISTEN_PORT: ${PGADMIN_PORT:-5050}
+      PGADMIN_DEFAULT_EMAIL: admin@zfgc.com
+      PGADMIN_DEFAULT_PASSWORD: ${POSTGRES_PASSWORD:-123456}
+      CONFIG_DATABASE_URI: ${PGADMIN_DATABASE_URI:-postgres://postgres:123456@zfgbb_postgresql:5432/zfgc_dev}
+    ports:
+      - "${PGADMIN_PORT:-5050}:${PGADMIN_PORT:-5050}"
+    networks:
+      - zfgbb
+    volumes:
+      - pgadmin:/var/lib/pgadmin
+    depends_on:
+      - postgresql
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
-  zfgbb:
+  api:
     container_name: zfgbb_api
-    hostname: zfgbb_api
+    # hostname: zfgbb_api
     build:
       context: .
       dockerfile: Dockerfile
       target: deploy
     ports:
       - "${ZFGBB_BACKEND_PORT:-8080}:${ZFGBB_BACKEND_PORT:-8080}"
+    networks:
+      - zfgbb
     volumes:
       - logs:/usr/src/app/logs
     env_file:
+      - .env.local
       - .env.docker
     depends_on:
       - postgresql
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
 volumes:
+  pgadmin:
   data:
   logs:
 
-# Add docker config option
+networks:
+  zfgbb:
+    # driver: bridge

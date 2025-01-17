@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: crystalrookarts
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: crystalrookarts
+  template:
+    metadata:
+      labels:
+        app: crystalrookarts
+    spec:
+      containers:
+        - name: crystalrookarts
+          image: "tomcat:jre17-temurin-jammy"
+          volumeMounts:
+            - name: crystalrookarts-content
+              mountPath: /usr/local/tomcat/webapps/content
+      volumes:
+        - name: crystalrookarts-content
+          hostPath:
+            path: ${OLD_SKOOL_DIR}/crystalrookarts
+            type: DirectoryOrCreate

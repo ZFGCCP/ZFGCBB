@@ -50,7 +50,7 @@ MYSQL_DIRECTORY=$MYSQL_DIR
 POSTGRES_DIRECTORY=$POSTGRES_DIR
 APACHE_VHOST_CONFIG_DIRECTORY=$APACHE_VHOSTS_DIR
 
-ZFGBB_IMAGE_NAME=zfgbb:latest
+ZFGBB_IMAGE_NAME=zfgbb-api:latest
 EOL
         echo ".env file generated successfully at $ENV_FILE"
 
@@ -64,13 +64,17 @@ ZFGBB_DATABASE=zfgc_dev
 ZFGBB_USER=zfgbb_user
 ZFGBB_USER_PASSWORD=123456 #FIXME: this is just a placeholder
 
-SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/zfgc_dev
+ZFGBB_DATABASE=zfgc_dev
+ZFGBB_USER=zfgbb_user
+ZFGBB_USER_PASSWORD=123456
+
+SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/zfgc_dev
 SPRING_DATASOURCE_USERNAME=zfgbb_user   
 SPRING_DATASOURCE_PASSWORD=123456
 
-mbg_jdbc_url=jdbc:postgresql://localhost:5432/zfgc_dev
-mbg_jdbc_username=zfgbb_user
-mbg_jdbc_password=123456
+MBG_JDBC_URL=jdbc:postgresql://postgres:5432/zfgc_dev
+MBG_JBDC_USERNAME=zfgbb_user
+MBG_JDBC_PASSWORD=123456
 EOL
         echo ".env file generated successfully at $ENV_FILE.secret"
     }
