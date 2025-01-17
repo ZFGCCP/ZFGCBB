@@ -10,12 +10,15 @@ Bringin back the Drama Llama from the dead!
   - [Table of Contents](#table-of-contents)
   - [Getting Started](#getting-started)
     - [Prerequisites](#prerequisites)
-      - [Docker](#docker)
-      - [Standing up just the database](#standing-up-just-the-database)
-    - [Developing](#developing)
+      - [Setup](#setup)
+    - [Developing with an IDE](#developing-with-an-ide)
+      - [Visual Studio Code](#visual-studio-code)
+      - [Eclipse](#eclipse)
+    - [Developing Standalone](#developing-standalone)
     - [Building](#building)
     - [Running Tests](#running-tests)
     - [Running MyBatis Generator](#running-mybatis-generator)
+  - [IaC (Infrastructure as Code)](#iac-infrastructure-as-code)
   - [License](#license)
 
 ## Getting Started
@@ -29,22 +32,42 @@ Bringin back the Drama Llama from the dead!
   - [PostgreSQL](https://www.postgresql.org/download/)
   - [Tomcat](https://tomcat.apache.org/download-90.cgi)
 
-#### Docker
+#### Setup
 
-Copy the `.env.example` file to `.env` and fill in the values, then run docker compose to start the containers.
+This repository provides a [setup script](./scripts/development/setup.sh). It will automatically detect your environment and prompt you to install dependencies. For Linux, only two kinds of distros are handled for installing packages (Arch and Ubuntu). For any other Linux distro, the script will just check the presence of dependencies.
 
-```bash
-cp .env.example .env
-docker compose up -d
-```
-
-#### Standing up just the database
+Using the script can be done by invoking the following command.
 
 ```bash
-docker compuse up -d postgresql
+./scripts/development/setup.sh
 ```
 
-### Developing
+### Developing with an IDE
+
+Opening the project in Eclipse or Visual Studio Code is recommended.
+
+Stand up the database using the following command.
+
+```bash
+docker-compose up -d postgresql pgadmin
+```
+
+You can access pgadmin at `http://0.0.0.0:5050`.
+
+#### Visual Studio Code
+
+The [vscode settings](./.vscode/settings.json) provides a basic setup for developing with VS Code.
+
+The following build actions are available:
+
+- `Debug Backend`: Runs the backend in debug mode, using `.env.local` as the environment file. NOTE: Docker should resolve just fine, but if not you can use the (Docker) variant of this action.
+- `Debug Backend (Docker)`: Runs the backend in debug mode, using `.env.docker` as the environment file.
+
+#### Eclipse
+
+Eclipse will respect the applications.properties file, so you can use that to configure the application.
+
+### Developing Standalone
 
 To run the application in development mode, run the following command:
 
@@ -79,9 +102,14 @@ This will run all the tests in the [src/test](src/test) directory.
 To run the MyBatis generator, run the following command:
 
 ```bash
+nvm mybatis-generator:generate
 ```
 
 This will generate the MyBatis mappers and Java models based on the database schema.
+
+## IaC (Infrastructure as Code)
+
+We implement a [Kubernetes Project](./iac/README.md) to deploy the application to a Kubernetes cluster. This also contains configuration for the legacy zfgc.com environment under the `old-skool` service. More details can be found in the [IaC README](./iac/README.md).
 
 ## License
 
