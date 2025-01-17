@@ -7,6 +7,7 @@ This directory contains the infrastructure as code for the zfgc.com domain.
 - [zfgc.com](#zfgccom)
   - [Table of Contents](#table-of-contents)
   - [Services](#services)
+    - [Shared](#shared)
 
 ## Services
 
@@ -14,3 +15,7 @@ Currently, we're including legacy zfgc.com services under the `old-skool` servic
 
 - [old-skool](./services/old-skool)
 - [zfg-bb](./services/zfgbb)
+
+### Shared
+
+- [postgres](./services/shared/postgres/kustomization.yml)
