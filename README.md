@@ -25,14 +25,17 @@ Bringin back the Drama Llama from the dead!
 
 ### Prerequisites
 
+- [Git Bash](https://git-scm.com/downloads)
 - [Docker/Docker-Compose](https://docs.docker.com/get-docker/)
 - [Java 17](https://www.oracle.com/java/technologies/downloads/)
-- [Maven](https://maven.apache.org/download.cgi)
+- [Maven](https://maven.apache.org/)
 - If running locally
   - [PostgreSQL](https://www.postgresql.org/download/)
-  - [Tomcat](https://tomcat.apache.org/download-90.cgi)
+  - [Tomcat](https://tomcat.apache.org/)
 
 #### Setup
+
+To use the automatic setup script to download and install dependencies, make sure [Git Bash](https://git-scm.com/downloads) is installed. This script currently supports Windows, macOS, and Linux.
 
 This repository provides a [setup script](./scripts/development/setup.sh). It will automatically detect your environment and prompt you to install dependencies. For Linux, only two kinds of distros are handled for installing packages (Arch and Ubuntu). For any other Linux distro, the script will just check the presence of dependencies.
 
@@ -75,7 +78,7 @@ To run the application in development mode, run the following command:
 mvn clean run package -Dmaven.test.skip=true
 ```
 
-This will start the application in development mode, and you can access it at `http://localhost:8080`.
+This will start the application in development mode, and you can access it at `http://0.0.0.0:8080`.
 
 ### Building
 

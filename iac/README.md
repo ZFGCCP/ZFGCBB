@@ -2,6 +2,23 @@
 
 Pizza.
 
+## Table of Contents
+
+- [zfgc.com](#zfgccom)
+  - [Table of Contents](#table-of-contents)
+  - [Environment Setup](#environment-setup)
+  - [Development Process](#development-process)
+    - [Scripts](#scripts)
+      - [setup.sh](#setupsh)
+      - [apply.sh](#applysh)
+      - [status.sh](#statussh)
+      - [destroy.sh](#destroysh)
+  - [Workflow](#workflow)
+    - [Cleaning Up](#cleaning-up)
+  - [Workspace](#workspace)
+    - [Domain Structure](#domain-structure)
+  - [Notes](#notes)
+
 ## Environment Setup
 
 To setup your environment, follow the [setup instructions](../README.md#setup) in the main README.
@@ -30,7 +47,7 @@ This script applies the manifests for the specified environment.
 
 #### [status.sh](./scripts/development/status.sh)
 
-This script displays the status of the specified namespace.
+This script displays the status of the specified namespace. Namespaces are created by the [setup.sh](./scripts/development/setup.sh) script.
 
 ```bash
 ./scripts/development/status.sh <namespace>
@@ -67,10 +84,39 @@ To clean up the development environment, run the following command:
 ./scripts/development/destroy.sh zfgc.com develop
 ```
 
-### Contributing
+## Workspace
 
-Feel free to contribute to the project by forking the repository, making changes, and submitting a pull request.
+The workspace is setup to group domains and services together.
+
+### Domain Structure
+
+```text
+domain-name.tld
+├── base - Defines the base resources for the domain, such as ingress and namespace.
+│   ├── ingress.yml
+│   ├── kustomization.yml
+│   ├── namespace.yml
+├── environments - Defines the environment configurations per git branch for the domain.
+│   ├── [git-branch-name]
+│   │   ├── kustomization.yml
+│   │   ├── namespace.yml
+│   ├── deployment-apache.yml
+│   ├── deployment-mysql.yml
+│   ├── deployment-postgres.yml
+│   ├── deployment-zfgbb.yml
+│   ├── kustomization.yml
+│   ├── namespace.yml
+│   ├── secret-mysql.yml
+│   └── secret-postgres.yml
+├── services - Defines the service manifests for the domain.
+│   ├── [name]
+│   │   ├── deployment-[name].yml
+│   │   ├── kustomization.yml
+│   │   ├── service-[name].yml
+├── scripts
+│   ├── setup-environment-files.sh
+```
 
 ## Notes
 
-TODO.
+Regarding the [Domain Structure](#domain-structure), for now, we're slightly breaking the convention and including `crystalrookarts` and legacy zfgc.com services under the `old-skool` service. This is because we're still using the old zfgc.com domain for legacy services, and we want to keep the domain name consistent. This will be addressed in the future. The [develop](./zfgc.com/)
