@@ -120,4 +120,4 @@ domain-name.tld
 
 ## Notes
 
-Regarding the [Domain Structure](#domain-structure), for now, we're slightly breaking the convention and including `crystalrookarts` and legacy zfgc.com services under the `old-skool` service. This is because we're still using the old zfgc.com domain for legacy services, and we want to keep the domain name consistent. This will be addressed in the future. The [develop](./zfgc.com/)
+Regarding the [Domain Structure](#domain-structure), for now, we're slightly breaking the convention and including `crystalrookarts` and legacy zfgc.com services under the `old-skool` service. This is because we're still using the old zfgc.com domain for legacy services, and we want to keep the domain name consistent. This will be addressed in the future. The [develop](./zfgc.com/) does not include legacy zfgc.com services, so if not deploying `main`, then you can safely ignore the legacy zfgc.com services under [old-skool](./zfgc.com/services/old-skool/).
