@@ -6,6 +6,7 @@ Pizza.
 
 - [ZFGBB IaC (Infrastructure as Code)](#zfgbb-iac-infrastructure-as-code)
   - [Table of Contents](#table-of-contents)
+  - [Projects](#projects)
   - [Environment Setup](#environment-setup)
   - [Development Process](#development-process)
     - [Scripts](#scripts)
@@ -18,6 +19,10 @@ Pizza.
   - [Workspace](#workspace)
     - [Domain Structure](#domain-structure)
   - [Notes](#notes)
+
+## Projects
+
+- [zfgc.com](./zfgc.com/README.md)
 
 ## Environment Setup
 
@@ -107,7 +112,6 @@ domain-name.tld
 │   │   ├── deployment.yml
 │   │   ├── kustomization.yml
 │   │   ├── service.yml
-│   │   ├── secret-[dependency-service-A].yml
 ├── scripts
 │   ├── setup-environment-files.sh
 ```
@@ -115,3 +119,5 @@ domain-name.tld
 ## Notes
 
 Regarding the [Domain Structure](#domain-structure), for now, we're slightly breaking the convention and including `crystalrookarts` and legacy zfgc.com services under the `old-skool` service. This is because we're still using the old zfgc.com domain for legacy services, and we want to keep the domain name consistent. This will be addressed in the future.
+
+For more details, see the [ZFGBB IaC README](./zfgc.com/README.md).
