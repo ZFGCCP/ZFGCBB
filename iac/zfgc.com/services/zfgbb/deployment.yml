@@ -22,7 +22,7 @@ spec:
                 name: zfgbb-secrets
                 key: POSTGRES_PASSWORD
         - name: zfgbb
-          image: zfgbb-zfgbb:latest
+          image: zfgbb-api:latest
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080

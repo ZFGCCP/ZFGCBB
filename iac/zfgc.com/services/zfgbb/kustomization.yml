@@ -1,5 +1,6 @@
 namespace: zfgbb
 resources:
   - ../shared/postgres
+  - ../shared/tomcat
   - deployment.yml
   - service.yml

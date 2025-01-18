@@ -17,13 +17,13 @@ spec:
   - host: crystalrook.com
     http:
       paths:
-      - path: /
+      - path: /crystalrookarts
         pathType: ImplementationSpecific
         backend:
           service:
             name: old-skool
             port:
-              number: 8080
+              number: 8082
   - host: pizzatime.zfgc.com
     http:
       paths:
