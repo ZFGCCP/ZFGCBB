@@ -24,9 +24,9 @@ as $$
 begin
 	
 	insert into zfgbb.permission_group(permission_group_id, group_name, description, min_posts, star_image, parent_group)
-	values(p_group_id, p_group_name, p_description, -1, 'default.png', p_parent_group)
+	values(p_group_id, p_group_name, p_description, -1, 3, p_parent_group)
 	on conflict(permission_group_id)
-	do update set group_name = p_group_name, description = p_description, min_posts = p_min_posts, star_image = 'default.png', parent_group = p_parent_group;
+	do update set group_name = p_group_name, description = p_description, min_posts = p_min_posts, star_image = 3, parent_group = p_parent_group;
 	
 	return;
 	
@@ -55,7 +55,7 @@ select zfgbb.create_permission(6, 'Message Viewer', 'ZFGC_MESSAGE_VIEWER');
 select zfgbb.create_permission(7, 'Message Editor', 'ZFGC_MESSAGE_EDITOR');
 select zfgbb.create_permission(8, 'Message Admin', 'ZFGC_MESSAGE_ADMIN');
 
-select zfgbb.create_permission_group(1, 'Member', '', -1, null);
-select zfgbb.create_permission_group(2, 'Admin', '', -1, 1);
+--select zfgbb.create_permission_group(1, 'Member', '', -1, null);
+--select zfgbb.create_permission_group(2, 'Admin', '', -1, 1);
 
-select zfgbb.associate_permission_to_group('Member', 'ZFGC_USER');
+--select zfgbb.associate_permission_to_group('Member', 'ZFGC_USER');
