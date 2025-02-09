@@ -5,6 +5,9 @@
   <properties resource="application.properties"/>
   <context id="zfgc3_context" targetRuntime="MyBatis3">
 
+	<plugin type="com.zfgc.zfgbb_mybatis.ExtendDbo"/>
+	<plugin type="com.zfgc.zfgbb_mybatis.GenerateDao"/>
+
     <jdbcConnection connectionURL="jdbc:postgresql://localhost:5432/zfgc_dev"
     				driverClass="org.postgresql.Driver"
     				password="postgres"
@@ -18,8 +21,8 @@
     
 
     <!-- tables -->
-    <table schema="zfgbb" tableName="child_board_view" domainObjectName="ChildBoardViewDbo">
-    </table>
+    <!-- <table schema="zfgbb" tableName="child_board_view" domainObjectName="ChildBoardViewDbo">
+    </table> -->
     
     <!-- <table schema="zfgbb" tableName="board_summary" domainObjectName="BoardSummaryViewDbo">
 		<columnOverride column="latest_message_created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime"/>
@@ -29,11 +32,11 @@
 		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime"/>
     </table> -->
     
-    <!-- <table schema="zfgbb" tableName="content_resource" domainObjectName="ContentResourceDbo">
+    <table schema="zfgbb" tableName="content_resource" domainObjectName="ContentResourceDbo">
 		<generatedKey column="content_resource_id" sqlStatement="JDBC" identity="true" />
 		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime" isGeneratedAlways="true"/>
 		<columnOverride column="updated_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime" isGeneratedAlways="true"/>
-    </table> -->
+    </table>
     
     
     <!-- <table schema="zfgbb" tableName="avatar" domainObjectName="AvatarDbo">
