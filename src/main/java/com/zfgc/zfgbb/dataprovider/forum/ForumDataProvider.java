@@ -126,10 +126,8 @@ public class ForumDataProvider extends AbstractDataProvider {
 		
 		BoardDbo boardDbo = boardDao.get(0);
 		forum.setBoardName(boardDbo.getBoardName());
-		
-		CategoryDboExample exC = new CategoryDboExample();
-		exC.createCriteria().andParentBoardIdEqualTo(0);
-		List<Category> categories = getCategories(exC);
+
+		List<Category> categories = getCategories(0);
 
 		forum.setCategories(categories);
 		
@@ -139,11 +137,12 @@ public class ForumDataProvider extends AbstractDataProvider {
 		return forum;
 	}
 	
-	public List<Category> getCategories(CategoryDboExample exC){
+	public List<Category> getCategories(Integer parentBoardId){
+		CategoryDboExample exC = new CategoryDboExample();
+		exC.createCriteria().andParentBoardIdEqualTo(parentBoardId);
 		List<Category> categories = super.convertDboListToModel(categoryDao.get(exC), Category.class);
-		List<Integer> categoryIds = categories.stream().map(Category::getCategoryId).collect(Collectors.toList());
 		
-		Map<Integer, List<BoardSummary>> summaries = getBoardSummariesByCategory(categoryIds).stream().collect(Collectors.groupingBy(BoardSummary::getCategoryId));
+		Map<Integer, List<BoardSummary>> summaries = getBoardSummaries(Arrays.asList(parentBoardId)).stream().filter(x -> x.getCategoryId() != null).collect(Collectors.groupingBy(BoardSummary::getCategoryId));
 		
 		categories.forEach(cat ->{
 			cat.setBoards(summaries.get(cat.getCategoryId()));

@@ -105,6 +105,7 @@ public class ThreadDataProvider extends AbstractDataProvider {
 	
 	public List<Thread> getThreadsByBoardId(Integer boardId, Integer pageNo, Integer threadsPerPage, Boolean sticky){
 		ThreadDboExample exT = new ThreadDboExample();
+		exT.setOrderByClause("created_ts desc");
 		if(pageNo != null && threadsPerPage != null) {
 			exT.setLimit(threadsPerPage);
 			exT.setOffset((pageNo - 1) * threadsPerPage);
