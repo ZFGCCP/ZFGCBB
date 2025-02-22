@@ -52,7 +52,7 @@ public class ForumService extends AbstractService {
 	}
 	
 	public Board getBoard(Integer boardId, Integer pageNo, User zfgcUser) {
-		return forumDataProvider.getBoard(boardId, pageNo, pageNo);
+		return forumDataProvider.getBoard(boardId, pageNo, 10);
 	}
 	
 	public Thread getThreadTemplate(Integer boardId, User zfgcUser) {
