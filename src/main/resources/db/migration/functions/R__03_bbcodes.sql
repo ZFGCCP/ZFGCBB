@@ -68,7 +68,7 @@ select zfgbb.create_bbcode_config(8, 'right', '</span>', true);
 select zfgbb.create_bbcode_config(9, 'youtube', '</span>', false);
 select zfgbb.create_bbcode_config(10, 'spoiler', '</span>', true);
 select zfgbb.create_bbcode_config(11, 'img', '</span>', false);
-select zfgbb.create_bbcode_config(12, 'url', '</a>', false);
+select zfgbb.create_bbcode_config(12, 'url', '</a></span>', true);
 select zfgbb.create_bbcode_config(13, 'email', '</span>', false);
 select zfgbb.create_bbcode_config(14, 'ftp', '</span>', false);
 select zfgbb.create_bbcode_config(15, 'move', '</marquee>', true);
@@ -98,6 +98,8 @@ select zfgbb.create_bbcode_attr(1, 0, 8, 'NAMELESS', 1);
 select zfgbb.create_bbcode_attr_mode(9,'spoiler','<span class="bb-code-spoiler">','</span>',false,false);
 select zfgbb.create_bbcode_attr_mode(10,'img','<span class="bb-code-img"><img src="{{c}}"/>','</span>',true,false);
 select zfgbb.create_bbcode_attr_mode(12,'url','<span class="bb-code-url"><a href="{{0}}">','</a></span>',false,false);
+select zfgbb.create_bbcode_attr(3, 0, 12, 'NAMELESS', 1);
+
 select zfgbb.create_bbcode_attr_mode(13,'email','<span class="bb-code-email"><a href="mailto:{{0}}">','</a></span>',false,false);
 select zfgbb.create_bbcode_attr_mode(14,'ftp','<span class="bb-code-ftp"><a href="{{0}}">','</a></span>',false,false);
 select zfgbb.create_bbcode_attr_mode(15,'move','<marquee>','</marquee>',false,false);

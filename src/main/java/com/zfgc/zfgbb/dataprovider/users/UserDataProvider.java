@@ -76,7 +76,9 @@ public class UserDataProvider extends AbstractDataProvider {
 		
 		if(Boolean.TRUE.equals(loadOptions.loadBio())) {
 			UserBioInfoDbo bioInfoDbo = bioInfoDao.get(userId);
-			user.setBioInfo(mapper.map(bioInfoDbo, UserBioInfo.class));
+			if(bioInfoDbo != null) {
+				user.setBioInfo(mapper.map(bioInfoDbo, UserBioInfo.class));
+			}
 		}
 		
 		if(Boolean.TRUE.equals(loadOptions.loadAvatar())) {
@@ -85,8 +87,11 @@ public class UserDataProvider extends AbstractDataProvider {
 									 .andActiveFlagEqualTo(true);
 			
 			Optional<AvatarDbo> avDb = avatarDao.get(avatarEx).stream().findFirst();
-			Avatar av = avDb.map((a) -> mapper.map(a, Avatar.class)).orElse(null);
-			user.setAvatar(av);
+			
+			if(avDb != null) {
+				Avatar av = avDb.map((a) -> mapper.map(a, Avatar.class)).orElse(null);
+				user.setAvatar(av);
+			}
 		}
 		
 		return user;
