@@ -74,7 +74,7 @@ select zfgbb.create_bbcode_config(14, 'ftp', '</span>', false);
 select zfgbb.create_bbcode_config(15, 'move', '</marquee>', true);
 select zfgbb.create_bbcode_config(16, 'black', '</span>', true);
 select zfgbb.create_bbcode_config(17, 'blue', '</span>', true);
-select zfgbb.create_bbcode_config(18, 'quote', '</span>', true);
+select zfgbb.create_bbcode_config(18, 'quote', '</div></div>', true);
 select zfgbb.create_bbcode_config(19, 'code', '</span>', true);
 select zfgbb.create_bbcode_config(20, 'color', '</span>', true);
 select zfgbb.create_bbcode_config(21, 'green', '</span>', true);
@@ -110,6 +110,11 @@ select zfgbb.create_bbcode_attr_mode(17,'quote','<div class="bb-code-quote"><div
 
 select zfgbb.create_bbcode_attr_mode(18,'quote','<div class="bb-code-quote"><div class="bb-code-quote-header">Quote from {{0}},</div><div class="bb-code-quote-body">','</div></div>',false,false);
 select zfgbb.create_bbcode_attr(2, 0, 18, 'author', 1);
+
+select zfgbb.create_bbcode_attr_mode(21,'quote','<div class="bb-code-quote"><div class="bb-code-quote-header">Quote from {{0}} on {{2}}</div><div class="bb-code-quote-body">','</div></div>',false,false);
+select zfgbb.create_bbcode_attr(4, 0, 21, 'author', 1);
+select zfgbb.create_bbcode_attr(5, 1, 21, 'link', 1);
+select zfgbb.create_bbcode_attr(6, 2, 21, 'date', 0);
 
 select zfgbb.create_bbcode_attr_mode(19,'color','<span style="color:{{0}}">','</span>',false,false);
 select zfgbb.create_bbcode_attr_mode(20,'green','<span style="color:green">','</span>',false,false);

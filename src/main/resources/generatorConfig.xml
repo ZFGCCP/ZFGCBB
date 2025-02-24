@@ -5,7 +5,7 @@
   <properties resource="application.properties"/>
   <context id="zfgc3_context" targetRuntime="MyBatis3">
 
-    <jdbcConnection connectionURL="jdbc:postgresql://localhost:5432/zfgc_dev"
+    <jdbcConnection connectionURL="jdbc:postgresql://localhost:5432/zfgbb"
     				driverClass="org.postgresql.Driver"
     				password="postgres"
     				userId="postgres"/>
@@ -18,15 +18,20 @@
     
 
     <!-- tables -->
-    <table schema="zfgbb" tableName="child_board_view" domainObjectName="ChildBoardViewDbo">
+    <table schema="zfgbb" tableName="latest_message_in_thread_view" domainObjectName="LatestMessageInThreadViewDbo">
+		<columnOverride column="created_ts" jdbcType="TIMESTAMP" javaType="java.time.LocalDateTime"/>
+		<columnOverride column="last_post_ts" jdbcType="TIMESTAMP" javaType="java.time.LocalDateTime"/>
     </table>
     
-    <!-- <table schema="zfgbb" tableName="board_summary" domainObjectName="BoardSummaryViewDbo">
-		<columnOverride column="latest_message_created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime"/>
+    <!-- <table schema="zfgbb" tableName="all_messages_in_thread_view" domainObjectName="AllMessagesInThreadViewDbo">
+    	<columnOverride column="post_ts" jdbcType="TIMESTAMP" javaType="java.time.LocalDateTime"/>
     </table> -->
     
-    <!-- <table schema="zfgbb" tableName="latest_message_in_thread_view" domainObjectName="LatestMessageInThreadViewDbo">
-		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime"/>
+    <!-- <table schema="zfgbb" tableName="board_summary" domainObjectName="BoardSummaryViewDbo">
+		<columnOverride column="latest_message_created_ts" jdbcType="TIMESTAMP" javaType="java.time.LocalDateTime"/>
+    </table> -->
+    
+    <!-- <table schema="zfgbb" tableName="child_board_view" domainObjectName="ChildBoardViewDbo">
     </table> -->
     
     <!-- <table schema="zfgbb" tableName="content_resource" domainObjectName="ContentResourceDbo">
