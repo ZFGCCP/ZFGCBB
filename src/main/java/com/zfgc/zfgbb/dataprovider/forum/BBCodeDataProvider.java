@@ -79,14 +79,14 @@ public class BBCodeDataProvider extends AbstractDataProvider {
 					attribute.setAttributeIndex("{{" + Integer.parseInt(attribute.getAttributeIndex()) + "}}");
 					attribute.setName(attribute.getName().equals("NAMELESS") ? "=" : attribute.getName() + "=");
 					attributes.add(attribute);
-					modeString.append(attribute.getName().equals("=") ? "=" : attribute.getName() + "=");
+					modeString.append(attribute.getName().equals("=") ? "=" : attribute.getName());
 					
 					if(attString.indexOf(attribute.getName()) == -1 || attString.length() == 0){
 						if(attString.length() > 0){
 							attString.append(",");
 						}
 						
-						attString.append(attribute.getName().equals("=") ? "=" : attribute.getName() + "=");
+						attString.append(attribute.getName().equals("=") ? "=" : attribute.getName());
 					}
 				}
 				

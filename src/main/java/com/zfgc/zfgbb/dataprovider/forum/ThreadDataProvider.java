@@ -12,9 +12,6 @@ import org.springframework.stereotype.Repository;
 
 import com.zfgc.zfgbb.dao.BoardPermissionViewDao;
 import com.zfgc.zfgbb.dao.ThreadDao;
-import com.zfgc.zfgbb.dao.forum.CurrentMessageDao;
-import com.zfgc.zfgbb.dao.forum.MessageDao;
-import com.zfgc.zfgbb.dao.forum.MessageHistoryDao;
 import com.zfgc.zfgbb.dao.forum.PollDao;
 import com.zfgc.zfgbb.dao.forum.PollQuestionDao;
 import com.zfgc.zfgbb.dao.users.UserDao;
@@ -22,25 +19,20 @@ import com.zfgc.zfgbb.dataprovider.AbstractDataProvider;
 import com.zfgc.zfgbb.dbo.AllMessagesInThreadViewDbo;
 import com.zfgc.zfgbb.dbo.AllMessagesInThreadViewDboExample;
 import com.zfgc.zfgbb.dbo.BoardPermissionViewDboExample;
-import com.zfgc.zfgbb.dbo.CurrentMessageDboExample;
 import com.zfgc.zfgbb.dbo.LatestMessageInThreadViewDbo;
 import com.zfgc.zfgbb.dbo.LatestMessageInThreadViewDboExample;
-import com.zfgc.zfgbb.dbo.MessageDbo;
-import com.zfgc.zfgbb.dbo.MessageDboExample;
-import com.zfgc.zfgbb.dbo.MessageHistoryDbo;
-import com.zfgc.zfgbb.dbo.MessageHistoryDboExample;
 import com.zfgc.zfgbb.dbo.PollDbo;
 import com.zfgc.zfgbb.dbo.PollDboExample;
 import com.zfgc.zfgbb.dbo.PollQuestionDbo;
 import com.zfgc.zfgbb.dbo.PollQuestionDboExample;
 import com.zfgc.zfgbb.dbo.ThreadDbo;
 import com.zfgc.zfgbb.dbo.ThreadDboExample;
-import com.zfgc.zfgbb.dbo.UserDboExample;
+import com.zfgc.zfgbb.mappers.AllMessagesInThreadViewDboMapper;
 import com.zfgc.zfgbb.mappers.LatestMessageInThreadViewDboMapper;
+import com.zfgc.zfgbb.mappers.MessageDboMapper;
 import com.zfgc.zfgbb.model.User;
 import com.zfgc.zfgbb.model.forum.LatestMessage;
 import com.zfgc.zfgbb.model.forum.Message;
-import com.zfgc.zfgbb.model.forum.MessageHistory;
 import com.zfgc.zfgbb.model.forum.Poll;
 import com.zfgc.zfgbb.model.forum.PollQuestion;
 import com.zfgc.zfgbb.model.forum.Thread;
@@ -70,6 +62,9 @@ public class ThreadDataProvider extends AbstractDataProvider {
 	
 	@Autowired
 	private LatestMessageInThreadViewDboMapper latestMessageMapper;
+	
+	@Autowired
+	private AllMessagesInThreadViewDboMapper allMessagesMapper;
 	
 	public Thread getThread(Integer threadId, Integer page, Integer count) {
 		ThreadDbo threadDb = threadDao.get(threadId);
@@ -108,12 +103,13 @@ public class ThreadDataProvider extends AbstractDataProvider {
 	}
 	
 	public List<Thread> getThreadsByBoardId(Integer boardId, Integer pageNo, Integer threadsPerPage, Boolean sticky){
-		ThreadDboExample exT = new ThreadDboExample();
-		exT.setOrderByClause("created_ts desc");
+		//get a high level view of the threads for this board based on page number
+		LatestMessageInThreadViewDboExample exT = new LatestMessageInThreadViewDboExample();
 		if(pageNo != null && threadsPerPage != null) {
 			exT.setLimit(threadsPerPage);
 			exT.setOffset((pageNo - 1) * threadsPerPage);
 		}
+		exT.setOrderByClause("last_post_ts desc");
 		exT.createCriteria().andBoardIdEqualTo(boardId).andPinnedFlagEqualTo(sticky);
 		
 		//map them all by threadId
@@ -150,12 +146,14 @@ public class ThreadDataProvider extends AbstractDataProvider {
 			th.setCreatedUser(super.mapper.map(userDao.get(th.getCreatedUserId()), User.class));
 			th.setPostCount(messageDataProvider.getTotalPostsInThread(th.getThreadId()).intValue());
 			
-			LatestMessageInThreadViewDboExample ex = new LatestMessageInThreadViewDboExample(); 
-			ex.createCriteria().andThreadIdEqualTo(th.getThreadId());
-			LatestMessageInThreadViewDbo latestDbo = latestMessageMapper.selectByExample(ex).stream().findFirst().orElse(null);
+			LatestMessageInThreadViewDbo latestDbo = messagesByThreadId.get(th.getThreadId());
 			if(latestDbo != null) {
 				th.setLatestMessage(mapper.map(latestDbo, LatestMessage.class));
+				th.getLatestMessage().setOwnerName(latestDetails.getLastPostedUser());
 			}
+			
+			//as we get done, clear out the details to free up memory
+			mappedMessageDetails.remove(th.getThreadId());
 		});
 		
 		return result;
