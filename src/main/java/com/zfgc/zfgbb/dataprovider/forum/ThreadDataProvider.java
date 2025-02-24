@@ -1,42 +1,38 @@
 package com.zfgc.zfgbb.dataprovider.forum;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.google.common.base.Preconditions;
-import com.google.common.collect.Streams;
 import com.zfgc.zfgbb.dao.BoardPermissionViewDao;
 import com.zfgc.zfgbb.dao.ThreadDao;
-import com.zfgc.zfgbb.dao.forum.CurrentMessageDao;
-import com.zfgc.zfgbb.dao.forum.MessageDao;
-import com.zfgc.zfgbb.dao.forum.MessageHistoryDao;
 import com.zfgc.zfgbb.dao.forum.PollDao;
 import com.zfgc.zfgbb.dao.forum.PollQuestionDao;
 import com.zfgc.zfgbb.dao.users.UserDao;
 import com.zfgc.zfgbb.dataprovider.AbstractDataProvider;
+import com.zfgc.zfgbb.dbo.AllMessagesInThreadViewDbo;
+import com.zfgc.zfgbb.dbo.AllMessagesInThreadViewDboExample;
 import com.zfgc.zfgbb.dbo.BoardPermissionViewDboExample;
-import com.zfgc.zfgbb.dbo.CurrentMessageDboExample;
 import com.zfgc.zfgbb.dbo.LatestMessageInThreadViewDbo;
 import com.zfgc.zfgbb.dbo.LatestMessageInThreadViewDboExample;
-import com.zfgc.zfgbb.dbo.MessageDbo;
-import com.zfgc.zfgbb.dbo.MessageDboExample;
-import com.zfgc.zfgbb.dbo.MessageHistoryDbo;
-import com.zfgc.zfgbb.dbo.MessageHistoryDboExample;
 import com.zfgc.zfgbb.dbo.PollDbo;
 import com.zfgc.zfgbb.dbo.PollDboExample;
 import com.zfgc.zfgbb.dbo.PollQuestionDbo;
 import com.zfgc.zfgbb.dbo.PollQuestionDboExample;
 import com.zfgc.zfgbb.dbo.ThreadDbo;
 import com.zfgc.zfgbb.dbo.ThreadDboExample;
-import com.zfgc.zfgbb.dbo.UserDboExample;
+import com.zfgc.zfgbb.mappers.AllMessagesInThreadViewDboMapper;
 import com.zfgc.zfgbb.mappers.LatestMessageInThreadViewDboMapper;
+import com.zfgc.zfgbb.mappers.MessageDboMapper;
 import com.zfgc.zfgbb.model.User;
 import com.zfgc.zfgbb.model.forum.LatestMessage;
 import com.zfgc.zfgbb.model.forum.Message;
-import com.zfgc.zfgbb.model.forum.MessageHistory;
 import com.zfgc.zfgbb.model.forum.Poll;
 import com.zfgc.zfgbb.model.forum.PollQuestion;
 import com.zfgc.zfgbb.model.forum.Thread;
@@ -66,6 +62,9 @@ public class ThreadDataProvider extends AbstractDataProvider {
 	
 	@Autowired
 	private LatestMessageInThreadViewDboMapper latestMessageMapper;
+	
+	@Autowired
+	private AllMessagesInThreadViewDboMapper allMessagesMapper;
 	
 	public Thread getThread(Integer threadId, Integer page, Integer count) {
 		ThreadDbo threadDb = threadDao.get(threadId);
@@ -104,26 +103,57 @@ public class ThreadDataProvider extends AbstractDataProvider {
 	}
 	
 	public List<Thread> getThreadsByBoardId(Integer boardId, Integer pageNo, Integer threadsPerPage, Boolean sticky){
-		ThreadDboExample exT = new ThreadDboExample();
-		exT.setOrderByClause("created_ts desc");
+		//get a high level view of the threads for this board based on page number
+		LatestMessageInThreadViewDboExample exT = new LatestMessageInThreadViewDboExample();
 		if(pageNo != null && threadsPerPage != null) {
 			exT.setLimit(threadsPerPage);
 			exT.setOffset((pageNo - 1) * threadsPerPage);
 		}
+		exT.setOrderByClause("last_post_ts desc");
 		exT.createCriteria().andBoardIdEqualTo(boardId).andPinnedFlagEqualTo(sticky);
 		
-		List<Thread> result = super.convertDboListToModel(threadDao.get(exT), Thread.class);
+		//map them all by threadId
+		List<LatestMessageInThreadViewDbo> latestMessages = latestMessageMapper.selectByExampleWithLimits(exT);
+		List<Thread> result = super.convertDboListToModel(latestMessages, Thread.class);
+		Map<Integer, LatestMessageInThreadViewDbo> messagesByThreadId = latestMessages.stream()
+																					  .collect(Collectors.toMap(LatestMessageInThreadViewDbo::getThreadId, Function.identity()));
+		//we don't need the original list anymore, so lets clear it to free up some memory
+		latestMessages.clear();
 		
+		//also get details of all the messages, mapped by threadId
+		//todo: find a better way to do this? it's fast, but I don't like the idea of loading all the posts for a thread
+		//just to get the latest one
+		//doing it via sql so far has been too slow
+		AllMessagesInThreadViewDboExample amEx = new AllMessagesInThreadViewDboExample();
+		List<AllMessagesInThreadViewDbo> fullMessageDetails = new ArrayList<>();
+		Map<Integer, List<AllMessagesInThreadViewDbo>> mappedMessageDetails = new HashMap<>();
+		
+		if(!result.isEmpty()) {
+			amEx.createCriteria().andThreadIdIn(result.stream().map(Thread::getThreadId).collect(Collectors.toList()));
+			amEx.setOrderByClause("post_ts desc");
+			fullMessageDetails = allMessagesMapper.selectByExample(amEx);
+			
+			mappedMessageDetails.putAll(fullMessageDetails.stream()
+					 									  .collect(Collectors.groupingBy(AllMessagesInThreadViewDbo::getThreadId)));
+			
+			//we don't need the original list anymore, so lets clear it to free up some memory
+			fullMessageDetails.clear();
+		}
+		
+		//finally, link up all the data
 		result.forEach(th -> {
+			AllMessagesInThreadViewDbo latestDetails = mappedMessageDetails.get(th.getThreadId()).get(0);
 			th.setCreatedUser(super.mapper.map(userDao.get(th.getCreatedUserId()), User.class));
 			th.setPostCount(messageDataProvider.getTotalPostsInThread(th.getThreadId()).intValue());
 			
-			LatestMessageInThreadViewDboExample ex = new LatestMessageInThreadViewDboExample(); 
-			ex.createCriteria().andThreadIdEqualTo(th.getThreadId());
-			LatestMessageInThreadViewDbo latestDbo = latestMessageMapper.selectByExample(ex).stream().findFirst().orElse(null);
+			LatestMessageInThreadViewDbo latestDbo = messagesByThreadId.get(th.getThreadId());
 			if(latestDbo != null) {
 				th.setLatestMessage(mapper.map(latestDbo, LatestMessage.class));
+				th.getLatestMessage().setOwnerName(latestDetails.getLastPostedUser());
 			}
+			
+			//as we get done, clear out the details to free up memory
+			mappedMessageDetails.remove(th.getThreadId());
 		});
 		
 		return result;

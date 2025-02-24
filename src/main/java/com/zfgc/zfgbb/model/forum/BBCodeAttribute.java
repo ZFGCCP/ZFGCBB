@@ -1,5 +1,9 @@
 package com.zfgc.zfgbb.model.forum;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+
 import com.zfgc.zfgbb.model.BaseModel;
 
 public class BBCodeAttribute extends BaseModel {
@@ -28,7 +32,8 @@ public class BBCodeAttribute extends BaseModel {
 	}
 	
     public String createDate(String value){
-		return "";//ZfgcTimeUtils.createDateAsString(value, super.getUserTimeZone());
+    	Long ts = Long.parseLong(value + "000");
+		return LocalDateTime.ofInstant(Instant.ofEpochMilli(ts), ZoneOffset.UTC).toString();
 	}
     
 	public Integer getBbCodeAttributeId() {
