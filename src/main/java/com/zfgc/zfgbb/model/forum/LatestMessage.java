@@ -8,12 +8,16 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class LatestMessage {
 	private Integer threadId;
     private String threadName;
-    private Integer messageId;
-    private Integer messageHistoryId;
     @JsonIgnore
-    private LocalDateTime createdTs;
+    private LocalDateTime lastPostTs;
     private String ownerName;
     
+	public LocalDateTime getLastPostTs() {
+		return lastPostTs;
+	}
+	public void setLastPostTs(LocalDateTime lastPostTs) {
+		this.lastPostTs = lastPostTs;
+	}
 	public Integer getThreadId() {
 		return threadId;
 	}
@@ -26,33 +30,15 @@ public class LatestMessage {
 	public void setThreadName(String threadName) {
 		this.threadName = threadName;
 	}
-	public Integer getMessageId() {
-		return messageId;
-	}
-	public void setMessageId(Integer messageId) {
-		this.messageId = messageId;
-	}
-	public Integer getMessageHistoryId() {
-		return messageHistoryId;
-	}
-	public void setMessageHistoryId(Integer messageHistoryId) {
-		this.messageHistoryId = messageHistoryId;
-	}
-	public LocalDateTime getCreatedTs() {
-		return createdTs;
-	}
-	public void setCreatedTs(LocalDateTime createdTs) {
-		this.createdTs = createdTs;
-	}
 	public String getOwnerName() {
 		return ownerName;
 	}
 	public void setOwnerName(String ownerName) {
 		this.ownerName = ownerName;
 	}
-	public String getCreatedTsAsString() {
-		if(createdTs != null) {
-			return createdTs.format(DateTimeFormatter.ofPattern("MM/dd/YYYY HH:mm:SS"));
+	public String getLastPostTsAsString() {
+		if(lastPostTs != null) {
+			return lastPostTs.format(DateTimeFormatter.ofPattern("MM/dd/YYYY HH:mm:SS"));
 		}
 		return "";
 	}
