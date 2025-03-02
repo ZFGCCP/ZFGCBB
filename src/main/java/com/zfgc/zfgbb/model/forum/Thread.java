@@ -21,6 +21,7 @@ public class Thread extends BaseModel implements Securable {
     private User createdUser;
     private Integer postCount;
     private Integer viewCount;
+    private Integer pageCount;
     
 	@JsonIgnore
     private List<Permission> boardPermissions = new ArrayList<>();
@@ -122,5 +123,11 @@ public class Thread extends BaseModel implements Securable {
 	}
 	public void setLatestMessage(LatestMessage latestMessage) {
 		this.latestMessage = latestMessage;
+	}
+	public Integer getPageCount() {
+		return pageCount;
+	}
+	public void setPageCount(Integer pageCount) {
+		this.pageCount = pageCount;
 	}
 }
