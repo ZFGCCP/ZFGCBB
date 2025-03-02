@@ -46,6 +46,19 @@ begin
 	return;
 end; $$;
 
+create or replace function zfgbb.add_perm_to_board(p_id integer, p_board_id integer, p_perm_id integer)
+returns void
+language plpgsql
+as $$
+begin
+	insert into zfgbb.br_board_permission (br_board_permission_id, board_id, permission_id)
+	values (p_id, p_board_id, p_perm_id)
+	on conflict (br_board_permission_id)
+	do update set board_id = p_board_id, permission_id = p_perm_id;
+	
+	return;
+end; $$;
+
 select zfgbb.create_permission(1, 'ZFGC User', 'ZFGC_USER');
 select zfgbb.create_permission(2, 'ZFGC Guest', 'ZFGC_GUEST');
 select zfgbb.create_permission(3, 'User Profile Viewer', 'ZFGC_PROFILE_VIEWER');

@@ -2,11 +2,13 @@ package com.zfgc.zfgbb.model.forum;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.zfgc.zfgbb.model.users.Permission;
 
 public class BoardSummary {
 	private Integer boardId;
@@ -23,6 +25,9 @@ public class BoardSummary {
     private String threadName;
 
     private List<ChildBoard> childBoards;
+    
+    @JsonIgnore
+    private List<Permission> boardPerms = new ArrayList<>();
     
     @JsonIgnore
     private LocalDateTime latestMessageCreatedTs;
@@ -123,5 +128,11 @@ public class BoardSummary {
 	}
 	public void setThreadName(String threadName) {
 		this.threadName = threadName;
+	}
+	public List<Permission> getBoardPerms() {
+		return boardPerms;
+	}
+	public void setBoardPerms(List<Permission> boardPerms) {
+		this.boardPerms = boardPerms;
 	}
 }
