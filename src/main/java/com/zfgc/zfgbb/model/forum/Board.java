@@ -1,9 +1,11 @@
 package com.zfgc.zfgbb.model.forum;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.zfgc.zfgbb.model.BaseModel;
+import com.zfgc.zfgbb.model.users.Permission;
 
 public class Board extends BaseModel {
 
@@ -18,6 +20,9 @@ public class Board extends BaseModel {
 	private List<Thread> stickyThreads;
 	private List<Thread> unStickyThreads;
 	private List<BoardSummary> childBoards;
+	
+	@JsonIgnore
+	private List<Permission> boardPerms = new ArrayList<>();
 	
 	public List<Thread> getStickyThreads() {
 		return stickyThreads;
@@ -106,6 +111,14 @@ public class Board extends BaseModel {
 			return 1L;
 		}
 		return (long) Math.ceil(threadCount.doubleValue() / 10.0);
+	}
+
+	public List<Permission> getBoardPerms() {
+		return boardPerms;
+	}
+
+	public void setBoardPerms(List<Permission> boardPerms) {
+		this.boardPerms = boardPerms;
 	}
 
 
