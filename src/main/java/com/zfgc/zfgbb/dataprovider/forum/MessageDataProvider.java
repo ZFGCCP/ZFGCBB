@@ -70,6 +70,7 @@ public class MessageDataProvider extends AbstractDataProvider {
 		ex.createCriteria().andThreadIdEqualTo(threadId)
 						   .andPostInThreadBetween(start, start + count - 1);
 		ex.setOrderByClause("post_in_thread asc");
+		ex.setOrderByClause("post_in_thread asc");
 		
 		
 		
