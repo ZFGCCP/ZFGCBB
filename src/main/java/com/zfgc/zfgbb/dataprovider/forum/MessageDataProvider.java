@@ -68,7 +68,7 @@ public class MessageDataProvider extends AbstractDataProvider {
 		Integer start = ((page - 1)*count) + 1;
 		CurrentMessageDboExample ex = new CurrentMessageDboExample();
 		ex.createCriteria().andThreadIdEqualTo(threadId)
-						   .andPostInThreadBetween(start, start + count);
+						   .andPostInThreadBetween(start, start + count - 1);
 		ex.setOrderByClause("post_in_thread asc");
 		
 		
