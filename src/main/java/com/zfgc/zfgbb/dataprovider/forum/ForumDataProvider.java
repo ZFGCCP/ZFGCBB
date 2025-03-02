@@ -1,6 +1,8 @@
 package com.zfgc.zfgbb.dataprovider.forum;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -73,6 +75,9 @@ public class ForumDataProvider extends AbstractDataProvider {
 
 		board.setChildBoards(getBoardSummaries(board.getBoardId()));
 		
+		List<Permission> boardPerms = getBoardPermissions(board.getBoardId());
+		board.setBoardPerms(boardPerms);
+		
 		return board;
 	}
 	
@@ -135,6 +140,18 @@ public class ForumDataProvider extends AbstractDataProvider {
 		//load up permissions for the board
 		forum.setBoardPermissions(getBoardPermissions(0));
 		
+		//ugly, clean this up
+		List<Integer> boardIds = new ArrayList<>(); 
+		categories.stream().filter(c -> c.getBoards() != null).forEach(c -> {
+			boardIds.addAll(c.getBoards().stream().map(BoardSummary::getBoardId).toList());
+		});
+		
+		Map<Integer, List<Permission>> perms = getBoardPermissions(boardIds);
+		categories.stream().filter(c -> c.getBoards() != null).forEach(c -> {
+			c.getBoards().forEach(b -> {
+				b.setBoardPerms(perms.get(b.getBoardId()));
+			});
+		});
 		return forum;
 	}
 	
@@ -156,6 +173,22 @@ public class ForumDataProvider extends AbstractDataProvider {
 		BoardPermissionViewDboExample bEx = new BoardPermissionViewDboExample();
 		bEx.createCriteria().andBoardIdEqualTo(boardId);
 		return super.convertDboListToModel(boardPermissionDao.get(bEx), Permission.class);
+	}
+	
+	public Map<Integer, List<Permission>> getBoardPermissions(List<Integer> boardIds){
+		BoardPermissionViewDboExample bEx = new BoardPermissionViewDboExample();
+		bEx.createCriteria().andBoardIdIn(boardIds);
+		Map<Integer, List<BoardPermissionViewDbo>> result = boardPermissionDao.get(bEx).stream()
+						  				  									  .collect(Collectors.groupingBy(BoardPermissionViewDbo::getBoardId));
+		
+		Map<Integer, List<Permission>> response = new HashMap<>();
+		result.keySet().forEach(k -> {
+			List<Permission> p = super.convertDboListToModel(result.get(k), Permission.class);
+			response.put(k, p);
+		});
+		
+		return response;
+		
 	}
 	
 	public List<Board> getBoardsByParent(Integer parentBoardId){
