@@ -1,5 +1,7 @@
 package com.zfgc.zfgbb.model.forum;
 
+import java.time.format.DateTimeFormatter;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.zfgc.zfgbb.model.BaseModel;
 
@@ -8,7 +10,9 @@ public class MessageHistory extends BaseModel {
 	private Integer messageHistoryId;
 	private Integer messageId;
 	private String messageText;
+	private String unparsedText;
 	private Boolean currentFlag;
+	private Integer ipAddressId;
 	
 	public Integer getMessageHistoryId() {
 		return messageHistoryId;
@@ -41,5 +45,17 @@ public class MessageHistory extends BaseModel {
 	}
 	public void setCurrentFlag(Boolean currentFlag) {
 		this.currentFlag = currentFlag;
+	}
+	public String getUnparsedText() {
+		return unparsedText;
+	}
+	public void setUnparsedText(String unparsedText) {
+		this.unparsedText = unparsedText;
+	}
+	public Integer getIpAddressId() {
+		return ipAddressId;
+	}
+	public void setIpAddressId(Integer ipAddressId) {
+		this.ipAddressId = ipAddressId;
 	}
 }

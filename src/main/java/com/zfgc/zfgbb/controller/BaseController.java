@@ -2,13 +2,13 @@ package com.zfgc.zfgbb.controller;
 
 import java.security.Principal;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 
 import com.zfgc.zfgbb.model.User;
 import com.zfgc.zfgbb.model.users.Permission;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 public class BaseController {
 	@Autowired
@@ -21,6 +21,8 @@ public class BaseController {
 			return createGuest();
 		}
 		
+		
+		
 		return (User) ((Authentication) userPrincipal).getPrincipal();
 	}
 	
@@ -31,7 +33,13 @@ public class BaseController {
 		guest.setUserId(-1);
 		guestPerm.setId(2);
 		guestPerm.setPermissionCode("ZFGC_GUEST");
+		
+		Permission readPerm = new Permission();
+		readPerm.setId(9);
+		readPerm.setPermissionCode("ZFGC_READ_ONLY");
+		
 		guest.getPermissions().add(guestPerm);
+		guest.getPermissions().add(readPerm);
 		
 		return guest;
 	}

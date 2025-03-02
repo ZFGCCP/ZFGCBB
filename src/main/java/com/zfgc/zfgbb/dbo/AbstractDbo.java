@@ -6,5 +6,6 @@ public abstract class AbstractDbo {
 	
 	public abstract Integer getPkId();
 	public abstract LocalDateTime getUpdatedTime();
+	public abstract LocalDateTime getCreatedTime();
 	
 }

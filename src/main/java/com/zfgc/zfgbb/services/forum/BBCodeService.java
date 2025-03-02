@@ -5,8 +5,6 @@ import java.util.Map;
 import java.util.Stack;
 import java.util.TreeMap;
 
-import javax.annotation.PostConstruct;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.mutable.MutableInt;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +15,9 @@ import com.zfgc.zfgbb.model.forum.BBCodeAttribute;
 import com.zfgc.zfgbb.model.forum.BBCodeAttributeMode;
 import com.zfgc.zfgbb.model.forum.BBCodeConfig;
 import com.zfgc.zfgbb.util.ZfgcStringUtils;
+
+import jakarta.annotation.PostConstruct;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

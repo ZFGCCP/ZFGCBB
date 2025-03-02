@@ -10,10 +10,10 @@ public class BBCodeAttributeMode extends BaseModel {
 	@JsonIgnore
 	private Integer bbCodeAttributeModeId;
     private Integer bbCodeConfigId;
-    private Boolean contentIsAttributeFlag;
+    private Boolean contentIsAttributeFlag = false;
     private String openTag;
     private String closeTag;
-    private Boolean outputContentFlag;
+    private Boolean outputContentFlag = true;
     private List<BBCodeAttribute> attributes = new ArrayList<>();
 	
 	public Integer getBbCodeAttributeModeId() {

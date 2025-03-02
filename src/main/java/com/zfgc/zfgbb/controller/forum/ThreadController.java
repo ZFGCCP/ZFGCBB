@@ -42,12 +42,6 @@ public class ThreadController extends BaseController {
 		return ResponseEntity.ok(forumService.getThread(threadId, pageNo, numPerPage, super.zfgcUser()));
 	}
 	
-	@PostMapping("/{threadId}")
-	@PreAuthorize("hasRole('ROLE_ZFGC_THREAD_POSTER')")
-	public ResponseEntity addMessageToThread(@PathVariable("threadId") Integer threadId, Message message) {
-		return ResponseEntity.ok(forumService.saveMessage(message, super.zfgcUser()));
-	}
-	
 	@DeleteMapping("/{threadId}")
 	@PreAuthorize("hasRole('ROLE_ZFGC_THREAD_DELETER')")
 	public ResponseEntity deleteThread(@PathVariable("threadId") Integer threadId) {

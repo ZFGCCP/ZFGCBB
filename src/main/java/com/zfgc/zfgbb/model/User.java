@@ -10,10 +10,14 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.zfgc.zfgbb.model.meta.IpAddress;
+import com.zfgc.zfgbb.model.users.Avatar;
 import com.zfgc.zfgbb.model.users.EmailAddress;
 import com.zfgc.zfgbb.model.users.Permission;
+import com.zfgc.zfgbb.model.users.UserBioInfo;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class User extends BaseModel implements UserDetails {
 	@JsonIgnore
 	private Integer userId;
@@ -21,12 +25,15 @@ public class User extends BaseModel implements UserDetails {
 	private String userName;
 	private Boolean activeFlag;
 	private EmailAddress email;
-	
-	@JsonIgnore
+	private String ssoKey;
+	private String password;
 	private List<Permission> permissions = new ArrayList<>();
 	
 	private IpAddress currentIpAddress;
 	private List<IpAddress> allKnownIpAddresses = new ArrayList<>();
+	private UserBioInfo bioInfo;
+	
+	private Avatar avatar;
 	
 	
 	public List<Permission> getPermissions() {
@@ -46,16 +53,10 @@ public class User extends BaseModel implements UserDetails {
 					      .collect(Collectors.toList());
 	}
 
-	@Override
-	public String getPassword() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	@Override
 	public String getUsername() {
-		// TODO Auto-generated method stub
-		return null;
+		return userName;
 	}
 
 	@Override
@@ -130,6 +131,64 @@ public class User extends BaseModel implements UserDetails {
 
 	public void setUserName(String userName) {
 		this.userName = userName;
+	}
+
+	public EmailAddress getEmail() {
+		return email;
+	}
+
+	public void setEmail(EmailAddress email) {
+		this.email = email;
+	}
+
+	public Boolean getActiveFlag() {
+		return activeFlag;
+	}
+
+	public void setActiveFlag(Boolean activeFlag) {
+		this.activeFlag = activeFlag;
+	}
+
+	public String getSsoKey() {
+		return ssoKey;
+	}
+
+	public void setSsoKey(String ssoKey) {
+		this.ssoKey = ssoKey;
+	}
+
+	@Override
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public UserBioInfo getBioInfo() {
+		return bioInfo;
+	}
+
+	public void setBioInfo(UserBioInfo bioInfo) {
+		this.bioInfo = bioInfo;
+	}
+	
+	@JsonIgnore
+	public boolean hasPermission(String permission) {
+		if(permissions != null) {
+			return permissions.stream().anyMatch(pr -> pr.getPermissionCode().equals(permission));
+		}
+		
+		return false;
+	}
+
+	public Avatar getAvatar() {
+		return avatar;
+	}
+
+	public void setAvatar(Avatar avatar) {
+		this.avatar = avatar;
 	}
 	
 }

@@ -2,11 +2,6 @@ package com.zfgc.zfgbb.config.security;
 
 import java.io.IOException;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
@@ -16,6 +11,11 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.filter.GenericFilterBean;
 
 import com.zfgc.zfgbb.util.ZfgcSecurityUtils;
+
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
 
 public class Oauth2AuthorizationFilter extends GenericFilterBean {
 
@@ -36,9 +36,10 @@ public class Oauth2AuthorizationFilter extends GenericFilterBean {
       
 		  //check here what authority user came from and transform to an sso key here
 		  //for now we only support clausius auth, but facebook and google are to come
-		  String ssoKey = "CLAUSIUS:" + ZfgcSecurityUtils.generateMd5(((Jwt)context.getAuthentication().getPrincipal()).getClaimAsString("user_name"));
+		  //String ssoKey = "CLAUSIUS:" + ZfgcSecurityUtils.generateMd5(((Jwt)context.getAuthentication().getPrincipal()).getClaimAsString("user_name"));
+		  String userName = ((Jwt)context.getAuthentication().getPrincipal()).getClaimAsString("user_name");
 		  
-		  UserDetails user = oauthUsersDetailsServiceImpl.loadUserByUsername(ssoKey); 
+		  UserDetails user = oauthUsersDetailsServiceImpl.loadUserByUsername(userName); 
 		  UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
 		  context.setAuthentication(authentication);
 	  }

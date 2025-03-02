@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.zfgc.zfgbb.controller.BaseController;
@@ -20,7 +21,12 @@ public class BoardController extends BaseController {
 	private ForumService forumService;
 	
 	@GetMapping("/{boardId}")
-	public ResponseEntity getBoard(@PathVariable("boardId") Integer boardId) {
-		return ResponseEntity.ok(forumService.getForum(boardId, super.zfgcUser()));
+	public ResponseEntity getBoard(@PathVariable("boardId") Integer boardId, @RequestParam(name="pageNo",required=false) Integer pageNo) {
+		return ResponseEntity.ok(forumService.getBoard(boardId, pageNo, super.zfgcUser()));
+	}
+	
+	@GetMapping("/forum")
+	public ResponseEntity getForum() {
+		return ResponseEntity.ok(forumService.getForum(super.zfgcUser()));
 	}
 }

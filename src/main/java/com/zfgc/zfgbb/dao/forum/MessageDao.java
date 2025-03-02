@@ -1,5 +1,6 @@
 package com.zfgc.zfgbb.dao.forum;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,11 +29,14 @@ public class MessageDao extends AbstractDao<MessageDboExample, MessageDboMapper,
 
 	@Override
 	protected void update(MessageDbo toSave) {
+		toSave.setUpdatedTs(LocalDateTime.now());
 		mapper.updateByPrimaryKey(toSave);
 	}
 
 	@Override
 	protected void create(MessageDbo toCreate) {
+		toCreate.setCreatedTs(LocalDateTime.now());
+		toCreate.setUpdatedTs(LocalDateTime.now());
 		mapper.insert(toCreate);
 	}
 

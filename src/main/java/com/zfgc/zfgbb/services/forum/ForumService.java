@@ -1,5 +1,9 @@
 package com.zfgc.zfgbb.services.forum;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -7,13 +11,19 @@ import org.springframework.transaction.annotation.Transactional;
 import com.zfgc.zfgbb.dataprovider.forum.ForumDataProvider;
 import com.zfgc.zfgbb.dataprovider.forum.MessageDataProvider;
 import com.zfgc.zfgbb.dataprovider.forum.ThreadDataProvider;
+import com.zfgc.zfgbb.exception.ZfgcNotFoundException;
 import com.zfgc.zfgbb.model.User;
+import com.zfgc.zfgbb.model.forum.Board;
+import com.zfgc.zfgbb.model.forum.BoardSummary;
 import com.zfgc.zfgbb.model.forum.Forum;
 import com.zfgc.zfgbb.model.forum.Message;
 import com.zfgc.zfgbb.model.forum.MessageHistory;
 import com.zfgc.zfgbb.services.AbstractService;
+import com.zfgc.zfgbb.services.core.IpService;
 import com.zfgc.zfgbb.model.forum.Thread;
 import com.zfgc.zfgbb.model.forum.ThreadSplit;
+import com.zfgc.zfgbb.model.meta.IpAddress;
+import com.zfgc.zfgbb.model.users.Permission;
 
 @Service
 @Transactional
@@ -31,12 +41,53 @@ public class ForumService extends AbstractService {
 	@Autowired
 	private MessageDataProvider messageDataProvider;
 	
-	public Forum getForum(Integer boardId, User zfgcUser) {
-		Forum forum = forumDataProvider.getForum(boardId);
+	@Autowired
+	private IpService ipService;
+	
+	public Forum getForum(User zfgcUser) {
+		Forum forum = forumDataProvider.getForum();
+		List<Integer> userPerms = zfgcUser.getPermissions().stream().map(Permission::getPermissionId).toList();
 		
-		super.secureObject(forum, zfgcUser);
+		forum.getCategories().stream().filter(c -> c.getBoards() != null).forEach(c -> {
+			List<BoardSummary> remove = new ArrayList<>();
+			c.getBoards().forEach(b -> {
+				AtomicBoolean found = new AtomicBoolean(false);
+				if(b.getBoardPerms() != null) {
+					b.getBoardPerms().forEach(bp -> {
+						if(userPerms.contains(bp.getPermissionId())) {
+							found.set(true);
+						}
+					});
+				}
+				
+				if(found.get() == false) {
+					remove.add(b);
+				}
+			});
+			c.getBoards().removeAll(remove);
+		});
+		//super.secureObject(forum, zfgcUser);
+		
+		forum.setCategories(forum.getCategories().stream()
+												 .filter(c -> c.getBoards() != null && !c.getBoards().isEmpty()).toList());
 		
 		return forum;
+	}
+	
+	public Board getBoard(Integer boardId, Integer pageNo, User zfgcUser) {
+		Board board = forumDataProvider.getBoard(boardId, pageNo, 10);
+		List<Integer> userPerms = zfgcUser.getPermissions().stream().map(Permission::getPermissionId).toList();
+		AtomicBoolean found = new AtomicBoolean(false);
+		board.getBoardPerms().forEach(bp -> {
+			if(userPerms.contains(bp.getPermissionId())) {
+				found.set(true);
+			}
+		});
+		
+		if(found.get() == false) {
+			throw new ZfgcNotFoundException();
+		}
+		return board;
 	}
 	
 	public Thread getThreadTemplate(Integer boardId, User zfgcUser) {
@@ -53,34 +104,15 @@ public class ForumService extends AbstractService {
 	}
 	
 	public Message getMessageTemplate(Integer boardId, Integer threadId, Integer messageId, User zfgcUser) {
-		Thread permissionCheck = new Thread();
+		/*Thread permissionCheck = new Thread();
 		permissionCheck.setBoardPermissions(forumDataProvider.getBoardPermissions(boardId));
-		super.secureObject(permissionCheck, zfgcUser);
+		super.secureObject(permissionCheck, zfgcUser);*/
 		
 		Message message = null;
-		if(messageId != null) {
-			message = messageDataProvider.getMessage(messageId);
-		}
-		else {
-			message = new Message();
-			message.setOwnerId(zfgcUser.getUserId());
-			message.setThreadId(threadId);
-		}
-		
-		//add a new history record
-		message.getHistory().forEach(hist -> {
-			try {
-				hist.setMessageText(bbCodeService.parseText(hist.getMessageText()));
-			} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
-				e.printStackTrace();
-				throw new RuntimeException(e);
-			}
-			hist.setCurrentFlag(false);
-		});
-		MessageHistory hist = new MessageHistory();
-		hist.setCurrentFlag(true);
-		hist.setMessageId(messageId);
-		message.getHistory().add(hist);
+		message = new Message();
+		message.setOwnerId(zfgcUser.getUserId());
+		message.setThreadId(threadId);
+		message.getCurrentMessage().setCurrentFlag(true);
 		
 		return message;
 		
@@ -88,8 +120,8 @@ public class ForumService extends AbstractService {
 	
 	public Thread saveThread(Thread thread, User zfgcUser) {
 		//first, lets make sure the user actually can post to this board
-		thread.setBoardPermissions(forumDataProvider.getBoardPermissions(thread.getBoardId()));
-		super.secureObject(thread, zfgcUser);
+		//thread.setBoardPermissions(forumDataProvider.getBoardPermissions(thread.getBoardId()));
+		//super.secureObject(thread, zfgcUser);
 		
 		Thread saved = threadDataProvider.getThread(thread.getThreadId(), 1, 1);
 		
@@ -103,12 +135,26 @@ public class ForumService extends AbstractService {
 		
 		//finally, save the thread
 		thread = threadDataProvider.saveThread(thread);
+		if(saved == null) {
+			saveMessage(thread.getMessages().get(0), zfgcUser);
+		}
 		
 		return thread;
 	}
 	
 	public Thread getThread(Integer threadId, Integer page, Integer count, User zfgcUser) {
 		Thread thread = threadDataProvider.getThread(threadId, page, count);
+		AtomicBoolean found = new AtomicBoolean(false);
+		List<Integer> userPerms = zfgcUser.getPermissions().stream().map(Permission::getPermissionId).toList();
+		thread.getBoardPermissions().forEach(bp -> {
+			if(userPerms.contains(bp.getPermissionId())) {
+				found.set(true);
+			}
+		});
+		
+		if(found.get() == false) {
+			throw new ZfgcNotFoundException();
+		}
 		
 		//super.secureObject(thread, zfgcUser);
 		
@@ -128,7 +174,14 @@ public class ForumService extends AbstractService {
 	
 	public Message saveMessage(Message message, User user) {
 		Thread thread = threadDataProvider.getThread(message.getThreadId());
+		Long postCount = messageDataProvider.getTotalPostsInThread(thread.getThreadId());
+		message.setPostInThread(postCount.intValue());
 		super.secureObject(thread, user);
+		
+		IpAddress ip = ipService.getClientIp();
+		message.getCurrentMessage().setIpAddressId(ip.getId());
+		
+		message.setPostInThread(postCount.intValue());
 		
 		return messageDataProvider.saveMessage(message);
 	}

@@ -7,14 +7,18 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.zfgc.zfgbb.model.BaseModel;
+import com.zfgc.zfgbb.model.User;
 
 public class Message extends BaseModel {
 	@JsonIgnore
 	private Integer messageId;
 	private Integer ownerId;
 	private Integer threadId;
+	private Integer postInThread;
 	
-	private List<MessageHistory> history = new ArrayList<>();
+	private User createdUser;
+	
+	private MessageHistory currentMessage = new MessageHistory();
 	
 	public Integer getMessageId() {
 		return messageId;
@@ -49,22 +53,34 @@ public class Message extends BaseModel {
 	public void setThreadId(Integer threadId) {
 		this.threadId = threadId;
 	}
-
-	public List<MessageHistory> getHistory() {
-		return history;
-	}
-
-	public void setHistory(List<MessageHistory> history) {
-		this.history = history;
-	}
-	
-	public MessageHistory getCurrentMessage() {
-		return history.stream().findFirst().orElseThrow();
-	}
 	
 	@JsonIgnore
 	public LocalDateTime getLatestMessageTs() {
-		return getCurrentMessage().getCreatedTs();
+		return currentMessage.getCreatedTs();
+	}
+
+	public MessageHistory getCurrentMessage() {
+		return currentMessage;
+	}
+
+	public void setCurrentMessage(MessageHistory currentMessage) {
+		this.currentMessage = currentMessage;
+	}
+
+	public Integer getPostInThread() {
+		return postInThread;
+	}
+
+	public void setPostInThread(Integer postInThread) {
+		this.postInThread = postInThread;
+	}
+
+	public User getCreatedUser() {
+		return createdUser;
+	}
+
+	public void setCreatedUser(User createdUser) {
+		this.createdUser = createdUser;
 	}
 	
 }
