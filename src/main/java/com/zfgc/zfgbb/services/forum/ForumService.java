@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -163,6 +164,11 @@ public class ForumService extends AbstractService {
 			try {
 				String parsed = bbCodeService.parseText(message.getCurrentMessage().getMessageText());
 				message.getCurrentMessage().setMessageText(parsed);
+				
+				if(!StringUtils.isEmpty(message.getCreatedUser().getBioInfo().getSignature())) {
+					String parsedSignature = bbCodeService.parseText(message.getCreatedUser().getBioInfo().getSignature());
+					message.getCreatedUser().getBioInfo().setSignature(parsedSignature);
+				}
 			} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
 				e.printStackTrace();
 				throw new RuntimeException(e);
