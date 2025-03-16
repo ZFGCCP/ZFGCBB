@@ -9,6 +9,7 @@ public class UserBioInfo extends BaseModel {
 	private Integer userId;
 	private String customTitle;
 	private String personalText;
+	private String signature;
 	
 	public String getCustomTitle() {
 		return customTitle;
@@ -42,6 +43,14 @@ public class UserBioInfo extends BaseModel {
 
 	public void setUserId(Integer userId) {
 		this.userId = userId;
+	}
+
+	public String getSignature() {
+		return signature;
+	}
+
+	public void setSignature(String signature) {
+		this.signature = signature;
 	}
 	
 }
