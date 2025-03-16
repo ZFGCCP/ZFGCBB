@@ -18,10 +18,15 @@
     
 
     <!-- tables -->
-    <table schema="zfgbb" tableName="latest_message_in_thread_view" domainObjectName="LatestMessageInThreadViewDbo">
+    <table schema="zfgbb" tableName="user_bio_info" domainObjectName="UserBioInfoDbo">
+		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime" isGeneratedAlways="true"/>
+		<columnOverride column="updated_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime" isGeneratedAlways="true"/>
+    </table>
+    
+    <!-- <table schema="zfgbb" tableName="latest_message_in_thread_view" domainObjectName="LatestMessageInThreadViewDbo">
 		<columnOverride column="created_ts" jdbcType="TIMESTAMP" javaType="java.time.LocalDateTime"/>
 		<columnOverride column="last_post_ts" jdbcType="TIMESTAMP" javaType="java.time.LocalDateTime"/>
-    </table>
+    </table> -->
     
     <!-- <table schema="zfgbb" tableName="all_messages_in_thread_view" domainObjectName="AllMessagesInThreadViewDbo">
     	<columnOverride column="post_ts" jdbcType="TIMESTAMP" javaType="java.time.LocalDateTime"/>
