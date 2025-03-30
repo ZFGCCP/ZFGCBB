@@ -191,8 +191,8 @@ public class BBCodeService {
 					}
 				}
 				else{ //it wasn't actually a bbcode..output what we found up to this point
-					int start = isClosingBrace ? closeBracePos : openBracePos;
-					output.append(inputChar,start, i - start);
+					//int start = isClosingBrace ? closeBracePos : openBracePos;
+					output.append(inputChar,lastKnownFreshPosition, i - lastKnownFreshPosition);
 					lastKnownFreshPosition = i;
 				}
 			}
