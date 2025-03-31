@@ -94,7 +94,7 @@ public class BBCodeDataProvider extends AbstractDataProvider {
 				bbCode.getAttributeConfig().put(modeString.toString(), mode);
 			}
 			bbCode.setAllAttributeNamesAsString(attString.toString());
-			result.put(bbCode.getCode(), bbCode);
+			result.put(bbCode.getCode().toUpperCase(), bbCode);
 		}
 
 		return result;
