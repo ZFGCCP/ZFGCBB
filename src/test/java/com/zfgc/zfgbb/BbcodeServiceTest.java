@@ -52,8 +52,8 @@ public class BbcodeServiceTest {
 		
 		bbCodeU.getAttributeConfig().put("",mode0);
 		
-		service.validBbCodes.put("u", bbCodeU);
-		service.bbCodeCounts.put("u", 0);
+		service.validBbCodes.put("U", bbCodeU);
+		service.bbCodeCounts.put("U", 0);
 	}
 	
 	private static void initI(){
@@ -75,8 +75,8 @@ public class BbcodeServiceTest {
 		
 		bbCodeI.getAttributeConfig().put("",mode0);
 		
-		service.validBbCodes.put("i", bbCodeI);
-		service.bbCodeCounts.put("i", 0);
+		service.validBbCodes.put("I", bbCodeI);
+		service.bbCodeCounts.put("I", 0);
 	}
 	
 	private static void initB(){
@@ -98,8 +98,8 @@ public class BbcodeServiceTest {
 		
 		bbCodeB.getAttributeConfig().put("",mode0);
 		
-		service.validBbCodes.put("b", bbCodeB);
-		service.bbCodeCounts.put("b", 0);
+		service.validBbCodes.put("B", bbCodeB);
+		service.bbCodeCounts.put("B", 0);
 	}
 	
 	private static void initCode(){
@@ -121,8 +121,8 @@ public class BbcodeServiceTest {
 		
 		bbCodeCode.getAttributeConfig().put("",mode0);
 		
-		service.validBbCodes.put("code", bbCodeCode);
-		service.bbCodeCounts.put("code", 0);
+		service.validBbCodes.put("CODE", bbCodeCode);
+		service.bbCodeCounts.put("CODE", 0);
 	}
 	
 	private static void initQuote(){
@@ -198,8 +198,8 @@ public class BbcodeServiceTest {
 		empty.setCloseTag("</span>");
 		bbCodeQuote.getAttributeConfig().put("", empty);
 		
-		service.validBbCodes.put("quote", bbCodeQuote);
-		service.bbCodeCounts.put("quote", 0);
+		service.validBbCodes.put("QUOTE", bbCodeQuote);
+		service.bbCodeCounts.put("QUOTE", 0);
 	}
 	
 	private static void initUrl(){
@@ -227,8 +227,8 @@ public class BbcodeServiceTest {
 		empty.setContentIsAttributeFlag(true);
 		bbCodeUrl.getAttributeConfig().put("", empty);
 		
-		service.validBbCodes.put("url", bbCodeUrl);
-		service.bbCodeCounts.put("url", 0);
+		service.validBbCodes.put("URL", bbCodeUrl);
+		service.bbCodeCounts.put("URL", 0);
 	}
 	
 	private static void initImg(){
@@ -245,9 +245,11 @@ public class BbcodeServiceTest {
 		none.setOutputContentFlag(false);
 		bbCodeImg.getAttributeConfig().put("", none);
 		
-		service.validBbCodes.put("img", bbCodeImg);
-		service.bbCodeCounts.put("img", 0);
+		service.validBbCodes.put("IMG", bbCodeImg);
+		service.bbCodeCounts.put("IMG", 0);
 	}
+	
+	
 	
 	@BeforeAll
 	public static void initialize(){
@@ -258,6 +260,19 @@ public class BbcodeServiceTest {
 		initU();
 		initUrl();
 		initImg();
+	}
+	
+	@Test
+	public void caseMismatchTest() {
+		try {
+			String result = service.parseText("[IMG]http://img.photobucket.com/albums/v191/legofreak1988/avy-sig/corpse.jpg[/img]");
+			
+			assertTrue(result.equals("<span class='bbcode-img'><img src='http://img.photobucket.com/albums/v191/legofreak1988/avy-sig/corpse.jpg'/></span>"));
+		} catch (NoSuchFieldException | SecurityException
+				| IllegalArgumentException | IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	@Test

@@ -38,7 +38,6 @@ public class BBCodeService {
 		final char[] inputChar = ZfgcStringUtils.getUnderlyingStringArray(input.replace("\n", "<br/>"));
 		final int length = inputChar.length;
 		final MutableInt NEG = new MutableInt(-1);
-		final MutableInt ZERO = new MutableInt(0);
 		StringBuilder output = new StringBuilder();
 		StringBuilder currentBuffer = new StringBuilder();
 		StringBuilder sideBuffer = new StringBuilder();
@@ -82,8 +81,9 @@ public class BBCodeService {
 					
 					bbCodetest += inputChar[i];
 					i++;
-				}while((inputChar[i] >= 'a' && inputChar[i] <= 'z') && (inputChar[i] != ' ' && inputChar[i] != '='));
+				}while((Character.toLowerCase(inputChar[i]) >= 'a' && Character.toLowerCase(inputChar[i]) <= 'z') && (inputChar[i] != ' ' && inputChar[i] != '='));
 
+				bbCodetest = bbCodetest.toUpperCase();
 				//check if this matches a valid bbcode. If so, find the next ]
 				//edge cases: we hit the end of the string, or we hit another [
 				//or we're already in a close brace
