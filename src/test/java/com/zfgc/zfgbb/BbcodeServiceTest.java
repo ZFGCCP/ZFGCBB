@@ -610,4 +610,16 @@ public class BbcodeServiceTest {
 		}
 	}
 	
+	@Test
+	public void parseTextInvalidTag() {
+		try {
+			String result = service.parseText("i am [hr] a [hr] dumb [b]test[/b]");
+			assertTrue(result.equals("i am [hr] a [hr] dumb <span class='bbcode-b'>test</span>"));
+		} catch (NoSuchFieldException | SecurityException
+				| IllegalArgumentException | IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 }
