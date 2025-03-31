@@ -165,7 +165,7 @@ public class ForumService extends AbstractService {
 				String parsed = bbCodeService.parseText(message.getCurrentMessage().getMessageText());
 				message.getCurrentMessage().setMessageText(parsed);
 				
-				if(!StringUtils.isEmpty(message.getCreatedUser().getBioInfo().getSignature())) {
+				if(message.getCreatedUser().getBioInfo() != null && !StringUtils.isEmpty(message.getCreatedUser().getBioInfo().getSignature())) {
 					String parsedSignature = bbCodeService.parseText(message.getCreatedUser().getBioInfo().getSignature());
 					message.getCreatedUser().getBioInfo().setSignature(parsedSignature);
 				}
