@@ -28,14 +28,13 @@ public class User extends BaseModel implements UserDetails {
 	private String ssoKey;
 	private String password;
 	private List<Permission> permissions = new ArrayList<>();
-	
+
 	private IpAddress currentIpAddress;
 	private List<IpAddress> allKnownIpAddresses = new ArrayList<>();
 	private UserBioInfo bioInfo;
-	
+
 	private Avatar avatar;
-	
-	
+
 	public List<Permission> getPermissions() {
 		return permissions;
 	}
@@ -47,12 +46,11 @@ public class User extends BaseModel implements UserDetails {
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return permissions.stream()
-					      .map(perm -> {
-					    	  return new SimpleGrantedAuthority("ROLE_" + perm.getPermissionCode());
-					      })
-					      .collect(Collectors.toList());
+				.map(perm -> {
+					return new SimpleGrantedAuthority("ROLE_" + perm.getPermissionCode());
+				})
+				.collect(Collectors.toList());
 	}
-
 
 	@Override
 	public String getUsername() {
@@ -173,13 +171,13 @@ public class User extends BaseModel implements UserDetails {
 	public void setBioInfo(UserBioInfo bioInfo) {
 		this.bioInfo = bioInfo;
 	}
-	
+
 	@JsonIgnore
 	public boolean hasPermission(String permission) {
-		if(permissions != null) {
+		if (permissions != null) {
 			return permissions.stream().anyMatch(pr -> pr.getPermissionCode().equals(permission));
 		}
-		
+
 		return false;
 	}
 
@@ -190,5 +188,5 @@ public class User extends BaseModel implements UserDetails {
 	public void setAvatar(Avatar avatar) {
 		this.avatar = avatar;
 	}
-	
+
 }
