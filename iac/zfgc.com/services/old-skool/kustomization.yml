@@ -1,5 +1,0 @@
-namespace: old-skool
-resources:
-  - ../shared/apache
-  - ../shared/mysql
-  - ../shared/tomcat

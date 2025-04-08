@@ -1,0 +1,112 @@
+name: Deploy to Linode
+
+# Required secrets:
+# - SSH_PRIVATE_KEY: SSH private key for server access
+# - SERVER_HOST: Target server hostname or IP address
+# - SERVER_USER: Username for SSH connection to server
+# - ZFGBB_DATABASE: Database name for application
+# - ZFGBB_USER: Database username for application
+# - ZFGBB_USER_PASSWORD: Database password for application
+
+on:
+  workflow_run:
+    workflows: ["Build and Publish Docker Images"]
+    types:
+      - completed
+    branches:
+      - main
+      - develop
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+          - staging
+          - production
+      tag:
+        description: 'Specific tag to deploy'
+        required: false
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
+    
+    environment:
+      name: ${{ github.event.inputs.environment || 'staging' }}
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download deployment package
+        uses: actions/download-artifact@v3
+        with:
+          name: deployment-package
+          path: .
+
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.8.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Add server to known hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H ${{ secrets.SERVER_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Copy deployment package to server
+        run: |
+          scp deployment-package.tar.gz ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/tmp/
+
+      - name: Create .env.local on server
+        run: |
+          cat > /tmp/.env.local <<EOF
+          ZFGBB_DATABASE=${{ secrets.ZFGBB_DATABASE }}
+          ZFGBB_USER=${{ secrets.ZFGBB_USER }}
+          ZFGBB_USER_PASSWORD=${{ secrets.ZFGBB_USER_PASSWORD }}
+          
+          SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/${{ secrets.ZFGBB_DATABASE }}
+          SPRING_DATASOURCE_USERNAME=${{ secrets.ZFGBB_USER }}
+          SPRING_DATASOURCE_PASSWORD=${{ secrets.ZFGBB_USER_PASSWORD }}
+          
+          MBG_JDBC_URL=jdbc:postgresql://localhost:5432/${{ secrets.ZFGBB_DATABASE }}
+          MBG_JBDC_USERNAME=${{ secrets.ZFGBB_USER }}
+          MBG_JDBC_PASSWORD=${{ secrets.ZFGBB_USER_PASSWORD }}
+          EOF
+          
+          scp /tmp/.env.local ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/tmp/
+
+      - name: Run deployment script on server
+        run: |
+          ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} "bash -s" << 'EOT'
+          set -e
+          
+          # Download deployment script if needed
+          if [ ! -f "/opt/zfgbb/deploy.sh" ]; then
+            sudo mkdir -p /opt/zfgbb
+            sudo chown $(whoami):$(whoami) /opt/zfgbb
+          fi
+          
+          # Copy deployment script
+          cat > /tmp/deploy.sh << 'EOF'
+          $(cat scripts/docker/deploy-script.sh)
+          EOF
+          
+          chmod +x /tmp/deploy.sh
+          sudo mv /tmp/deploy.sh /opt/zfgbb/deploy.sh
+          
+          # Move .env.local
+          sudo mv /tmp/.env.local /opt/zfgbb/.env.local
+          
+          # Run deployment
+          cd /opt/zfgbb
+          ./deploy.sh --package /tmp/deployment-package.tar.gz --env .env.local ${{ github.event.inputs.tag && format('--tag {0}', github.event.inputs.tag) || '' }}
+          EOT

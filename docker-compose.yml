@@ -2,7 +2,6 @@ name: zfgbb
 services:
   postgresql:
     container_name: zfgbb_postgresql
-    # hostname: zfgbb_postgresql
     build:
       context: .
       dockerfile: Dockerfile
@@ -22,18 +21,28 @@ services:
       timeout: 60s
       retries: 5
       start_period: 80s  
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
     extra_hosts:
       - "host.docker.internal:host-gateway"
   
   pgadmin:
     container_name: zfgbb_pgadmin
-    # hostname: zfgbb_pgadmin
     image: dpage/pgadmin4:8.14.0
     environment:
       PGADMIN_LISTEN_PORT: ${PGADMIN_PORT:-5050}
       PGADMIN_DEFAULT_EMAIL: admin@zfgc.com
       PGADMIN_DEFAULT_PASSWORD: ${POSTGRES_PASSWORD:-123456}
       CONFIG_DATABASE_URI: ${PGADMIN_DATABASE_URI:-postgres://postgres:123456@zfgbb_postgresql:5432/zfgc_dev}
+      MASTER_PASSWORD_REQUIRED: "True"
+      # Whitelist allowed IP addresses
+      PGADMIN_CONFIG_ENHANCED_COOKIE_PROTECTION: "True"
+      PGADMIN_CONFIG_SERVER_MODE: "True"
+      PGADMIN_CONFIG_ALLOWED_HOSTS: "${PGADMIN_ALLOWED_HOSTS:-localhost}"
     ports:
       - "${PGADMIN_PORT:-5050}:${PGADMIN_PORT:-5050}"
     networks:
@@ -42,12 +51,17 @@ services:
       - pgadmin:/var/lib/pgadmin
     depends_on:
       - postgresql
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 500M
     extra_hosts:
       - "host.docker.internal:host-gateway"
 
   api:
     container_name: zfgbb_api
-    # hostname: zfgbb_api
     build:
       context: .
       dockerfile: Dockerfile
@@ -57,12 +71,25 @@ services:
     networks:
       - zfgbb
     volumes:
-      - logs:/usr/src/app/logs
+      - logs:/usr/local/tomcat/logs
+      - content:/usr/local/tomcat/webapps/content
     env_file:
       - .env.local
       - .env.docker
     depends_on:
       - postgresql
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:${ZFGBB_BACKEND_PORT:-8080}/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
     extra_hosts:
       - "host.docker.internal:host-gateway"
 
@@ -70,7 +97,8 @@ volumes:
   pgadmin:
   data:
   logs:
+  content:
 
 networks:
   zfgbb:
-    # driver: bridge
+    driver: bridge
