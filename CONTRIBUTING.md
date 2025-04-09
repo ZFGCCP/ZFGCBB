@@ -14,6 +14,7 @@ TBD. We could use some help writing this out.
   - [Development](#development)
     - [Prerequisites](#prerequisites)
       - [Using the scripts/development/setup.sh script](#using-the-scriptsdevelopmentsetupsh-script)
+        - [Configuring the `.env` file](#configuring-the-env-file)
     - [IDEs](#ides)
       - [Visual Studio Code](#visual-studio-code)
       - [Eclipse](#eclipse)
@@ -56,6 +57,12 @@ The script will run depending on your OS, which the following below are supporte
 - Linux
   - Ubuntu
   - Arch Linux
+
+##### Configuring the `.env` file
+
+The `.env` file is used to configure the application. You will need to supply values for CLAUSIUS_AUTH_KEY, CLAUSIUS_CLIENT, CLAUSIUS_PASSWORD, and CLAUSIUS_AUTH_ENDPOINT.
+
+Please reach out to the Steven the Hutt aka MG-Zero to get these values.
 
 ### IDEs
 
