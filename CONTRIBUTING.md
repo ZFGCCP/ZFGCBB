@@ -13,8 +13,9 @@ TBD. We could use some help writing this out.
   - [Table of Contents](#table-of-contents)
   - [Development](#development)
     - [Prerequisites](#prerequisites)
-      - [Using the scripts/development/setup.sh script](#using-the-scriptsdevelopmentsetupsh-script)
+      - [Installing Prerequisites - Using the scripts/development/setup.sh script](#installing-prerequisites---using-the-scriptsdevelopmentsetupsh-script)
         - [Configuring the `.env` file](#configuring-the-env-file)
+        - [Setting up the PostgreSQL database](#setting-up-the-postgresql-database)
     - [IDEs](#ides)
       - [Visual Studio Code](#visual-studio-code)
       - [Eclipse](#eclipse)
@@ -42,7 +43,7 @@ git clone https://github.com/ZFGC/ZFGCBB.git
 - Maven
 - Docker
 
-#### Using the [scripts/development/setup.sh](./scripts/development/setup.sh) script
+#### Installing Prerequisites - Using the [scripts/development/setup.sh](./scripts/development/setup.sh) script
 
 The development setup script is just a helper script to download and install all the required dependencies. You can optionally manually install the dependencies if you prefer.
 
@@ -63,6 +64,16 @@ The script will run depending on your OS, which the following below are supporte
 The `.env` file is used to configure the application. You will need to supply values for CLAUSIUS_AUTH_KEY, CLAUSIUS_CLIENT, CLAUSIUS_PASSWORD, and CLAUSIUS_AUTH_ENDPOINT.
 
 Please reach out to the Steven the Hutt aka MG-Zero to get these values.
+
+##### Setting up the PostgreSQL database
+
+You will need to create a PostgreSQL database and user. We provide a docker container that will do this for you.
+
+```bash
+docker compose up -d postgresql pgadmin
+```
+
+You can access the pgadmin at `http://0.0.0.0:5050`.
 
 ### IDEs
 
