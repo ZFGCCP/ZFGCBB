@@ -2,13 +2,10 @@ package com.zfgc.zfgbb.model.forum;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.zfgc.zfgbb.model.users.Permission;
 
 public class BoardSummary {
 	private Integer boardId;
@@ -22,12 +19,6 @@ public class BoardSummary {
     private String latestMessageUserName;
     private Integer categoryId;
     private Integer parentBoardId;
-    private String threadName;
-
-    private List<ChildBoard> childBoards;
-    
-    @JsonIgnore
-    private List<Permission> boardPerms = new ArrayList<>();
     
     @JsonIgnore
     private LocalDateTime latestMessageCreatedTs;
@@ -94,7 +85,7 @@ public class BoardSummary {
 	}
 	public String getLatestMessageCreatedTsAsString() {
 		if(latestMessageCreatedTs != null) {
-			return DateTimeFormatter.ofPattern("MM/dd/YYYY hh:mm a").format(latestMessageCreatedTs);
+			return DateTimeFormatter.ofPattern("MM/dd/YYYY hh:mm:ss am").format(latestMessageCreatedTs);
 		}
 		
 		return null;
@@ -102,7 +93,7 @@ public class BoardSummary {
 	
 	public void setLatestMessageCreatedTsAsString(String latestMessageCreatedTsAsString) {
 		if(!StringUtils.isEmpty(latestMessageCreatedTsAsString)) {
-			latestMessageCreatedTs = (LocalDateTime) DateTimeFormatter.ofPattern("MM/dd/YYYY hh:mm a").parse(latestMessageCreatedTsAsString);
+			latestMessageCreatedTs = (LocalDateTime) DateTimeFormatter.ofPattern("MM/dd/YYYY hh:mm:ss am").parse(latestMessageCreatedTsAsString);
 		}
 	}
 	public Integer getParentBoardId() {
@@ -116,23 +107,5 @@ public class BoardSummary {
 	}
 	public void setCategoryId(Integer categoryId) {
 		this.categoryId = categoryId;
-	}
-	public List<ChildBoard> getChildBoards() {
-		return childBoards;
-	}
-	public void setChildBoards(List<ChildBoard> childBoards) {
-		this.childBoards = childBoards;
-	}
-	public String getThreadName() {
-		return threadName;
-	}
-	public void setThreadName(String threadName) {
-		this.threadName = threadName;
-	}
-	public List<Permission> getBoardPerms() {
-		return boardPerms;
-	}
-	public void setBoardPerms(List<Permission> boardPerms) {
-		this.boardPerms = boardPerms;
 	}
 }

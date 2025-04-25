@@ -13,7 +13,6 @@ import org.springframework.stereotype.Repository;
 
 import com.zfgc.zfgbb.dao.BoardDao;
 import com.zfgc.zfgbb.dao.BoardPermissionViewDao;
-import com.zfgc.zfgbb.dao.CategoryDao;
 import com.zfgc.zfgbb.dao.ThreadDao;
 import com.zfgc.zfgbb.dataprovider.AbstractDataProvider;
 import com.zfgc.zfgbb.dbo.BoardDbo;
@@ -22,10 +21,8 @@ import com.zfgc.zfgbb.dbo.BoardPermissionViewDbo;
 import com.zfgc.zfgbb.dbo.BoardPermissionViewDboExample;
 import com.zfgc.zfgbb.dbo.BoardSummaryViewDboExample;
 import com.zfgc.zfgbb.dbo.CategoryDboExample;
-import com.zfgc.zfgbb.dbo.ChildBoardViewDboExample;
 import com.zfgc.zfgbb.dbo.ThreadDboExample;
 import com.zfgc.zfgbb.mappers.BoardSummaryViewDboMapper;
-import com.zfgc.zfgbb.mappers.ChildBoardViewDboMapper;
 import com.zfgc.zfgbb.model.forum.Board;
 import com.zfgc.zfgbb.model.forum.BoardSummary;
 import com.zfgc.zfgbb.model.forum.Category;
@@ -52,21 +49,8 @@ public class ForumDataProvider extends AbstractDataProvider {
 	@Autowired
 	private BoardPermissionViewDao boardPermissionDao;
 	
-	public Forum getForum(Integer boardId, Integer pageNo, Integer threadsPerPage) {
-		Forum forum = new Forum();
-		
-		BoardDbo boardDbo = boardDao.get(boardId);
-		forum.setBoardName(boardDbo.getBoardName());
-		
-		CategoryDboExample exC = new CategoryDboExample();
-		exC.createCriteria().andParentBoardIdEqualTo(boardId);
-		List<Category> categories = categoryDataProvider.getCategories(exC);
-
-		List<Thread> unstickyThreads = threadDataProvider.getThreadsByBoardId(boardId, pageNo, threadsPerPage, false);
-		List<Thread> stickyThreads = threadDataProvider.getThreadsByBoardId(boardId, null, null, true);
-	
 	@Autowired
-	private ChildBoardViewDboMapper childBoardMapper;
+	private BoardSummaryViewDboMapper boardSummaryMapper;
 	
 	public Board getBoard(Integer boardId, Integer pageNo, Integer threadsPerPage) {
 		BoardDbo boardDbo = boardDao.get(boardId);
@@ -82,59 +66,12 @@ public class ForumDataProvider extends AbstractDataProvider {
 		threadEx.createCriteria().andBoardIdEqualTo(boardId).andPinnedFlagEqualTo(false);
 		Long threadCount = threadDao.getMapper().countByExample(threadEx);
 		board.setThreadCount(threadCount);
-
-		board.setChildBoards(getBoardSummaries(board.getBoardId()));
-		
-		List<Permission> boardPerms = getBoardPermissions(board.getBoardId());
-		board.setBoardPerms(boardPerms);
+	
+		BoardSummaryViewDboExample bEx = new BoardSummaryViewDboExample();
+		bEx.createCriteria().andParentBoardIdEqualTo(boardId);
+		board.setChildBoards(boardSummaryMapper.selectByExample(bEx).stream().map(b -> mapper.map(b, BoardSummary.class)).collect(Collectors.toList()));
 		
 		return board;
-	}
-	
-	private List<BoardSummary> getBoardSummaries(Integer parentBoardId){
-		return getBoardSummaries(Arrays.asList(parentBoardId));
-	}
-	
-	private List<BoardSummary> getBoardSummaries(List<Integer> parentBoardId){
-		BoardSummaryViewDboExample bEx = new BoardSummaryViewDboExample();
-		bEx.createCriteria().andParentBoardIdIn(parentBoardId);
-		List<BoardSummary> result = (boardSummaryMapper.selectByExample(bEx).stream().map(b -> mapper.map(b, BoardSummary.class)).collect(Collectors.toList()));
-		
-		ChildBoardViewDboExample cEx = new ChildBoardViewDboExample();
-		cEx.createCriteria().andParentBoardIdIn(parentBoardId);
-		
-		Map<Integer, List<ChildBoard>> childBoards = childBoardMapper.selectByExample(cEx).stream()
-																					.map(c -> mapper.map(c, ChildBoard.class))
-																					.collect(Collectors.groupingBy(ChildBoard::getParentBoardId));
-		
-		result.forEach(bs -> {
-			bs.setChildBoards(childBoards.get(bs.getBoardId()));
-		});
-		
-		
-		return result;
-	}
-	
-	private List<BoardSummary> getBoardSummariesByCategory(List<Integer> categoryId){
-		BoardSummaryViewDboExample bEx = new BoardSummaryViewDboExample();
-		bEx.createCriteria().andCategoryIdIn(categoryId);
-		List<BoardSummary> result = (boardSummaryMapper.selectByExample(bEx).stream().map(b -> mapper.map(b, BoardSummary.class)).collect(Collectors.toList()));
-		
-		if(!result.isEmpty()) {
-			ChildBoardViewDboExample cEx = new ChildBoardViewDboExample();
-			cEx.createCriteria().andParentBoardIdIn(result.stream().map(BoardSummary::getBoardId).collect(Collectors.toList()));
-			
-			Map<Integer, List<ChildBoard>> childBoards = childBoardMapper.selectByExample(cEx).stream()
-																						.map(c -> mapper.map(c, ChildBoard.class))
-																						.collect(Collectors.groupingBy(ChildBoard::getParentBoardId));
-			
-			result.forEach(bs -> {
-				bs.setChildBoards(childBoards.get(bs.getBoardId()));
-			});
-		}
-		
-		
-		return result;
 	}
 	
 	public Forum getForum() {
@@ -142,26 +79,16 @@ public class ForumDataProvider extends AbstractDataProvider {
 		
 		BoardDbo boardDbo = boardDao.get(0);
 		forum.setBoardName(boardDbo.getBoardName());
-
-		List<Category> categories = getCategories(0);
+		
+		CategoryDboExample exC = new CategoryDboExample();
+		exC.createCriteria().andParentBoardIdEqualTo(0);
+		List<Category> categories = categoryDataProvider.getCategories(exC);
 
 		forum.setCategories(categories);
 		
 		//load up permissions for the board
 		forum.setBoardPermissions(getBoardPermissions(0));
 		
-		//ugly, clean this up
-		List<Integer> boardIds = new ArrayList<>(); 
-		categories.stream().filter(c -> c.getBoards() != null).forEach(c -> {
-			boardIds.addAll(c.getBoards().stream().map(BoardSummary::getBoardId).toList());
-		});
-		
-		Map<Integer, List<Permission>> perms = getBoardPermissions(boardIds);
-		categories.stream().filter(c -> c.getBoards() != null).forEach(c -> {
-			c.getBoards().forEach(b -> {
-				b.setBoardPerms(perms.get(b.getBoardId()));
-			});
-		});
 		return forum;
 	}
 	
@@ -183,22 +110,6 @@ public class ForumDataProvider extends AbstractDataProvider {
 		BoardPermissionViewDboExample bEx = new BoardPermissionViewDboExample();
 		bEx.createCriteria().andBoardIdEqualTo(boardId);
 		return super.convertDboListToModel(boardPermissionDao.get(bEx), Permission.class);
-	}
-	
-	public Map<Integer, List<Permission>> getBoardPermissions(List<Integer> boardIds){
-		BoardPermissionViewDboExample bEx = new BoardPermissionViewDboExample();
-		bEx.createCriteria().andBoardIdIn(boardIds);
-		Map<Integer, List<BoardPermissionViewDbo>> result = boardPermissionDao.get(bEx).stream()
-						  				  									  .collect(Collectors.groupingBy(BoardPermissionViewDbo::getBoardId));
-		
-		Map<Integer, List<Permission>> response = new HashMap<>();
-		result.keySet().forEach(k -> {
-			List<Permission> p = super.convertDboListToModel(result.get(k), Permission.class);
-			response.put(k, p);
-		});
-		
-		return response;
-		
 	}
 	
 	public List<Board> getBoardsByParent(Integer parentBoardId){

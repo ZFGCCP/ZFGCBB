@@ -10,8 +10,7 @@ select b.board_id,
 	   latest_post.display_name as latest_message_user_name,
 	   latest_post.created_ts as latest_message_created_ts,
 	   b.category_id,
-	   b.parent_board_id,
-	   latest_post.thread_name
+	   b.parent_board_id
 from zfgbb.board b
 left join lateral(
 	select count(*) thread_count
@@ -29,8 +28,7 @@ left join lateral(
 	       m.owner_id,
 	       u.display_name,
 	       m.created_ts,
-		   t.thread_id,
-		   t.thread_name
+		   t.thread_id
 	from zfgbb.thread t
 	join zfgbb.message m on m.thread_id = t.thread_id
 	join zfgbb.user u on u.user_id = m.owner_id

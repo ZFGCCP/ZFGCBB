@@ -18,9 +18,13 @@
     
 
     <!-- tables -->
-    <table schema="zfgbb" tableName="latest_message_in_thread_view" domainObjectName="LatestMessageInThreadViewDbo">
-		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime"/>
+    <table schema="zfgbb" tableName="board_summary" domainObjectName="BoardSummaryViewDbo">
+		<columnOverride column="latest_message_created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime"/>
     </table>
+    
+    <!-- <table schema="zfgbb" tableName="latest_message_in_thread_view" domainObjectName="LatestMessageInThreadViewDbo">
+		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime"/>
+    </table> -->
     
     <!-- <table schema="zfgbb" tableName="content_resource" domainObjectName="ContentResourceDbo">
 		<generatedKey column="content_resource_id" sqlStatement="JDBC" identity="true" />
@@ -139,9 +143,9 @@
 		<generatedKey column="thread_ID" sqlStatement="JDBC" identity="true" />
 		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime" isGeneratedAlways="true"/>
 		<columnOverride column="updated_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime" isGeneratedAlways="true"/>
-    </table>
+    </table> -->
    
-     <table schema="zfgbb" tableName="BOARD" domainObjectName="BoardDbo">
+     <!-- <table schema="zfgbb" tableName="BOARD" domainObjectName="BoardDbo">
 		<generatedKey column="BOARD_ID" sqlStatement="JDBC" identity="true" />
 		<columnOverride column="created_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime" isGeneratedAlways="true"/>
 		<columnOverride column="updated_ts" jdbcType="TIMESTAMP_WITH_TIMEZONE" javaType="java.time.LocalDateTime" isGeneratedAlways="true"/>

@@ -14,7 +14,6 @@ import com.zfgc.zfgbb.dataprovider.forum.ThreadDataProvider;
 import com.zfgc.zfgbb.exception.ZfgcNotFoundException;
 import com.zfgc.zfgbb.model.User;
 import com.zfgc.zfgbb.model.forum.Board;
-import com.zfgc.zfgbb.model.forum.BoardSummary;
 import com.zfgc.zfgbb.model.forum.Forum;
 import com.zfgc.zfgbb.model.forum.Message;
 import com.zfgc.zfgbb.model.forum.MessageHistory;
@@ -43,8 +42,8 @@ public class ForumService extends AbstractService {
 	@Autowired
 	private IpService ipService;
 	
-	public Forum getForum(Integer boardId, Integer pageNo, User zfgcUser) {
-		Forum forum = forumDataProvider.getForum(boardId, pageNo, 10);
+	public Forum getForum(User zfgcUser) {
+		Forum forum = forumDataProvider.getForum();
 		
 		//super.secureObject(forum, zfgcUser);
 		
@@ -52,19 +51,7 @@ public class ForumService extends AbstractService {
 	}
 	
 	public Board getBoard(Integer boardId, Integer pageNo, User zfgcUser) {
-		Board board = forumDataProvider.getBoard(boardId, pageNo, 10);
-		List<Integer> userPerms = zfgcUser.getPermissions().stream().map(Permission::getPermissionId).toList();
-		AtomicBoolean found = new AtomicBoolean(false);
-		board.getBoardPerms().forEach(bp -> {
-			if(userPerms.contains(bp.getPermissionId())) {
-				found.set(true);
-			}
-		});
-		
-		if(found.get() == false) {
-			throw new ZfgcNotFoundException();
-		}
-		return board;
+		return forumDataProvider.getBoard(boardId, pageNo, pageNo);
 	}
 	
 	public Thread getThreadTemplate(Integer boardId, User zfgcUser) {
