@@ -4,7 +4,7 @@ set -e
 INSTALL_IAC_STUFF=false
 INSTALL_JAVA_STUFF=false
 
-echo "Do you want to install Docker, Docker Compose, and Minikube? (y/n)"
+echo "Do you want to install Docker, Docker Compose? (y/n)"
 read -r answer
 if [ "$answer" == "y" ]; then
     INSTALL_IAC_STUFF=true
@@ -19,7 +19,11 @@ fi
 install_ubuntu() {
     sudo apt-get update
     if [ "$INSTALL_IAC_STUFF" = true ]; then
-        sudo apt-get install -y docker.io docker-compose minikube
+        sudo apt-get install -y docker.io docker-compose #minikube
+
+        echo "Starting Docker..."
+        sudo systemctl start docker
+        echo "Docker started successfully."
     fi
 
     if [ "$INSTALL_JAVA_STUFF" = true ]; then
@@ -30,7 +34,10 @@ install_ubuntu() {
 install_arch() {
     sudo pacman -Syu
     if [ "$INSTALL_IAC_STUFF" = true ]; then
-        sudo pacman -S docker docker-compose minikube 
+        sudo pacman -S docker docker-compose #minikube
+        echo "Starting Docker..."
+        sudo systemctl start docker
+        echo "Docker started successfully."
     fi
 
     if [ "$INSTALL_JAVA_STUFF" = true ]; then
@@ -48,9 +55,9 @@ install_unknown() {
         if ! command -v kubectl &> /dev/null; then
             echo "Kubernetes CLI is not installed. Please install it first."
         fi
-        if ! command -v minikube &> /dev/null; then
-            echo "Minikube is not installed. Please install it first."
-        fi
+        # if ! command -v minikube &> /dev/null; then
+        #     echo "Minikube is not installed. Please install it first."
+        # fi
     fi
     
     if [ "$INSTALL_JAVA_STUFF" = true ]; then
@@ -71,6 +78,35 @@ install_unknown() {
     exit 0
 }
 
+install_docker() {
+
+    # echo "Starting Docker..."
+    # sudo systemctl start docker
+    # echo "Docker started successfully."
+    # echo "Installing Minikube..."
+
+    # #grab cpu arch for minikube
+    # cpu_arch=$(uname -m)
+
+    # if [ "$cpu_arch" == "x86_64" ]; then
+    #     cpu_arch="amd64"
+    # elif [ "$cpu_arch" == "aarch64" ]; then
+    #     cpu_arch="arm64"
+    # else
+    #     echo "Unknown CPU architecture. Please install Minikube manually."
+    #     exit 1
+    # fi
+
+    # curl -LO https://github.com/kubernetes/minikube/releases/latest/download/minikube-linux-amd64
+    # sudo install minikube-linux-$cpu_arch /usr/local/bin/minikube && rm minikube-linux-$cpu_arch
+    # echo "Minikube installed successfully."
+
+    # minikube start --driver=docker
+    # eval "$(minikube docker-env)"
+    # kubectl config use-context minikube
+
+}
+
 # Check distro
 if [ "$(lsb_release -si)" == "Ubuntu" ]; then
     install_ubuntu
@@ -80,28 +116,3 @@ elif [ "$(lsb_release -si)" == "Arch" ]; then
 else 
     install_unknown
 fi
-
-echo "Starting Docker..."
-sudo systemctl start docker
-echo "Docker started successfully."
-echo "Installing Minikube..."
-
-#grab cpu arch for minikube
-cpu_arch=$(uname -m)
-
-if [ "$cpu_arch" == "x86_64" ]; then
-    cpu_arch="amd64"
-elif [ "$cpu_arch" == "aarch64" ]; then
-    cpu_arch="arm64"
-else
-    echo "Unknown CPU architecture. Please install Minikube manually."
-    exit 1
-fi
-
-curl -LO https://github.com/kubernetes/minikube/releases/latest/download/minikube-linux-amd64
-sudo install minikube-linux-$cpu_arch /usr/local/bin/minikube && rm minikube-linux-$cpu_arch
-echo "Minikube installed successfully."
-
-minikube start --driver=docker
-eval "$(minikube docker-env)"
-kubectl config use-context minikube

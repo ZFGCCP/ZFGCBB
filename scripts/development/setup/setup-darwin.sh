@@ -7,13 +7,13 @@ if [ "$EUID" -ne 0 ]; then
 fi
 
 brew update
-echo "Do you want to install Docker Desktop, Kubernetes CLI, and Minikube? (y/n)"
+echo "Do you want to install Docker Desktop? (y/n)"
 read -r answer
 if [ "$answer" == "y" ]; then
-    echo "Installing Docker Desktop, Kubernetes CLI, and Minikube..."
-    brew install docker docker-compose minikube
+    echo "Installing Docker Desktop..."
+    brew install docker docker-compose #minikube
 else
-    echo "Skipping installation of Docker Desktop, Kubernetes CLI, and Minikube."
+    echo "Skipping installation of Docker Desktop."
 fi
 
 java_version=$(java -version 2>&1 | head -n 1 | awk -F '"' '{print $2}')

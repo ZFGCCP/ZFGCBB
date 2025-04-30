@@ -20,18 +20,18 @@ if [ $? -ne 0 ]; then
     fi
 fi
 
-echo "Do you want to install Docker Desktop, Kubernetes CLI, and Minikube? (y/n)"
+echo "Do you want to install Docker Desktop (y/n)"
 read -r answer
 if [ "$answer" == "y" ]; then
-    echo "Installing Docker Desktop, Kubernetes CLI, and Minikube..."
+    echo "Installing Docker Desktop..."
     winget install -e --id Docker.DockerDesktop
-    winget install -e --id Kubernetes.kubectl
-    winget install -e --id Kubernetes.minikube
-    minikube start --driver=docker
-    eval "$(minikube docker-env)"
-    kubectl config use-context minikube
+    # winget install -e --id Kubernetes.kubectl
+    # winget install -e --id Kubernetes.minikube
+    # minikube start --driver=docker
+    # eval "$(minikube docker-env)"
+    # kubectl config use-context minikube
 else
-    echo "Skipping installation of Docker Desktop, Kubernetes CLI, and Minikube."
+    echo "Skipping installation of Docker Desktop."
 fi
 
 java_version=$(java -version 2>&1 | head -n 1 | awk -F '"' '{print $2}')
