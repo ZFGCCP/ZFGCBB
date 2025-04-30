@@ -65,7 +65,7 @@ jobs:
 
       - name: Copy deployment package to server
         run: |
-          scp deployment-package.tar.gz -p ${{ secrets.SERVER_PORT }} ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/tmp/
+          scp -P ${{ secrets.SERVER_PORT }} deployment-package.tar.gz ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/tmp/
 
       - name: Create .env.local on server
         run: |
@@ -83,7 +83,7 @@ jobs:
           MBG_JDBC_PASSWORD=${{ secrets.ZFGBB_USER_PASSWORD }}
           EOF
 
-          scp /tmp/.env.local -p ${{ secrets.SERVER_PORT }} ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/tmp/
+          scp -P ${{ secrets.SERVER_PORT }} /tmp/.env.local ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/tmp/
 
       - name: Run deployment script on server
         run: |

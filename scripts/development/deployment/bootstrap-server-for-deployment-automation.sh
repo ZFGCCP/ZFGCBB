@@ -36,5 +36,5 @@ fi
 
 SCRIPT_DIR=$(dirname "$0")
 
-scp "$SCRIPT_DIR"/../../../scripts/deployment/00.manual.setup-runner-linux-user.sh "$USER_NAME@$HOST_NAME:/tmp/"
+scp -P "$PORT" "$SCRIPT_DIR"/../../../scripts/deployment/00.manual.setup-runner-linux-user.sh "$USER_NAME@$HOST_NAME:/tmp/"
 ssh "$USER_NAME@$HOST_NAME" -p "$PORT" "chmod +x /tmp/00.manual.setup-runner-linux-user.sh && sudo -S /tmp/00.manual.setup-runner-linux-user.sh"
