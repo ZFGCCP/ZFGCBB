@@ -31,6 +31,8 @@ TBD. We could use some help writing this out.
 
 TBD.
 
+For documentation on the scripts, see [scripts/README.md](./scripts/README.md).
+
 ### Prerequisites
 
 Clone the repository.
