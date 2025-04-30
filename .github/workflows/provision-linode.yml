@@ -11,11 +11,12 @@ on:
       environment:
         description: "Environment to provision"
         required: true
-        default: "staging"
+        default: "development"
         type: choice
         options:
-          - staging
-          - production
+          - development
+          - main
+          - gm112-linode-test
 
 permissions:
   contents: read

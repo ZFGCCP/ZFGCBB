@@ -21,11 +21,12 @@ on:
       environment:
         description: "Environment to deploy to"
         required: true
-        default: "staging"
+        default: "development"
         type: choice
         options:
-          - staging
-          - production
+          - development
+          - main
+          - gm112-linode-test
       tag:
         description: "Specific tag to deploy"
         required: false
@@ -40,7 +41,7 @@ jobs:
     if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
 
     environment:
-      name: ${{ github.event.inputs.environment || 'staging' }}
+      name: ${{ github.event.inputs.environment || 'development' }}
 
     steps:
       - name: Checkout repository

@@ -6,17 +6,18 @@ on:
       - main
       - develop
     tags:
-      - 'v*'
+      - "v*"
   workflow_dispatch:
     inputs:
       environment:
-        description: 'Environment to deploy to'
+        description: "Environment to deploy to"
         required: true
-        default: 'staging'
+        default: "development"
         type: choice
         options:
-          - staging
-          - production
+          - development
+          - main
+          - gm112-linode-test
 
 env:
   REGISTRY: ghcr.io
@@ -82,8 +83,8 @@ jobs:
           echo "DOCKER_TAG=${{ steps.meta.outputs.version }}" > deployment/version.env
           echo "REGISTRY=${{ env.REGISTRY }}" >> deployment/version.env
           echo "IMAGE_PREFIX=${{ env.IMAGE_PREFIX }}" >> deployment/version.env
-          
-          # Create docker-compose.override.yml for production
+
+          # Create docker-compose.override.yml for main
           cat > deployment/docker-compose.override.yml <<EOF
           name: zfgbb
           services:
@@ -94,7 +95,7 @@ jobs:
               image: \${REGISTRY}/\${IMAGE_PREFIX}/api:\${DOCKER_TAG}
               build: {}
           EOF
-          
+
           tar -czf deployment-package.tar.gz deployment/
 
       - name: Upload deployment package
