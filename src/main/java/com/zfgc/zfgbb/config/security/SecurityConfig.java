@@ -21,9 +21,6 @@ public class SecurityConfig{
 	// userDetailsService bean
 	@Autowired
 	private OauthUsersDetailsServiceImpl oauthUsersDetailsServiceImpl;
-	
-	@Value("${clausius.auth.key}")
-	private String authKey;
 
 	@Bean
 	  public Oauth2AuthorizationFilter jwtAuthTokenFilterBean() throws Exception {
@@ -35,17 +32,14 @@ public class SecurityConfig{
 	@Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		//test key for now
-		SecretKeySpec key = new SecretKeySpec(authKey.getBytes(), "HMACSHA256");
+		/*SecretKeySpec key = new SecretKeySpec(authKey.getBytes(), "HMACSHA256");
 		
 		http.httpBasic(httpBasic -> httpBasic.disable())
 			.csrf(csrf -> csrf.disable())
 			.authorizeHttpRequests(req -> req.requestMatchers("//*.map", "/**").permitAll())
 			.authorizeHttpRequests(req -> req.anyRequest().authenticated())
-			.oauth2ResourceServer(oauth -> oauth.jwt(jwt -> jwt.decoder(NimbusJwtDecoder.withSecretKey(key).build())));
+			.oauth2ResourceServer(oauth -> oauth.jwt(jwt -> jwt.decoder(NimbusJwtDecoder.withSecretKey(key).build())));*/
 		
-		/*http.httpBasic().disable().csrf().disable().authorizeRequests().requestMatchers("//*.map", 
-				 "/**").permitAll().and().authorizeRequests().anyRequest().authenticated().and()
-		    .oauth2ResourceServer().jwt().decoder(NimbusJwtDecoder.withSecretKey(key).build());*/
 		
 		http.addFilterAfter(jwtAuthTokenFilterBean(), SwitchUserFilter.class);
 		return http.build();
