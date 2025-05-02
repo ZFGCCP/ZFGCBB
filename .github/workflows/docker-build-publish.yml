@@ -80,7 +80,8 @@ jobs:
           echo "${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/db:${{ env.DOCKER_TAG }}"
           echo "${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/db:latest"
 
-      - name: Build and push images
+      # Build and push API image (deploy target)
+      - name: Build and push API image
         uses: docker/build-push-action@v6
         with:
           context: .
@@ -95,11 +96,12 @@ jobs:
             ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/api:latest
           target: deploy
 
+      # Build and push Database image (database target)
       - name: Build and push database image
         uses: docker/build-push-action@v6
         with:
           context: .
-          file: Dockerfile.db # Assuming you have a separate Dockerfile for the database
+          file: Dockerfile
           push: true
           cache-from: type=gha
           cache-to: type=gha,mode=max
@@ -108,6 +110,7 @@ jobs:
           tags: |
             ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/db:${{ env.DOCKER_TAG }}
             ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/db:latest
+          target: database
 
       - name: Create deployment package
         run: |
