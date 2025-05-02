@@ -135,11 +135,11 @@ jobs:
             sudo chown $(whoami):$(whoami) /opt/zfgbb
           fi
 
-
+          rm /opt/zfgbb/deploy-script.sh || true
           mv /tmp/deploy-script.sh /opt/zfgbb/deploy-script.sh
           chmod +x /opt/zfgbb/deploy-script.sh
-          rm /opt/zfgbb/.env
-          rm /opt/zfgbb/ghcr.env
+          rm /opt/zfgbb/.env || true
+          rm /opt/zfgbb/ghcr.env || true
 
           mv /tmp/.env /opt/zfgbb/.env
           mv /tmp/ghcr.env /opt/zfgbb/ghcr.env
