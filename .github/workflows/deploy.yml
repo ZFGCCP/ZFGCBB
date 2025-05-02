@@ -121,6 +121,10 @@ jobs:
 
           scp -P ${{ secrets.SERVER_PORT }} /tmp/ghcr.env ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/tmp/
 
+      - name: Upload deploy-script.sh to server
+        run: |
+          scp -P ${{ secrets.SERVER_PORT }} ./scripts/docker/deploy-script.sh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/tmp/
+
       - name: Run deployment script on server
         run: |
           ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} -p ${{ secrets.SERVER_PORT }} "bash -s" << 'EOT'
@@ -132,13 +136,8 @@ jobs:
             sudo chown $(whoami):$(whoami) /opt/zfgbb
           fi
 
-          # Copy deploy.sh
-          cat > /tmp/deploy.sh << 'EOF'
-          $(cat ./scripts/docker/deploy-script.sh)
-          EOF
-
-          chmod +x /tmp/deploy.sh
-          sudo mv /tmp/deploy.sh /opt/zfgbb/deploy.sh
+          chmod +x /tmp/deploy-script.sh
+          sudo mv /tmp/deploy-script.sh /opt/zfgbb/deploy-script.sh
 
           # Move .env and ghcr.env
           sudo mv /tmp/.env /opt/zfgbb/.env
