@@ -33,22 +33,6 @@ log "Environment file: $ENV_FILE"
 log "Branch: $BRANCH"
 log "Tag (if any): $TAG"
 
-# Ensure target directory exists
-if [ ! -d "/opt/zfgbb" ]; then
-  sudo mkdir -p /opt/zfgbb
-  sudo chown $(whoami):$(whoami) /opt/zfgbb
-fi
-
-chmod +x /tmp/deploy-script.sh
-rm /opt/zfgbb/deploy-script.sh
-mv /tmp/deploy-script.sh /opt/zfgbb/deploy-script.sh
-
-# Move .env and ghcr.env
-rm /opt/zfgbb/.env
-mv /tmp/.env /opt/zfgbb/.env
-
-rm /opt/zfgbb/ghcr.env
-mv /tmp/ghcr.env /opt/zfgbb/ghcr.env
 # Authenticate with GHCR
 GHCR_CREDENTIALS_FILE="$TARGET_DIR/ghcr.env"
 if [ -f "$GHCR_CREDENTIALS_FILE" ]; then
