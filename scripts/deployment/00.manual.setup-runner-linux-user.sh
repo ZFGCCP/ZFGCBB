@@ -65,10 +65,10 @@ if grep -q "PubkeyAuthentication no" "/etc/ssh/sshd_config"; then
   systemctl restart ssh
 fi
 
-# We need to search /etc/ssh/sshd_config for "AuthorizedKeysFile      .ssh/authorized_keys". If this is not present, find the line that matches "AuthorizedKeysFile" and all preceding whitespace or characters on the same line, and replace it with "AuthorizedKeysFile      .ssh/authorized_keys"
 if ! grep -q "AuthorizedKeysFile      .ssh/authorized_keys" "/etc/ssh/sshd_config"; then
   log "AuthorizedKeysFile is not set in /etc/ssh/sshd_config. Setting it to .ssh/authorized_keys..."
   sed -i 's/^AuthorizedKeysFile/AuthorizedKeysFile      .ssh\/authorized_keys/' /etc/ssh/sshd_config
+  systemctl restart ssh
 fi
 
 log "Linux user setup completed successfully!"
