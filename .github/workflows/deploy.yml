@@ -91,7 +91,7 @@ jobs:
             echo "❌ Image ${FULL_IMAGE_NAME} does not exist in GHCR."
             echo "❌ This likely means the Docker image build job failed or the tag is incorrect."
             echo "❌ Available images for ${{ env.IMAGE_PREFIX }}/api:"
-            docker images list ghcr.io/${{ env.IMAGE_PREFIX }}/api 2>/dev/null || echo "No images found"
+            docker images list #ghcr.io/${{ env.IMAGE_PREFIX }}/api 2>/dev/null || echo "No images found"
             echo "image_exists=false" >> $GITHUB_OUTPUT
             exit 1
           fi
