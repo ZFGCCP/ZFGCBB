@@ -1,0 +1,105 @@
+name: Build and Publish Docker Images
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Environment to deploy to"
+        required: true
+        default: "development"
+        type: choice
+        options:
+          - development
+          - main
+          - gm112-linode-test
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_PREFIX: ${{ github.repository_owner }}/zfgbb
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata for Docker
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}
+          tags: |
+            type=ref,event=branch
+            type=ref,event=tag
+            type=sha,format=short
+
+      - name: Build and push API Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: Dockerfile
+          target: deploy
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/api:${{ steps.meta.outputs.version }},${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/api:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Build and push DB Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: Dockerfile
+          target: database
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/db:${{ steps.meta.outputs.version }},${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/db:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Create deployment package
+        run: |
+          mkdir -p deployment
+          cp -r docker-compose.yml .env.docker deployment/
+          echo "DOCKER_TAG=${{ steps.meta.outputs.version }}" > deployment/version.env
+          echo "REGISTRY=${{ env.REGISTRY }}" >> deployment/version.env
+          echo "IMAGE_PREFIX=${{ env.IMAGE_PREFIX }}" >> deployment/version.env
+
+          # Create docker-compose.override.yml for main
+          cat > deployment/docker-compose.override.yml <<EOF
+          name: zfgbb
+          services:
+            postgresql:
+              image: \${REGISTRY}/\${IMAGE_PREFIX}/db:\${DOCKER_TAG}
+              build: {}
+            api:
+              image: \${REGISTRY}/\${IMAGE_PREFIX}/api:\${DOCKER_TAG}
+              build: {}
+          EOF
+
+          tar -czf deployment-package.tar.gz deployment/
+
+      - name: Upload deployment package
+        uses: actions/upload-artifact@v3
+        with:
+          name: deployment-package
+          path: deployment-package.tar.gz
