@@ -149,5 +149,5 @@ jobs:
 
           # Run deployment
           cd /opt/zfgbb
-          ./deploy.sh --env .env --tag "${{ env.IMAGE_TAG }}"
+          ./deploy-script.sh --env .env --tag "${{ env.IMAGE_TAG }}"
           EOT
