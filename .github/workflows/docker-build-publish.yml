@@ -1,5 +1,4 @@
 name: Build and Publish Docker Images
-
 on:
   push:
     branches: [main, development]
@@ -13,17 +12,14 @@ on:
         default: "development"
         type: choice
         options: [development, main, gm112-linode-test]
-
 env:
   REGISTRY: ghcr.io
-
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -68,7 +64,21 @@ jobs:
       # Set the final Docker tag (tag if available, otherwise branch)
       - name: Set effective Docker tag
         run: |
-          echo "DOCKER_TAG=${{ steps.meta_tag.outputs.version != '' && steps.meta_tag.outputs.version || steps.meta_branch.outputs.version }}" >> $GITHUB_ENV
+          if [[ "${{ steps.meta_tag.outputs.version }}" != "" ]]; then
+            DOCKER_TAG="${{ steps.meta_tag.outputs.version }}"
+          else
+            DOCKER_TAG="${{ steps.meta_branch.outputs.version }}"
+          fi
+          echo "Using Docker tag: $DOCKER_TAG"
+          echo "DOCKER_TAG=$DOCKER_TAG" >> $GITHUB_ENV
+
+      - name: Print docker image names for verification
+        run: |
+          echo "Will build and push the following images:"
+          echo "${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/api:${{ env.DOCKER_TAG }}"
+          echo "${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/api:latest"
+          echo "${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/db:${{ env.DOCKER_TAG }}"
+          echo "${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/db:latest"
 
       - name: Build and push images
         uses: docker/build-push-action@v6
@@ -83,9 +93,21 @@ jobs:
           tags: |
             ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/api:${{ env.DOCKER_TAG }}
             ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/api:latest
+          target: deploy
+
+      - name: Build and push database image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: Dockerfile.db # Assuming you have a separate Dockerfile for the database
+          push: true
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          build-args: |
+            BUILDKIT_INLINE_CACHE=1
+          tags: |
             ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/db:${{ env.DOCKER_TAG }}
             ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/db:latest
-          target: deploy
 
       - name: Create deployment package
         run: |
@@ -94,7 +116,6 @@ jobs:
           echo "DOCKER_TAG=${{ env.DOCKER_TAG }}" > deployment/version.env
           echo "REGISTRY=${{ env.REGISTRY }}" >> deployment/version.env
           echo "IMAGE_PREFIX=${{ env.IMAGE_PREFIX }}" >> deployment/version.env
-
           cat > deployment/docker-compose.override.yml <<EOF
           name: zfgbb
           services:
@@ -105,7 +126,6 @@ jobs:
               image: \${REGISTRY}/\${IMAGE_PREFIX}/api:\${DOCKER_TAG}
               build: {}
           EOF
-
           tar -czf deployment-package.tar.gz deployment/
 
       - name: Upload deployment package

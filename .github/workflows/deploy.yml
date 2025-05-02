@@ -48,13 +48,30 @@ jobs:
           TAG="${{ github.event.inputs.tag }}"
 
           if [ -z "$TAG" ]; then
-            BRANCH_NAME="${{ github.ref_name || github.head_ref || github.event.repository.default_branch }}"
-            TAG=$(echo "$BRANCH_NAME" | tr '[:upper:]' '[:lower:]' | tr '/' '-')
+            # For workflow_run triggers, use the branch name that triggered the workflow
+            if [ "${{ github.event_name }}" == "workflow_run" ]; then
+              TAG="${{ github.event.workflow_run.head_branch }}"
+            else
+              # For manual triggers with no tag, use the environment
+              TAG="${{ github.event.inputs.environment }}"
+            fi
           fi
+
+          # Convert tag to lowercase and replace slashes with hyphens for Docker compatibility
+          TAG=$(echo "$TAG" | tr '[:upper:]' '[:lower:]' | tr '/' '-')
 
           echo "REGISTRY=ghcr.io/${REPO_OWNER_LOWER}/${REPO_NAME_LOWER}" >> $GITHUB_ENV
           echo "IMAGE_PREFIX=${REPO_OWNER_LOWER}/${REPO_NAME_LOWER}" >> $GITHUB_ENV
           echo "IMAGE_TAG=$TAG" >> $GITHUB_ENV
+
+          echo "Will look for image with tag: $TAG"
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Check if Docker image exists in GHCR
         id: check_image
@@ -66,15 +83,15 @@ jobs:
 
           echo "Checking if image ${FULL_IMAGE_NAME} exists in GHCR..."
 
-          # Use Docker to attempt to pull the image which is a reliable way to check existence
-          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-
+          # Use Docker to attempt to inspect the image manifest
           if docker manifest inspect ${FULL_IMAGE_NAME} > /dev/null 2>&1; then
             echo "✅ Image ${FULL_IMAGE_NAME} exists in GHCR."
             echo "image_exists=true" >> $GITHUB_OUTPUT
           else
             echo "❌ Image ${FULL_IMAGE_NAME} does not exist in GHCR."
             echo "❌ This likely means the Docker image build job failed or the tag is incorrect."
+            echo "❌ Available images for ${{ env.IMAGE_PREFIX }}/api:"
+            docker images list ghcr.io/${{ env.IMAGE_PREFIX }}/api 2>/dev/null || echo "No images found"
             echo "image_exists=false" >> $GITHUB_OUTPUT
             exit 1
           fi
@@ -118,10 +135,11 @@ jobs:
       - name: Pass GHCR credentials to remote server
         run: |
           cat > /tmp/ghcr.env <<EOF
-          GHCR_USERNAME=${{ secrets.GHCR_USERNAME }}
-          GHCR_TOKEN=${{ secrets.GHCR_TOKEN }}
+          GHCR_USERNAME=${{ github.actor }}
+          GHCR_TOKEN=${{ secrets.GITHUB_TOKEN }}
           REGISTRY=${{ env.REGISTRY }}
           IMAGE_PREFIX=${{ env.IMAGE_PREFIX }}
+          IMAGE_TAG=${{ env.IMAGE_TAG }}
           EOF
 
           scp -P ${{ secrets.SERVER_PORT }} /tmp/ghcr.env ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/tmp/
