@@ -1,13 +1,5 @@
 name: Deploy to Linode
 
-# Required secrets:
-# - SSH_PRIVATE_KEY: SSH private key for server access
-# - SERVER_HOST: Target server hostname or IP address
-# - SERVER_USER: Username for SSH connection to server
-# - ZFGBB_DATABASE: Database name for application
-# - ZFGBB_USER: Database username for application
-# - ZFGBB_USER_PASSWORD: Database password for application
-
 on:
   workflow_run:
     workflows: ["Build and Publish Docker Images"]
@@ -48,23 +40,21 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Check if the deployment package exists
-      - name: Check if deployment package exists
-        id: check_artifact
+      - name: Check if Docker image exists in GCR
+        id: check_image
         run: |
-          if [ ! -f deployment-package.tar.gz ]; then
-            echo "Deployment package not found. Exiting deploy process."
-            exit 1
-          else
-            echo "Deployment package found."
-          fi
+          IMAGE_TAG=${{ github.event.inputs.tag }}
+          IMAGE="${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/api:${IMAGE_TAG}"
 
-      - name: Download deployment package
-        uses: actions/download-artifact@v3
-        with:
-          name: deployment-package
-          path: .
-        if: steps.check_artifact.outcome == 'failure' # Only download if artifact wasn't found
+          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            "https://ghcr.io/v2/${{ env.IMAGE_PREFIX }}/api/manifests/${IMAGE_TAG}")
+
+          if [ "$RESPONSE" -eq 200 ]; then
+            echo "Image $IMAGE exists in GCR."
+          else
+            echo "Image $IMAGE does not exist in GCR."
+            exit 1
+          fi
 
       - name: Setup SSH
         uses: webfactory/ssh-agent@v0.9.1
@@ -84,10 +74,6 @@ jobs:
         run: |
           ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} -p ${{ secrets.SERVER_PORT }} "chmod +x /tmp/01.provision-linode.sh && sudo /tmp/01.provision-linode.sh"
 
-      - name: Copy deployment package to server
-        run: |
-          scp -P ${{ secrets.SERVER_PORT }} deployment-package.tar.gz ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/tmp/
-
       - name: Create .env.local on server
         run: |
           cat > /tmp/.env.local <<EOF
@@ -104,31 +90,41 @@ jobs:
           MBG_JDBC_PASSWORD=${{ secrets.ZFGBB_USER_PASSWORD }}
           EOF
 
-          scp -P ${{ secrets.SERVER_PORT }} /tmp/.env.local ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/tmp/
+          scp -P ${{ secrets.SERVER_PORT }} /tmp/.env.local ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/tmp/.env
+
+      - name: Pass GHCR credentials to remote server
+        run: |
+          cat > /tmp/ghcr.env <<EOF
+          GHCR_USERNAME=${{ secrets.GHCR_USERNAME }}
+          GHCR_TOKEN=${{ secrets.GHCR_TOKEN }}
+          EOF
+
+          scp -P ${{ secrets.SERVER_PORT }} /tmp/ghcr.env ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/tmp/
 
       - name: Run deployment script on server
         run: |
           ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} -p ${{ secrets.SERVER_PORT }} "bash -s" << 'EOT'
           set -e
 
-          # Download deployment script if needed
-          if [ ! -f "/opt/zfgbb/deploy.sh" ]; then
+          # Ensure target directory exists
+          if [ ! -d "/opt/zfgbb" ]; then
             sudo mkdir -p /opt/zfgbb
             sudo chown $(whoami):$(whoami) /opt/zfgbb
           fi
 
-          # Copy deployment script
+          # Copy deploy.sh
           cat > /tmp/deploy.sh << 'EOF'
-          $(cat scripts/docker/deploy-script.sh)
+          $(cat ./scripts/docker/deploy-script.sh)
           EOF
 
           chmod +x /tmp/deploy.sh
           sudo mv /tmp/deploy.sh /opt/zfgbb/deploy.sh
 
-          # Move .env.local
-          sudo mv /tmp/.env.local /opt/zfgbb/.env.local
+          # Move .env and ghcr.env
+          sudo mv /tmp/.env /opt/zfgbb/.env
+          sudo mv /tmp/ghcr.env /opt/zfgbb/ghcr.env
 
           # Run deployment
           cd /opt/zfgbb
-          ./deploy.sh --package /tmp/deployment-package.tar.gz --env .env.local ${{ github.event.inputs.tag && format('--tag {0}', github.event.inputs.tag) || '' }}
+          ./deploy.sh --env .env ${{ github.event.inputs.tag && format('--tag {0}', github.event.inputs.tag) || '' }}
           EOT
