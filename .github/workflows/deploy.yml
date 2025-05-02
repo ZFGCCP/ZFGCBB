@@ -130,23 +130,6 @@ jobs:
           ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} -p ${{ secrets.SERVER_PORT }} "bash -s" << 'EOT'
           set -e
 
-          # Ensure target directory exists
-          if [ ! -d "/opt/zfgbb" ]; then
-            sudo mkdir -p /opt/zfgbb
-            sudo chown $(whoami):$(whoami) /opt/zfgbb
-          fi
-
-          chmod +x /tmp/deploy-script.sh
-          sudo rm /opt/zfgbb/deploy-script.sh
-          sudo mv /tmp/deploy-script.sh /opt/zfgbb/deploy-script.sh
-
-          # Move .env and ghcr.env
-          sudo rm /opt/zfgbb/.env
-          sudo mv /tmp/.env /opt/zfgbb/.env
-
-          sudo rm /opt/zfgbb/ghcr.env
-          sudo mv /tmp/ghcr.env /opt/zfgbb/ghcr.env
-
           # Run deployment
           cd /opt/zfgbb
           ls -la
