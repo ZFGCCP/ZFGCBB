@@ -24,6 +24,10 @@ on:
         description: "Specific tag to deploy (optional)"
         required: false
         type: string
+      run_id:
+        description: "Specific workflow run ID to deploy (optional)"
+        required: false
+        type: string
 
 permissions:
   contents: read
@@ -42,30 +46,98 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set environment variables
+      - name: Set deployment variables
+        id: set_vars
         run: |
           REPO_OWNER_LOWER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
           REPO_NAME_LOWER=$(echo "${{ github.event.repository.name }}" | tr '[:upper:]' '[:lower:]')
-          TAG="${{ github.event.inputs.tag }}"
 
-          if [ -z "$TAG" ]; then
+          # Determine reference name (branch or tag) for artifact naming
+          if [ "${{ github.event_name }}" == "workflow_run" ]; then
             # For workflow_run triggers, use the branch name that triggered the workflow
-            if [ "${{ github.event_name }}" == "workflow_run" ]; then
-              TAG="${{ github.event.workflow_run.head_branch }}"
-            else
-              # For manual triggers with no tag, use the environment
-              TAG="${{ github.event.inputs.environment }}"
-            fi
+            REF_NAME="${{ github.event.workflow_run.head_branch }}"
+          elif [ -n "${{ github.event.inputs.tag }}" ]; then
+            # For manual triggers with tag specified
+            REF_NAME="${{ github.event.inputs.tag }}"
+          else
+            # For manual triggers with environment but no tag
+            REF_NAME="${{ github.event.inputs.environment }}"
           fi
 
-          # Convert tag to lowercase and replace slashes with hyphens for Docker compatibility
-          TAG=$(echo "$TAG" | tr '[:upper:]' '[:lower:]' | tr '/' '-')
+          # Convert ref name to lowercase and replace slashes with hyphens for compatibility
+          REF_NAME=$(echo "$REF_NAME" | tr '[:upper:]' '[:lower:]' | tr '/' '-')
+          echo "REF_NAME=$REF_NAME" >> $GITHUB_ENV
 
+          # Set artifact name based on ref name
+          ARTIFACT_NAME="deployment-package-${REF_NAME}"
+          echo "ARTIFACT_NAME=$ARTIFACT_NAME" >> $GITHUB_ENV
+
+          # Set registry and image info
           echo "REGISTRY=ghcr.io/${REPO_OWNER_LOWER}/${REPO_NAME_LOWER}" >> $GITHUB_ENV
           echo "IMAGE_PREFIX=${REPO_OWNER_LOWER}/${REPO_NAME_LOWER}" >> $GITHUB_ENV
-          echo "IMAGE_TAG=$TAG" >> $GITHUB_ENV
+          echo "IMAGE_TAG=$REF_NAME" >> $GITHUB_ENV
 
-          echo "Will look for image with tag: $TAG"
+          echo "Will look for artifact with name: $ARTIFACT_NAME"
+          echo "Will look for image with tag: $REF_NAME"
+
+      # Download the metadata first to get the exact package filename
+      - name: Download artifact metadata
+        id: download_metadata
+        if: ${{ github.event_name == 'workflow_run' }}
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow: Build and Publish Docker Images
+          run_id: ${{ github.event.workflow_run.id }}
+          name: ${{ env.ARTIFACT_NAME }}-metadata
+          path: ./metadata/
+          check_artifacts: true
+          if_no_artifact_found: warn
+
+      - name: Download artifact metadata (specific run)
+        id: download_metadata_run
+        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.run_id != '' }}
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow: Build and Publish Docker Images
+          run_id: ${{ github.event.inputs.run_id }}
+          name: ${{ env.ARTIFACT_NAME }}-metadata
+          path: ./metadata/
+          check_artifacts: true
+          if_no_artifact_found: warn
+
+      - name: Download artifact metadata (latest)
+        id: download_metadata_latest
+        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.run_id == '' && (steps.download_metadata.outcome != 'success' || steps.download_metadata_run.outcome != 'success') }}
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow: Build and Publish Docker Images
+          name: ${{ env.ARTIFACT_NAME }}-metadata
+          branch: ${{ contains(github.event.inputs.environment, 'development') && 'development' || 'main' }}
+          path: ./metadata/
+          check_artifacts: true
+          if_no_artifact_found: warn
+
+      - name: Read metadata and set package filename
+        id: read_metadata
+        run: |
+          if [ -f "./metadata/deployment-metadata.json" ]; then
+            echo "Metadata file found!"
+            cat ./metadata/deployment-metadata.json
+            
+            # Extract package filename from metadata
+            PACKAGE_FILENAME=$(jq -r '.package_filename' ./metadata/deployment-metadata.json)
+            DOCKER_TAG=$(jq -r '.docker_tag' ./metadata/deployment-metadata.json)
+            
+            echo "Found package filename: $PACKAGE_FILENAME"
+            echo "Found Docker tag: $DOCKER_TAG"
+            
+            echo "PACKAGE_FILENAME=$PACKAGE_FILENAME" >> $GITHUB_ENV
+            echo "DOCKER_TAG=$DOCKER_TAG" >> $GITHUB_ENV
+          else
+            echo "WARNING: No metadata file found, using default naming convention"
+            # Fallback to generic artifact name if no metadata found
+            echo "PACKAGE_FILENAME=deployment-package-${{ env.REF_NAME }}.tar.gz" >> $GITHUB_ENV
+          fi
 
       # Download deployment artifact from the previous workflow run
       - name: Download deployment package
@@ -74,38 +146,49 @@ jobs:
         with:
           workflow: Build and Publish Docker Images
           run_id: ${{ github.event.workflow_run.id }}
-          name: deployment-package
-          path: ./
+          name: ${{ env.ARTIFACT_NAME }}
+          path: ./package/
+          check_artifacts: true
+          if_no_artifact_found: fail
 
-      # Download deployment artifact for manual dispatch
-      - name: Download specific tag artifact
-        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.tag != '' }}
+      # Download deployment artifact for manual dispatch with specific run ID
+      - name: Download specific run artifact
+        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.run_id != '' }}
         uses: dawidd6/action-download-artifact@v2
         with:
           workflow: Build and Publish Docker Images
-          name: deployment-package
-          branch: ${{ contains(github.event.inputs.tag, 'development') && 'development' || 'main' }}
-          path: ./
-          if_no_artifact_found: warn
+          run_id: ${{ github.event.inputs.run_id }}
+          name: ${{ env.ARTIFACT_NAME }}
+          path: ./package/
+          check_artifacts: true
+          if_no_artifact_found: fail
 
-      # Fallback to the latest artifact from the branch if no specific tag
+      # Fallback to the latest artifact from the branch if no specific run ID
       - name: Download latest branch artifact
-        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.tag == '' }}
+        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.run_id == '' }}
         uses: dawidd6/action-download-artifact@v2
         with:
           workflow: Build and Publish Docker Images
-          name: deployment-package
-          branch: ${{ github.event.inputs.environment == 'development' && 'development' || 'main' }}
-          path: ./
-          if_no_artifact_found: warn
+          name: ${{ env.ARTIFACT_NAME }}
+          branch: ${{ contains(github.event.inputs.environment, 'development') && 'development' || 'main' }}
+          path: ./package/
+          check_artifacts: true
+          if_no_artifact_found: fail
 
-      - name: Verify deployment package exists
+      - name: Prepare deployment package
         run: |
-          if [ -f "deployment-package.tar.gz" ]; then
-            echo "Deployment package found!"
-            ls -la deployment-package.tar.gz
+          # Find the downloaded deployment package file
+          PACKAGE_FILE=$(find ./package -type f -name "*.tar.gz" | head -n 1)
+
+          if [ -n "$PACKAGE_FILE" ]; then
+            echo "Found deployment package: $PACKAGE_FILE"
+            # Rename for consistency in later steps
+            cp "$PACKAGE_FILE" ./deployment-package.tar.gz
+            echo "Deployment package prepared as: deployment-package.tar.gz"
+            ls -la ./deployment-package.tar.gz
           else
-            echo "ERROR: deployment-package.tar.gz not found!"
+            echo "ERROR: No deployment package found!"
+            find ./package -type f
             exit 1
           fi
 
@@ -159,7 +242,7 @@ jobs:
           GHCR_TOKEN=${{ secrets.GITHUB_TOKEN }}
           REGISTRY=${{ env.REGISTRY }}
           IMAGE_PREFIX=${{ env.IMAGE_PREFIX }}
-          IMAGE_TAG=${{ env.IMAGE_TAG }}
+          IMAGE_TAG=${{ env.DOCKER_TAG || env.IMAGE_TAG }}
           EOF
 
           scp -P ${{ secrets.SERVER_PORT }} /tmp/ghcr.env ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/tmp/
@@ -197,5 +280,5 @@ jobs:
 
           # Run deployment
           cd $TARGET_DIR
-          bash ./deploy-script.sh --env .env --tag "${{ env.IMAGE_TAG }}" --package deployment-package.tar.gz || ls -la
+          bash ./deploy-script.sh --env .env --tag "$IMAGE_TAG" --package deployment-package.tar.gz || ls -la
           EOT

@@ -24,6 +24,38 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Generate build identifiers
+        id: build_ids
+        run: |
+          # Create timestamp in format YYYYMMDD-HHMMSS
+          TIMESTAMP=$(date -u '+%Y%m%d-%H%M%S')
+          echo "TIMESTAMP=$TIMESTAMP" >> $GITHUB_ENV
+
+          # Get branch or tag name for artifact naming
+          if [[ "${{ github.ref }}" == refs/tags/* ]]; then
+            REF_NAME=$(echo "${{ github.ref_name }}" | tr '/' '-')
+            echo "REF_TYPE=tag" >> $GITHUB_ENV
+          else
+            REF_NAME=$(echo "${{ github.ref_name }}" | tr '/' '-')
+            echo "REF_TYPE=branch" >> $GITHUB_ENV
+          fi
+          echo "REF_NAME=$REF_NAME" >> $GITHUB_ENV
+
+          # Create a unique run ID that combines the REF_NAME and TIMESTAMP
+          UNIQUE_RUN_ID="${REF_NAME}-${TIMESTAMP}-${GITHUB_RUN_ID}"
+          echo "UNIQUE_RUN_ID=$UNIQUE_RUN_ID" >> $GITHUB_ENV
+
+          # Create artifact name that includes ref name
+          ARTIFACT_NAME="deployment-package-${REF_NAME}"
+          echo "ARTIFACT_NAME=$ARTIFACT_NAME" >> $GITHUB_ENV
+
+          echo "Generated IDs:"
+          echo "- Timestamp: $TIMESTAMP"
+          echo "- Ref Name: $REF_NAME"
+          echo "- Ref Type: ${{ env.REF_TYPE }}"
+          echo "- Unique Run ID: $UNIQUE_RUN_ID"
+          echo "- Artifact Name: $ARTIFACT_NAME"
+
       - name: Set lowercase IMAGE_PREFIX
         run: |
           REPO_OWNER_LOWER=$(echo '${{ github.repository_owner }}' | tr '[:upper:]' '[:lower:]')
@@ -116,9 +148,19 @@ jobs:
         run: |
           mkdir -p deployment
           cp -r docker-compose.yml .env.docker deployment/
-          echo "DOCKER_TAG=${{ env.DOCKER_TAG }}" > deployment/version.env
-          echo "REGISTRY=${{ env.REGISTRY }}" >> deployment/version.env
-          echo "IMAGE_PREFIX=${{ env.IMAGE_PREFIX }}" >> deployment/version.env
+
+          # Create version.env with deployment metadata
+          cat > deployment/version.env <<EOF
+          DOCKER_TAG=${{ env.DOCKER_TAG }}
+          REGISTRY=${{ env.REGISTRY }}
+          IMAGE_PREFIX=${{ env.IMAGE_PREFIX }}
+          BUILD_TIMESTAMP=${{ env.TIMESTAMP }}
+          BUILD_REF_NAME=${{ env.REF_NAME }}
+          BUILD_REF_TYPE=${{ env.REF_TYPE }}
+          BUILD_RUN_ID=${{ github.run_id }}
+          BUILD_UNIQUE_ID=${{ env.UNIQUE_RUN_ID }}
+          EOF
+
           cat > deployment/docker-compose.override.yml <<EOF
           name: zfgbb
           services:
@@ -129,10 +171,32 @@ jobs:
               image: \${REGISTRY}/\${IMAGE_PREFIX}:api-\${DOCKER_TAG}
               build: {}
           EOF
-          tar -czf deployment-package.tar.gz deployment/
+
+          # Create the deployment package with a more specific name
+          PACKAGE_FILENAME="deployment-package-${{ env.REF_NAME }}-${{ env.TIMESTAMP }}.tar.gz"
+          tar -czf $PACKAGE_FILENAME deployment/
+          echo "PACKAGE_FILENAME=$PACKAGE_FILENAME" >> $GITHUB_ENV
+
+          # Also create a metadata file to help with later identification
+          echo "{
+            \"ref_name\": \"${{ env.REF_NAME }}\",
+            \"ref_type\": \"${{ env.REF_TYPE }}\",
+            \"timestamp\": \"${{ env.TIMESTAMP }}\",
+            \"run_id\": \"${{ github.run_id }}\",
+            \"docker_tag\": \"${{ env.DOCKER_TAG }}\",
+            \"package_filename\": \"$PACKAGE_FILENAME\"
+          }" > deployment-metadata.json
 
       - name: Upload deployment package
         uses: actions/upload-artifact@v4
         with:
-          name: deployment-package
-          path: deployment-package.tar.gz
+          name: ${{ env.ARTIFACT_NAME }}
+          path: ${{ env.PACKAGE_FILENAME }}
+          retention-days: 7
+
+      - name: Upload deployment metadata
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.ARTIFACT_NAME }}-metadata
+          path: deployment-metadata.json
+          retention-days: 7
