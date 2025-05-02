@@ -2,11 +2,9 @@ name: Build and Publish Docker Images
 
 on:
   push:
-    branches:
-      - main
-      - develop
+    branches: [main, development]
     tags:
-      - "v*"
+      - "[0-9][0-9][0-9][0-9]*.*" # matches YYYY.ReleaseNumber
   workflow_dispatch:
     inputs:
       environment:
@@ -14,10 +12,7 @@ on:
         required: true
         default: "development"
         type: choice
-        options:
-          - development
-          - main
-          - gm112-linode-test
+        options: [development, main, gm112-linode-test]
 
 env:
   REGISTRY: ghcr.io
@@ -46,47 +41,57 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Extract metadata for Docker
-        id: meta
+      # Extract metadata based on whether the workflow was triggered by a tag or branch
+      - name: Extract metadata for Docker (tag)
+        id: meta_tag
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}
+          tags: |
+            type=match,pattern=\d{4}\.\d+,group=0
+            type=sha,format=short
+
+      - name: Extract metadata for Docker (branch)
+        id: meta_branch
+        if: startsWith(github.ref, 'refs/heads/')
         uses: docker/metadata-action@v5
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}
           tags: |
             type=ref,event=branch
-            type=ref,event=tag
             type=sha,format=short
 
-      - name: Build and push API Docker image
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          file: Dockerfile
-          target: deploy
-          push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/api:${{ steps.meta.outputs.version }},${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/api:latest
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+      # Set the final Docker tag (tag if available, otherwise branch)
+      - name: Set effective Docker tag
+        run: |
+          echo "DOCKER_TAG=${{ steps.meta_tag.outputs.version != '' && steps.meta_tag.outputs.version || steps.meta_branch.outputs.version }}" >> $GITHUB_ENV
 
-      - name: Build and push DB Docker image
+      - name: Build and push images
         uses: docker/build-push-action@v6
         with:
           context: .
           file: Dockerfile
-          target: database
           push: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/db:${{ steps.meta.outputs.version }},${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/db:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          build-args: |
+            BUILDKIT_INLINE_CACHE=1
+          tags: |
+            ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/api:${{ env.DOCKER_TAG }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/api:latest
+            ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/db:${{ env.DOCKER_TAG }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/db:latest
+          target: deploy
 
       - name: Create deployment package
         run: |
           mkdir -p deployment
           cp -r docker-compose.yml .env.docker deployment/
-          echo "DOCKER_TAG=${{ steps.meta.outputs.version }}" > deployment/version.env
+          echo "DOCKER_TAG=${{ env.DOCKER_TAG }}" > deployment/version.env
           echo "REGISTRY=${{ env.REGISTRY }}" >> deployment/version.env
           echo "IMAGE_PREFIX=${{ env.IMAGE_PREFIX }}" >> deployment/version.env
 
-          # Create docker-compose.override.yml for main
           cat > deployment/docker-compose.override.yml <<EOF
           name: zfgbb
           services:

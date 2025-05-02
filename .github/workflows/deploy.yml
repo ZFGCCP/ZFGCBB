@@ -15,7 +15,8 @@ on:
       - completed
     branches:
       - main
-      - develop
+      - development
+
   workflow_dispatch:
     inputs:
       environment:
@@ -29,7 +30,7 @@ on:
           - gm112-linode-test
       tag:
         description: "Specific tag to deploy"
-        required: false
+        required: true
         type: string
 
 permissions:
@@ -47,11 +48,23 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # Check if the deployment package exists
+      - name: Check if deployment package exists
+        id: check_artifact
+        run: |
+          if [ ! -f deployment-package.tar.gz ]; then
+            echo "Deployment package not found. Exiting deploy process."
+            exit 1
+          else
+            echo "Deployment package found."
+          fi
+
       - name: Download deployment package
         uses: actions/download-artifact@v3
         with:
           name: deployment-package
           path: .
+        if: steps.check_artifact.outcome == 'failure' # Only download if artifact wasn't found
 
       - name: Setup SSH
         uses: webfactory/ssh-agent@v0.9.1
@@ -65,7 +78,6 @@ jobs:
 
       - name: Copy provisioning script to server
         run: |
-          #ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} -p ${{ secrets.SERVER_PORT }} "rm /tmp/01.provision-linode.sh && sudo /tmp/01.provision-linode.sh"
           scp -P ${{ secrets.SERVER_PORT }} ./scripts/deployment/01.provision-linode.sh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/tmp/
 
       - name: Execute provisioning script
