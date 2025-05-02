@@ -84,40 +84,33 @@ jobs:
       - name: Download artifact metadata
         id: download_metadata
         if: ${{ github.event_name == 'workflow_run' }}
-        uses: dawidd6/action-download-artifact@v9
+        uses: actions/download-artifact@v4
         with:
-          workflow: Build and Publish Docker Images
-          run_id: ${{ github.event.workflow_run.id }}
           name: ${{ env.ARTIFACT_NAME }}-metadata
           path: ./metadata/
-          check_artifacts: true
-          if_no_artifact_found: warn
-          branch: ${{ github.event.workflow_run.head_branch }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ github.event.workflow_run.id }}
 
       - name: Download artifact metadata (specific run)
         id: download_metadata_run
         if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.run_id != '' }}
-        uses: dawidd6/action-download-artifact@v9
+        uses: actions/download-artifact@v4
         with:
-          workflow: Build and Publish Docker Images
-          run_id: ${{ github.event.inputs.run_id }}
           name: ${{ env.ARTIFACT_NAME }}-metadata
           path: ./metadata/
-          check_artifacts: true
-          if_no_artifact_found: warn
-          branch: ${{ github.event.workflow_run.head_branch }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ github.event.inputs.run_id }}
 
       - name: Download artifact metadata (latest)
         id: download_metadata_latest
         if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.run_id == '' && (steps.download_metadata.outcome != 'success' || steps.download_metadata_run.outcome != 'success') }}
-        uses: dawidd6/action-download-artifact@v9
+        uses: actions/download-artifact@v4
         with:
-          workflow: Build and Publish Docker Images
           name: ${{ env.ARTIFACT_NAME }}-metadata
-          branch: ${{ github.event.workflow_run.head_branch }}
           path: ./metadata/
-          check_artifacts: true
-          if_no_artifact_found: warn
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          workflow: Build and Publish Docker Images
+          branch: ${{ github.event.workflow_run.head_branch }}
 
       - name: Read metadata and set package filename
         id: read_metadata
@@ -144,40 +137,33 @@ jobs:
       # Download deployment artifact from the previous workflow run
       - name: Download deployment package
         if: ${{ github.event_name == 'workflow_run' }}
-        uses: dawidd6/action-download-artifact@v9
+        uses: actions/download-artifact@v4
         with:
-          workflow: Build and Publish Docker Images
-          run_id: ${{ github.event.workflow_run.id }}
           name: ${{ env.ARTIFACT_NAME }}
           path: ./package/
-          check_artifacts: true
-          if_no_artifact_found: fail
-          branch: ${{ github.event.workflow_run.head_branch }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ github.event.workflow_run.id }}
 
       # Download deployment artifact for manual dispatch with specific run ID
       - name: Download specific run artifact
         if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.run_id != '' }}
-        uses: dawidd6/action-download-artifact@v9
+        uses: actions/download-artifact@v4
         with:
-          workflow: Build and Publish Docker Images
-          run_id: ${{ github.event.inputs.run_id }}
           name: ${{ env.ARTIFACT_NAME }}
           path: ./package/
-          check_artifacts: true
-          if_no_artifact_found: fail
-          branch: ${{ github.event.workflow_run.head_branch }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ github.event.inputs.run_id }}
 
       # Fallback to the latest artifact from the branch if no specific run ID
       - name: Download latest branch artifact
         if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.run_id == '' }}
-        uses: dawidd6/action-download-artifact@v9
+        uses: actions/download-artifact@v4
         with:
-          workflow: Build and Publish Docker Images
           name: ${{ env.ARTIFACT_NAME }}
-          branch: ${{ github.event.workflow_run.head_branch }}
           path: ./package/
-          check_artifacts: true
-          if_no_artifact_found: fail
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          workflow: Build and Publish Docker Images
+          branch: ${{ github.event.workflow_run.head_branch }}
 
       - name: Prepare deployment package
         run: |
