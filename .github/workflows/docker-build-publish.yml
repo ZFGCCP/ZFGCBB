@@ -29,7 +29,10 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Set lowercase IMAGE_PREFIX
-        run: echo "IMAGE_PREFIX=$(echo '${{ github.repository_owner }}' | tr '[:upper:]' '[:lower:]')/${{ github.event.repository.name }}" >> $GITHUB_ENV
+        run: |
+          REPO_OWNER_LOWER=$(echo '${{ github.repository_owner }}' | tr '[:upper:]' '[:lower:]')
+          REPO_NAME_LOWER=$(echo '${{ github.event.repository.name }}' | tr '[:upper:]' '[:lower:]')
+          echo "IMAGE_PREFIX=${REPO_OWNER_LOWER}/${REPO_NAME_LOWER}" >> $GITHUB_ENV
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
