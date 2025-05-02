@@ -63,9 +63,7 @@ The script will run depending on your OS, which the following below are supporte
 
 ##### Configuring the `.env` file
 
-The `.env` file is used to configure the application. You will need to supply values for CLAUSIUS_AUTH_KEY, CLAUSIUS_CLIENT, CLAUSIUS_PASSWORD, and CLAUSIUS_AUTH_ENDPOINT.
-
-Please reach out to the Steven the Hutt aka MG-Zero to get these values.
+The `.env` file is used to configure the application. 
 
 ##### Setting up the PostgreSQL database
 
