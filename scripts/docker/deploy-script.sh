@@ -69,7 +69,7 @@ log "Pulling latest docker images..."
 cd "$TARGET_DIR"
 docker compose pull
 
-# Load env vars
+# Load environment variables from all relevant files
 for env_file in "$ENV_FILE" "version.env" ".env.docker"; do
   if [ -f "$env_file" ]; then
     export $(grep -v '^#' "$env_file" | xargs)

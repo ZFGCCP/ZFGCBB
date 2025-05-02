@@ -40,11 +40,18 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Set environment variables
+        run: |
+          REPO_OWNER_LOWER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+          REPO_NAME_LOWER=$(echo "${{ github.event.repository.name }}" | tr '[:upper:]' '[:lower:]')
+          echo "REGISTRY=ghcr.io/${REPO_OWNER_LOWER}/${REPO_NAME_LOWER}" >> $GITHUB_ENV
+          echo "IMAGE_PREFIX=${REPO_OWNER_LOWER}/${REPO_NAME_LOWER}" >> $GITHUB_ENV
+
       - name: Check if Docker image exists in GCR
         id: check_image
         run: |
           IMAGE_TAG=${{ github.event.inputs.tag }}
-          IMAGE="${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/api:${IMAGE_TAG}"
+          IMAGE="${{ env.REGISTRY }}/api:${IMAGE_TAG}"
 
           RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
             "https://ghcr.io/v2/${{ env.IMAGE_PREFIX }}/api/manifests/${IMAGE_TAG}")
@@ -97,6 +104,8 @@ jobs:
           cat > /tmp/ghcr.env <<EOF
           GHCR_USERNAME=${{ secrets.GHCR_USERNAME }}
           GHCR_TOKEN=${{ secrets.GHCR_TOKEN }}
+          REGISTRY=${{ env.REGISTRY }}
+          IMAGE_PREFIX=${{ env.IMAGE_PREFIX }}
           EOF
 
           scp -P ${{ secrets.SERVER_PORT }} /tmp/ghcr.env ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/tmp/
