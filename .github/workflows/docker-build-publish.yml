@@ -75,10 +75,10 @@ jobs:
       - name: Print docker image names for verification
         run: |
           echo "Will build and push the following images:"
-          echo "${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/api:${{ env.DOCKER_TAG }}"
-          echo "${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/api:latest"
-          echo "${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/db:${{ env.DOCKER_TAG }}"
-          echo "${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/db:latest"
+          echo "${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}:api-${{ env.DOCKER_TAG }}"
+          echo "${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}:api-latest"
+          echo "${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}:postgresql-${{ env.DOCKER_TAG }}"
+          echo "${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}:postgresql-latest"
 
       # Build and push API image (deploy target)
       - name: Build and push API image
@@ -92,8 +92,8 @@ jobs:
           build-args: |
             BUILDKIT_INLINE_CACHE=1
           tags: |
-            ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/api:${{ env.DOCKER_TAG }}
-            ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/api:latest
+            ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}:api-${{ env.DOCKER_TAG }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}:api-latest
           target: deploy
 
       # Build and push Database image (database target)
@@ -108,8 +108,8 @@ jobs:
           build-args: |
             BUILDKIT_INLINE_CACHE=1
           tags: |
-            ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/db:${{ env.DOCKER_TAG }}
-            ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/db:latest
+            ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}:postgresql-${{ env.DOCKER_TAG }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}:postgresql-latest
           target: database
 
       - name: Create deployment package
@@ -123,10 +123,10 @@ jobs:
           name: zfgbb
           services:
             postgresql:
-              image: \${REGISTRY}/\${IMAGE_PREFIX}/db:\${DOCKER_TAG}
+              image: \${REGISTRY}/\${IMAGE_PREFIX}:postgresql-\${DOCKER_TAG}
               build: {}
             api:
-              image: \${REGISTRY}/\${IMAGE_PREFIX}/api:\${DOCKER_TAG}
+              image: \${REGISTRY}/\${IMAGE_PREFIX}:api-\${DOCKER_TAG}
               build: {}
           EOF
           tar -czf deployment-package.tar.gz deployment/
