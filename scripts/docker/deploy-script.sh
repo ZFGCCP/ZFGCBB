@@ -33,6 +33,18 @@ log "Environment file: $ENV_FILE"
 log "Branch: $BRANCH"
 log "Tag (if any): $TAG"
 
+# Authenticate with GHCR
+GHCR_CREDENTIALS_FILE="$TARGET_DIR/ghcr.env"
+if [ -f "$GHCR_CREDENTIALS_FILE" ]; then
+  log "Authenticating with GitHub Container Registry..."
+  export $(grep -v '^#' "$GHCR_CREDENTIALS_FILE" | xargs)
+  echo "$GHCR_TOKEN" | docker login ghcr.io -u "$GHCR_USERNAME" --password-stdin
+  rm -f "$GHCR_CREDENTIALS_FILE"
+else
+  log "Error: GHCR credentials file $GHCR_CREDENTIALS_FILE not found."
+  exit 1
+fi
+
 # Check if target directory exists
 if [ ! -d "$TARGET_DIR" ]; then
   log "Creating target directory: $TARGET_DIR"
@@ -57,30 +69,25 @@ log "Pulling latest docker images..."
 cd "$TARGET_DIR"
 docker compose pull
 
-if [ -f "$TARGET_DIR/$ENV_FILE" ]; then
-  export $(grep -v '^#' "$TARGET_DIR/$ENV_FILE" | xargs)
-fi
-
-if [ -f "$TARGET_DIR/version.env" ]; then
-  export $(grep -v '^#' "$TARGET_DIR/version.env" | xargs)
-fi
-
-if [ -f "$TARGET_DIR/.env.docker" ]; then
-  export $(grep -v '^#' "$TARGET_DIR/.env.docker" | xargs)
-fi
+# Load env vars
+for env_file in "$ENV_FILE" "version.env" ".env.docker"; do
+  if [ -f "$env_file" ]; then
+    export $(grep -v '^#' "$env_file" | xargs)
+  fi
+done
 
 log "Starting containers..."
-docker compose -f "$TARGET_DIR/docker-compose.yml" -f "$TARGET_DIR/docker-compose.override.yml" up -d
+docker compose -f docker-compose.yml -f docker-compose.override.yml up -d
 
 log "Checking container status..."
 sleep 10
-CONTAINERS_RUNNING=$(docker compose -f "$TARGET_DIR/docker-compose.yml" ps --format json | grep -c "running")
-TOTAL_CONTAINERS=$(docker compose -f "$TARGET_DIR/docker-compose.yml" ps --format json | grep -c "service")
+CONTAINERS_RUNNING=$(docker compose ps --format json | grep -c "running")
+TOTAL_CONTAINERS=$(docker compose ps --format json | grep -c "service")
 
 if [ "$CONTAINERS_RUNNING" -eq "$TOTAL_CONTAINERS" ]; then
   log "Deployment successful! All containers are running."
 else
   log "Warning: Not all containers are running. Please check logs."
-  docker compose -f "$TARGET_DIR/docker-compose.yml" logs
+  docker compose logs
   exit 1
 fi
