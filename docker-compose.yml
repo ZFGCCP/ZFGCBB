@@ -1,4 +1,4 @@
-name: zfgcbb
+name: zfgbb
 services:
   postgresql:
     container_name: zfgbb_postgresql
