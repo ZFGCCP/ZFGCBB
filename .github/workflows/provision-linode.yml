@@ -43,7 +43,8 @@ jobs:
 
       - name: Copy provisioning script to server
         run: |
-          scp -v -P ${{ secrets.SERVER_PORT }} ./scripts/deployment/01.provision-linode.sh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/tmp/
+          #ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} -p ${{ secrets.SERVER_PORT }} "rm /tmp/01.provision-linode.sh && sudo /tmp/01.provision-linode.sh"
+          scp -P ${{ secrets.SERVER_PORT }} ./scripts/deployment/01.provision-linode.sh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/tmp/
 
       - name: Execute provisioning script
         run: |
