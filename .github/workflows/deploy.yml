@@ -54,7 +54,7 @@ jobs:
           path: .
 
       - name: Setup SSH
-        uses: webfactory/ssh-agent@v0.8.0
+        uses: webfactory/ssh-agent@v0.9.1
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
@@ -62,6 +62,15 @@ jobs:
         run: |
           mkdir -p ~/.ssh
           ssh-keyscan -H ${{ secrets.SERVER_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Copy provisioning script to server
+        run: |
+          #ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} -p ${{ secrets.SERVER_PORT }} "rm /tmp/01.provision-linode.sh && sudo /tmp/01.provision-linode.sh"
+          scp -P ${{ secrets.SERVER_PORT }} ./scripts/deployment/01.provision-linode.sh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/tmp/
+
+      - name: Execute provisioning script
+        run: |
+          ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} -p ${{ secrets.SERVER_PORT }} "chmod +x /tmp/01.provision-linode.sh && sudo /tmp/01.provision-linode.sh"
 
       - name: Copy deployment package to server
         run: |
