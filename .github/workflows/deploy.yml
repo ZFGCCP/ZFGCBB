@@ -21,12 +21,13 @@ on:
           - main
           - gm112-linode-test
       tag:
-        description: "Specific tag to deploy"
-        required: true
+        description: "Specific tag to deploy (optional)"
+        required: false
         type: string
 
 permissions:
   contents: read
+  packages: read
 
 jobs:
   deploy:
@@ -44,17 +45,24 @@ jobs:
         run: |
           REPO_OWNER_LOWER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
           REPO_NAME_LOWER=$(echo "${{ github.event.repository.name }}" | tr '[:upper:]' '[:lower:]')
+          TAG="${{ github.event.inputs.tag }}"
+
+          if [ -z "$TAG" ]; then
+            BRANCH_NAME="${{ github.ref_name || github.head_ref || github.event.repository.default_branch }}"
+            TAG=$(echo "$BRANCH_NAME" | tr '[:upper:]' '[:lower:]' | tr '/' '-')
+          fi
+
           echo "REGISTRY=ghcr.io/${REPO_OWNER_LOWER}/${REPO_NAME_LOWER}" >> $GITHUB_ENV
           echo "IMAGE_PREFIX=${REPO_OWNER_LOWER}/${REPO_NAME_LOWER}" >> $GITHUB_ENV
+          echo "IMAGE_TAG=$TAG" >> $GITHUB_ENV
 
       - name: Check if Docker image exists in GCR
         id: check_image
         run: |
-          IMAGE_TAG=${{ github.event.inputs.tag }}
-          IMAGE="${{ env.REGISTRY }}/api:${IMAGE_TAG}"
+          IMAGE="${{ env.REGISTRY }}/api:${{ env.IMAGE_TAG }}"
 
           RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-            "https://ghcr.io/v2/${{ env.IMAGE_PREFIX }}/api/manifests/${IMAGE_TAG}")
+            "https://ghcr.io/v2/${{ env.IMAGE_PREFIX }}/api/manifests/${{ env.IMAGE_TAG }}")
 
           if [ "$RESPONSE" -eq 200 ]; then
             echo "Image $IMAGE exists in GCR."
@@ -135,5 +143,5 @@ jobs:
 
           # Run deployment
           cd /opt/zfgbb
-          ./deploy.sh --env .env ${{ github.event.inputs.tag && format('--tag {0}', github.event.inputs.tag) || '' }}
+          ./deploy.sh --env .env --tag "${{ env.IMAGE_TAG }}"
           EOT
