@@ -28,6 +28,7 @@ on:
 permissions:
   contents: read
   packages: read
+  actions: read # Added permission to read artifacts
 
 jobs:
   deploy:
@@ -65,6 +66,48 @@ jobs:
           echo "IMAGE_TAG=$TAG" >> $GITHUB_ENV
 
           echo "Will look for image with tag: $TAG"
+
+      # Download deployment artifact from the previous workflow run
+      - name: Download deployment package
+        if: ${{ github.event_name == 'workflow_run' }}
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow: Build and Publish Docker Images
+          run_id: ${{ github.event.workflow_run.id }}
+          name: deployment-package
+          path: ./
+
+      # Download deployment artifact for manual dispatch
+      - name: Download specific tag artifact
+        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.tag != '' }}
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow: Build and Publish Docker Images
+          name: deployment-package
+          branch: ${{ contains(github.event.inputs.tag, 'development') && 'development' || 'main' }}
+          path: ./
+          if_no_artifact_found: warn
+
+      # Fallback to the latest artifact from the branch if no specific tag
+      - name: Download latest branch artifact
+        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.tag == '' }}
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow: Build and Publish Docker Images
+          name: deployment-package
+          branch: ${{ github.event.inputs.environment == 'development' && 'development' || 'main' }}
+          path: ./
+          if_no_artifact_found: warn
+
+      - name: Verify deployment package exists
+        run: |
+          if [ -f "deployment-package.tar.gz" ]; then
+            echo "Deployment package found!"
+            ls -la deployment-package.tar.gz
+          else
+            echo "ERROR: deployment-package.tar.gz not found!"
+            exit 1
+          fi
 
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3
@@ -125,26 +168,34 @@ jobs:
         run: |
           scp -P ${{ secrets.SERVER_PORT }} ./scripts/docker/deploy-script.sh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/tmp/
 
+      # Upload deployment package to server
+      - name: Upload deployment package to server
+        run: |
+          scp -P ${{ secrets.SERVER_PORT }} ./deployment-package.tar.gz ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/tmp/
+
       - name: Run deployment script on server
         run: |
           ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} -p ${{ secrets.SERVER_PORT }} "bash -s" << 'EOT'
           set -e
           # Ensure target directory exists
+          TARGET_DIR="/opt/zfgbb"
           if [ ! -d "$TARGET_DIR" ]; then
-            sudo mkdir -p /opt/zfgbb
-            sudo chown $(whoami):$(whoami) /opt/zfgbb
+            sudo mkdir -p $TARGET_DIR
+            sudo chown $(whoami):$(whoami) $TARGET_DIR
           fi
 
-          rm /opt/zfgbb/deploy-script.sh || true
-          mv /tmp/deploy-script.sh /opt/zfgbb/deploy-script.sh
-          chmod +x /opt/zfgbb/deploy-script.sh
-          rm /opt/zfgbb/.env || true
-          rm /opt/zfgbb/ghcr.env || true
+          rm $TARGET_DIR/deploy-script.sh || true
+          mv /tmp/deploy-script.sh $TARGET_DIR/deploy-script.sh
+          chmod +x $TARGET_DIR/deploy-script.sh
+          rm $TARGET_DIR/.env || true
+          rm $TARGET_DIR/ghcr.env || true
 
-          mv /tmp/.env /opt/zfgbb/.env
-          mv /tmp/ghcr.env /opt/zfgbb/ghcr.env
+          # Move deployment package to target directory
+          mv /tmp/deployment-package.tar.gz $TARGET_DIR/
+          mv /tmp/.env $TARGET_DIR/.env
+          mv /tmp/ghcr.env $TARGET_DIR/ghcr.env
 
           # Run deployment
-          cd /opt/zfgbb
-          bash ./deploy-script.sh --env .env --tag "${{ env.IMAGE_TAG }}" || ls -la
+          cd $TARGET_DIR
+          bash ./deploy-script.sh --env .env --tag "${{ env.IMAGE_TAG }}" --package deployment-package.tar.gz || ls -la
           EOT
