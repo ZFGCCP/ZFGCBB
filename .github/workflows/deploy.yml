@@ -89,7 +89,7 @@ jobs:
           name: ${{ env.ARTIFACT_NAME }}-metadata
           path: ./metadata/
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          run-id: ${{ github.event.workflow_run.id }}
+          workflow: Build and Publish Docker Images
 
       - name: Download artifact metadata (specific run)
         id: download_metadata_run
@@ -99,7 +99,7 @@ jobs:
           name: ${{ env.ARTIFACT_NAME }}-metadata
           path: ./metadata/
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          run-id: ${{ github.event.inputs.run_id }}
+          workflow: Build and Publish Docker Images
 
       - name: Download artifact metadata (latest)
         id: download_metadata_latest
@@ -142,7 +142,7 @@ jobs:
           name: ${{ env.ARTIFACT_NAME }}
           path: ./package/
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          run-id: ${{ github.event.workflow_run.id }}
+          workflow: Build and Publish Docker Images
 
       # Download deployment artifact for manual dispatch with specific run ID
       - name: Download specific run artifact
@@ -152,7 +152,7 @@ jobs:
           name: ${{ env.ARTIFACT_NAME }}
           path: ./package/
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          run-id: ${{ github.event.inputs.run_id }}
+          workflow: Build and Publish Docker Images
 
       # Fallback to the latest artifact from the branch if no specific run ID
       - name: Download latest branch artifact
