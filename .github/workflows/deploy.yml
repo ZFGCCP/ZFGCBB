@@ -138,8 +138,11 @@ jobs:
 
           mv /tmp/deploy-script.sh /opt/zfgbb/deploy-script.sh
           chmod +x /opt/zfgbb/deploy-script.sh
+          rm /opt/zfgbb/.env
+          rm /opt/zfgbb/ghcr.env
 
           mv /tmp/.env /opt/zfgbb/.env
+          mv /tmp/ghcr.env /opt/zfgbb/ghcr.env
 
           # Run deployment
           cd /opt/zfgbb
