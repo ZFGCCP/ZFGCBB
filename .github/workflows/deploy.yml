@@ -130,6 +130,17 @@ jobs:
           ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} -p ${{ secrets.SERVER_PORT }} "bash -s" << 'EOT'
           set -e
 
+          mv /tmp/deploy-script.sh /opt/zfgbb/deploy-script.sh
+          chmod +x /opt/zfgbb/deploy-script.sh
+
+          mv /tmp/.env /opt/zfgbb/.env
+
+          # Ensure target directory exists
+          if [ ! -d "$TARGET_DIR" ]; then
+            sudo mkdir -p /opt/zfgbb
+            sudo chown $(whoami):$(whoami) /opt/zfgbb
+          fi
+
           # Run deployment
           cd /opt/zfgbb
           bash ./deploy-script.sh --env .env --tag "${{ env.IMAGE_TAG }}" || ls -la
