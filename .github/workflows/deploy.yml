@@ -56,8 +56,8 @@ jobs:
             # For manual triggers with tag specified
             REF_NAME="${{ github.event.inputs.tag }}"
           else
-            # For manual triggers with environment but no tag
-            REF_NAME="${{ github.event.inputs.environment }}"
+            # For manual triggers with environment but no tag, use the branch name
+            REF_NAME="${{ github.head_ref }}"
           fi
 
           # Convert ref name to lowercase and replace slashes with hyphens for compatibility
