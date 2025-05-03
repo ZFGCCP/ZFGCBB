@@ -28,7 +28,7 @@ on:
 permissions:
   contents: read
   packages: read
-  actions: read # Added permission to read artifacts
+  actions: read
 
 jobs:
   deploy:
@@ -96,8 +96,8 @@ jobs:
         with:
           script: |
             const branch = '${{ github.event.inputs.environment }}';
-            const workflow_id = 'build-and-publish-docker-images.yml';
-            
+            const workflow_id = 'docker-build-publish.yml';
+
             const runs = await github.rest.actions.listWorkflowRuns({
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -106,7 +106,7 @@ jobs:
               status: 'success',
               per_page: 1
             });
-            
+
             if (runs.data.workflow_runs.length > 0) {
               const runId = runs.data.workflow_runs[0].id;
               console.log(`Found workflow run ID: ${runId}`);
