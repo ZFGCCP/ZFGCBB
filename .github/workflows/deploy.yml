@@ -274,6 +274,7 @@ jobs:
           mv /tmp/deployment-package.tar.gz $TARGET_DIR/
           mv /tmp/.env $TARGET_DIR/.env
           mv /tmp/ghcr.env $TARGET_DIR/ghcr.env
+          touch $TARGET_DIR/.env.local
 
           # Run deployment
           cd $TARGET_DIR
