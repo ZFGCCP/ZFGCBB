@@ -76,7 +76,6 @@ jobs:
           echo "Will look for artifact with name: $ARTIFACT_NAME"
           echo "Will look for image with tag: $REF_NAME"
 
-      # Download the metadata first to get the exact package filename
       # For workflow_run triggered deployments
       - name: Download artifact metadata
         id: download_metadata
@@ -86,18 +85,46 @@ jobs:
           name: ${{ env.ARTIFACT_NAME }}-metadata
           path: ./metadata/
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          workflow: Build and Publish Docker Images
+          repository: ${{ github.repository }}
+          run-id: ${{ github.event.workflow_run.id }}
 
       # For manual deployments (latest from branch/environment)
-      - name: Download artifact metadata (latest)
+      - name: Find most recent workflow run
         if: ${{ github.event_name == 'workflow_dispatch' }}
+        id: find_run
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const branch = '${{ github.event.inputs.environment }}';
+            const workflow_id = 'build-and-publish-docker-images.yml';
+
+            const runs = await github.rest.actions.listWorkflowRuns({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: workflow_id,
+              branch: branch,
+              status: 'success',
+              per_page: 1
+            });
+
+            if (runs.data.workflow_runs.length > 0) {
+              const runId = runs.data.workflow_runs[0].id;
+              console.log(`Found workflow run ID: ${runId}`);
+              return runId;
+            } else {
+              console.log('No successful workflow runs found');
+              return '';
+            }
+
+      - name: Download artifact metadata (latest)
+        if: ${{ github.event_name == 'workflow_dispatch' && steps.find_run.outputs.result != '' }}
         uses: actions/download-artifact@v4
         with:
           name: ${{ env.ARTIFACT_NAME }}-metadata
           path: ./metadata/
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          workflow: Build and Publish Docker Images
-          branch: ${{ github.ref_name }}
+          repository: ${{ github.repository }}
+          run-id: ${{ steps.find_run.outputs.result }}
 
       - name: Read metadata and set package filename
         id: read_metadata
@@ -130,18 +157,19 @@ jobs:
           name: ${{ env.ARTIFACT_NAME }}
           path: ./package/
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          workflow: Build and Publish Docker Images
+          repository: ${{ github.repository }}
+          run-id: ${{ github.event.workflow_run.id }}
 
       # For manual deployments (latest from branch/environment)
       - name: Download latest branch artifact
-        if: ${{ github.event_name == 'workflow_dispatch' }}
+        if: ${{ github.event_name == 'workflow_dispatch' && steps.find_run.outputs.result != '' }}
         uses: actions/download-artifact@v4
         with:
           name: ${{ env.ARTIFACT_NAME }}
           path: ./package/
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          workflow: Build and Publish Docker Images
-          branch: ${{ github.ref_name }}
+          repository: ${{ github.repository }}
+          run-id: ${{ steps.find_run.outputs.result }}
 
       - name: Prepare deployment package
         run: |
