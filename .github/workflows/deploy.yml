@@ -113,6 +113,7 @@ jobs:
               return runId;
             } else {
               console.log('No successful workflow runs found');
+              console.log(JSON.stringify(runs, null, 2));
               return '';
             }
 
