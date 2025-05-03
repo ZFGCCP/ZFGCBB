@@ -273,7 +273,15 @@ jobs:
           # Move deployment package to target directory
           mv /tmp/deployment-package.tar.gz $TARGET_DIR/
           mv /tmp/.env $TARGET_DIR/.env
-          mv /tmp/ghcr.env $TARGET_DIR/ghcr.env
+          #mv /tmp/ghcr.env $TARGET_DIR/ghcr.env
+          cat > $TARGET_DIR/ghcr.env <<EOF
+          GHCR_USERNAME=${{ github.actor }}
+          GHCR_TOKEN=${{ secrets.GITHUB_TOKEN }}
+          REGISTRY=${{ env.REGISTRY }}
+          IMAGE_PREFIX=${{ env.IMAGE_PREFIX }}
+          IMAGE_TAG=${{ env.DOCKER_TAG || env.IMAGE_TAG }}
+          EOF
+
           touch $TARGET_DIR/.env.local
 
           # Run deployment
