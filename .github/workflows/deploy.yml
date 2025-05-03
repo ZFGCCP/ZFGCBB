@@ -278,5 +278,13 @@ jobs:
 
           # Run deployment
           cd $TARGET_DIR
-          bash ./deploy-script.sh --env .env --tag "$IMAGE_TAG" --package deployment-package.tar.gz || ls -la
+
+          TAG_ARG=""
+          if [ -n "${{ github.event.inputs.tag }}" ]; then
+            TAG_ARG="--tag ${{ github.event.inputs.tag }}"
+          else
+            TAG_ARG="--branch ${{ github.ref_name }}"
+          fi
+
+          bash ./deploy-script.sh --env .env --tag "$IMAGE_TAG" --package deployment-package.tar.gz $TAG_ARG || ls -la
           EOT
