@@ -88,10 +88,9 @@ public class UserDataProvider extends AbstractDataProvider {
 			
 			Optional<AvatarDbo> avDb = avatarDao.get(avatarEx).stream().findFirst();
 			
-			if(avDb != null) {
-				Avatar av = avDb.map((a) -> mapper.map(a, Avatar.class)).orElse(null);
-				user.setAvatar(av);
-			}
+			avDb.ifPresent(av -> {
+				user.getBioInfo().setAvatar(mapper.map(av, Avatar.class));
+			});
 		}
 		
 		return user;
