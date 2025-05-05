@@ -71,4 +71,14 @@ if ! grep -q "AuthorizedKeysFile      .ssh/authorized_keys" "/etc/ssh/sshd_confi
   systemctl restart ssh
 fi
 
+log "Configuring UFW firewall..."
+
+systemctl enable ufw
+ufw allow 22
+ufw allow 80
+ufw allow 443
+
+ufw enable
+
+
 log "Linux user setup completed successfully!"
