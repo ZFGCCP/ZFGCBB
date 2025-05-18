@@ -1,7 +1,5 @@
 package com.zfgc.zfgbb.model.users;
 
-import java.time.LocalDateTime;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.zfgc.zfgbb.model.BaseModel;
 
@@ -12,19 +10,8 @@ public class Avatar extends BaseModel {
 	@JsonIgnore
 	private String url;
 	private Boolean activeFlag;
-	
-	
-	@JsonIgnore
-	private String filename;
-	
-	public String getLocation() {
-		if(url != null) {
-			return url;
-		}
-		else {
-			return "todo:contentstreamurl/" + filename;
-		}
-	}
+	private Integer contentResourceId;
+
 
 	public Integer getAvatarId() {
 		return avatarId;
@@ -60,12 +47,12 @@ public class Avatar extends BaseModel {
 		avatarId = id;
 	}
 
-	public String getFilename() {
-		return filename;
+	public Integer getContentResourceId() {
+		return contentResourceId;
 	}
 
-	public void setFilename(String filename) {
-		this.filename = filename;
+	public void setContentResourceId(Integer contentResourceId) {
+		this.contentResourceId = contentResourceId;
 	}
 	
 }
