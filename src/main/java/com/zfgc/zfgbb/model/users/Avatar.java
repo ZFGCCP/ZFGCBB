@@ -11,8 +11,8 @@ public class Avatar extends BaseModel {
 	
 	@JsonIgnore
 	private String url;
-	private Integer userId;
 	private Boolean activeFlag;
+	
 	
 	@JsonIgnore
 	private String filename;
@@ -40,14 +40,6 @@ public class Avatar extends BaseModel {
 
 	public void setUrl(String url) {
 		this.url = url;
-	}
-
-	public Integer getUserId() {
-		return userId;
-	}
-
-	public void setUserId(Integer userId) {
-		this.userId = userId;
 	}
 
 	public Boolean getActiveFlag() {
