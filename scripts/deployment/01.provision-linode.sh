@@ -7,10 +7,16 @@ log() {
   echo "[$(date +'%Y-%m-%dT%H:%M:%S%z')]: $*"
 }
 
-log "Starting Linode provisioning..."
 
+# Create app directory structure if it doesn't exist
+APP_DIR="/opt/zfgbb"
+# Install required packages if not already installed
+PACKAGES_TO_INSTALL="apt-transport-https curl containerd docker.io docker-compose-v2"
 # Update package lists if it hasn't been updated in the last 12 hours
 APT_UPDATE_TIMESTAMP="/var/lib/apt/periodic/update-success-stamp"
+
+log "Starting Linode provisioning..."
+
 if [ ! -f "$APT_UPDATE_TIMESTAMP" ] || [ "$(find "$APT_UPDATE_TIMESTAMP" -mtime +0.5 2>/dev/null)" ]; then
   log "Updating package lists..."
   sudo apt update
@@ -18,8 +24,6 @@ else
   log "Package lists already up to date"
 fi
 
-# Install required packages if not already installed
-PACKAGES_TO_INSTALL="apt-transport-https curl containerd docker.io docker-compose-v2"
 PACKAGES_TO_INSTALL_ARR=($PACKAGES_TO_INSTALL)
 
 PACKAGES_TO_INSTALL_FILTERED=""
@@ -47,8 +51,6 @@ else
   log "containerd already configured"
 fi
 
-# Create app directory structure if it doesn't exist
-APP_DIR="/opt/zfgbb"
 if [ ! -d "$APP_DIR" ]; then
   log "Creating application directory structure..."
   sudo mkdir -p "$APP_DIR"
@@ -56,6 +58,8 @@ if [ ! -d "$APP_DIR" ]; then
   sudo mkdir -p "$APP_DIR/config"
   sudo mkdir -p "$APP_DIR/logs"
   sudo chown -R $(whoami):$(whoami) "$APP_DIR"
+  # make ownership change permanent
+  sudo chattr +i "$APP_DIR"
 else
   log "Application directory structure already exists"
 fi

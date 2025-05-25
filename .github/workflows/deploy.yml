@@ -2,28 +2,28 @@ name: Deploy to Linode
 
 on:
   workflow_run:
-    workflows: ["Build and Publish Docker Images"]
+    workflows: ["Provision Linode"]
     types:
       - completed
     branches:
       - main
       - development
 
-  workflow_dispatch:
-    inputs:
-      environment:
-        description: "Environment to deploy to"
-        required: true
-        default: "development"
-        type: choice
-        options:
-          - development
-          - main
-          - gm112-linode-test
-      tag:
-        description: "Specific tag to deploy (optional)"
-        required: false
-        type: string
+  # workflow_dispatch:
+  #   inputs:
+  #     environment:
+  #       description: "Environment to deploy to"
+  #       required: true
+  #       default: "development"
+  #       type: choice
+  #       options:
+  #         - development
+  #         - main
+  #         - gm112-linode-test
+  #     tag:
+  #       description: "Specific tag to deploy (optional)"
+  #       required: false
+  #       type: string
 
 permissions:
   contents: read
@@ -33,10 +33,10 @@ permissions:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
 
     environment:
-      name: ${{ github.event.inputs.environment || 'development' }}
+      name: ${{ github.ref_name }}
 
     steps:
       - name: Checkout repository
@@ -52,9 +52,9 @@ jobs:
           if [ "${{ github.event_name }}" == "workflow_run" ]; then
             # For workflow_run triggers, use the branch name that triggered the workflow
             REF_NAME="${{ github.event.workflow_run.head_branch }}"
-          elif [ -n "${{ github.event.inputs.tag }}" ]; then
-            # For manual triggers with tag specified
-            REF_NAME="${{ github.event.inputs.tag }}"
+          # elif [ -n "${{ github.event.inputs.tag }}" ]; then
+          #   # For manual triggers with tag specified
+          #   REF_NAME="${{ github.event.inputs.tag }}"
           else
             # For manual triggers with environment but no tag, use the branch name
             REF_NAME="${{ github.ref_name }}"
@@ -76,125 +76,157 @@ jobs:
           echo "Will look for artifact with name: $ARTIFACT_NAME"
           echo "Will look for image with tag: $REF_NAME"
 
-      # For workflow_run triggered deployments
-      - name: Download artifact metadata
-        id: download_metadata
-        if: ${{ github.event_name == 'workflow_run' }}
-        uses: actions/download-artifact@v4
-        with:
-          name: ${{ env.ARTIFACT_NAME }}-metadata
-          path: ./metadata/
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          repository: ${{ github.repository }}
-          run-id: ${{ github.event.workflow_run.id }}
+      # # For workflow_run triggered deployments
+      # - name: Download artifact metadata
+      #   id: download_metadata
+      #   if: ${{ github.event_name == 'workflow_run' }}
+      #   uses: actions/download-artifact@v4
+      #   with:
+      #     name: ${{ env.ARTIFACT_NAME }}-metadata
+      #     path: ./metadata/
+      #     github-token: ${{ secrets.GITHUB_TOKEN }}
+      #     repository: ${{ github.repository }}
+      #     run-id: ${{ github.event.workflow_run.id }}
 
-      # For manual deployments (latest from branch/environment)
-      - name: Find most recent workflow run
-        if: ${{ github.event_name == 'workflow_dispatch' }}
-        id: find_run
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const head_sha = '${{ github.head_ref }}';
-            const workflow_id = 'docker-build-publish.yml';
+      # # For manual deployments (latest from branch/environment)
+      # - name: Find most recent workflow run
+      #   if: ${{ github.event_name == 'workflow_dispatch' }}
+      #   id: find_run
+      #   uses: actions/github-script@v7
+      #   with:
+      #     script: |
+      #       const head_sha = '${{ github.head_ref }}';
+      #       const workflow_id = 'docker-build-publish.yml';
 
-            const runs = await github.rest.actions.listWorkflowRuns({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              workflow_id: workflow_id,
-              head_sha,
-              status: 'success',
-              per_page: 1
-            });
+      #       const runs = await github.rest.actions.listWorkflowRuns({
+      #         owner: context.repo.owner,
+      #         repo: context.repo.repo,
+      #         workflow_id: workflow_id,
+      #         head_sha,
+      #         status: 'success',
+      #         per_page: 1
+      #       });
 
-            if (runs.data.workflow_runs.length > 0) {
-              const runId = runs.data.workflow_runs[0].id;
-              console.log(`Found workflow run ID: ${runId}`);
-              return runId;
-            } else {
-              console.log('No successful workflow runs found');
-              console.log(JSON.stringify(runs, null, 2));
-              return '';
-            }
+      #       if (runs.data.workflow_runs.length > 0) {
+      #         const runId = runs.data.workflow_runs[0].id;
+      #         console.log(`Found workflow run ID: ${runId}`);
+      #         return runId;
+      #       } else {
+      #         console.log('No successful workflow runs found');
+      #         console.log(JSON.stringify(runs, null, 2));
+      #         return '';
+      #       }
 
-      - name: Download artifact metadata (latest)
-        if: ${{ github.event_name == 'workflow_dispatch' && steps.find_run.outputs.result != '' }}
-        uses: actions/download-artifact@v4
-        with:
-          name: ${{ env.ARTIFACT_NAME }}-metadata
-          path: ./metadata/
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          repository: ${{ github.repository }}
-          run-id: ${{ steps.find_run.outputs.result }}
-
-      - name: Read metadata and set package filename
-        id: read_metadata
+      - name: Generate build identifiers
+        id: build_ids
         run: |
-          if [ -f "./metadata/deployment-metadata.json" ]; then
-            echo "Metadata file found!"
-            cat ./metadata/deployment-metadata.json
-            
-            # Extract package filename from metadata
-            PACKAGE_FILENAME=$(jq -r '.package_filename' ./metadata/deployment-metadata.json)
-            DOCKER_TAG=$(jq -r '.docker_tag' ./metadata/deployment-metadata.json)
-            
-            echo "Found package filename: $PACKAGE_FILENAME"
-            echo "Found Docker tag: $DOCKER_TAG"
-            
-            echo "PACKAGE_FILENAME=$PACKAGE_FILENAME" >> $GITHUB_ENV
-            echo "DOCKER_TAG=$DOCKER_TAG" >> $GITHUB_ENV
+          # Create timestamp in format YYYYMMDD-HHMMSS
+          TIMESTAMP=$(date -u '+%Y%m%d-%H%M%S')
+          echo "TIMESTAMP=$TIMESTAMP" >> $GITHUB_ENV
+
+          # Get branch or tag name for artifact naming
+          if [[ "${{ github.ref }}" == refs/tags/* ]]; then
+            REF_NAME=$(echo "${{ github.ref_name }}" | tr '/' '-')
+            echo "REF_TYPE=tag" >> $GITHUB_ENV
           else
-            echo "WARNING: No metadata file found, using default naming convention"
-            # Fallback to generic artifact name if no metadata found
-            echo "PACKAGE_FILENAME=deployment-package-${{ env.REF_NAME }}.tar.gz" >> $GITHUB_ENV
+            REF_NAME=$(echo "${{ github.ref_name }}" | tr '/' '-')
+            echo "REF_TYPE=branch" >> $GITHUB_ENV
           fi
+          echo "REF_NAME=$REF_NAME" >> $GITHUB_ENV
 
-      # Download the main deployment artifact
-      # For workflow_run triggered deployments
-      - name: Download deployment package
-        if: ${{ github.event_name == 'workflow_run' }}
-        uses: actions/download-artifact@v4
-        with:
-          name: ${{ env.ARTIFACT_NAME }}
-          path: ./package/
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          repository: ${{ github.repository }}
-          run-id: ${{ github.event.workflow_run.id }}
+          # Create a unique run ID that combines the REF_NAME and TIMESTAMP
+          UNIQUE_RUN_ID="${REF_NAME}-${TIMESTAMP}-${GITHUB_RUN_ID}"
+          echo "UNIQUE_RUN_ID=$UNIQUE_RUN_ID" >> $GITHUB_ENV
 
-      # For manual deployments (latest from branch/environment)
-      - name: Download latest branch artifact
-        if: ${{ github.event_name == 'workflow_dispatch' && steps.find_run.outputs.result != '' }}
-        uses: actions/download-artifact@v4
-        with:
-          name: ${{ env.ARTIFACT_NAME }}
-          path: ./package/
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          repository: ${{ github.repository }}
-          run-id: ${{ steps.find_run.outputs.result }}
+          # # Create artifact name that includes ref name
+          # ARTIFACT_NAME="deployment-package-${REF_NAME}"
+          # echo "ARTIFACT_NAME=$ARTIFACT_NAME" >> $GITHUB_ENV
 
-      - name: Prepare deployment package
-        run: |
-          # Find the downloaded deployment package file
-          PACKAGE_FILE=$(find ./package -type f -name "*.tar.gz" | head -n 1)
+          echo "Generated IDs:"
+          echo "- Timestamp: $TIMESTAMP"
+          echo "- Ref Name: $REF_NAME"
+          echo "- Ref Type: ${{ env.REF_TYPE }}"
+          echo "- Unique Run ID: $UNIQUE_RUN_ID"
+          #echo "- Artifact Name: $ARTIFACT_NAME"
 
-          if [ -n "$PACKAGE_FILE" ]; then
-            echo "Found deployment package: $PACKAGE_FILE"
-            # Rename for consistency in later steps
-            cp "$PACKAGE_FILE" ./deployment-package.tar.gz
-            echo "Deployment package prepared as: deployment-package.tar.gz"
-            ls -la ./deployment-package.tar.gz
-          else
-            echo "ERROR: No deployment package found!"
-            find ./package -type f
-            exit 1
-          fi
+      # - name: Download artifact metadata (latest)
+      #   if: ${{ github.event_name == 'workflow_dispatch' && steps.find_run.outputs.result != '' }}
+      #   uses: actions/download-artifact@v4
+      #   with:
+      #     name: ${{ env.ARTIFACT_NAME }}-metadata
+      #     path: ./metadata/
+      #     github-token: ${{ secrets.GITHUB_TOKEN }}
+      #     repository: ${{ github.repository }}
+      #     run-id: ${{ steps.find_run.outputs.result }}
 
-      - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+      # - name: Read metadata and set package filename
+      #   id: read_metadata
+      #   run: |
+      #     if [ -f "./metadata/deployment-metadata.json" ]; then
+      #       echo "Metadata file found!"
+      #       cat ./metadata/deployment-metadata.json
+
+      #       # Extract package filename from metadata
+      #       PACKAGE_FILENAME=$(jq -r '.package_filename' ./metadata/deployment-metadata.json)
+      #       DOCKER_TAG=$(jq -r '.docker_tag' ./metadata/deployment-metadata.json)
+
+      #       echo "Found package filename: $PACKAGE_FILENAME"
+      #       echo "Found Docker tag: $DOCKER_TAG"
+
+      #       echo "PACKAGE_FILENAME=$PACKAGE_FILENAME" >> $GITHUB_ENV
+      #       echo "DOCKER_TAG=$DOCKER_TAG" >> $GITHUB_ENV
+      #     else
+      #       echo "WARNING: No metadata file found, using default naming convention"
+      #       # Fallback to generic artifact name if no metadata found
+      #       echo "PACKAGE_FILENAME=deployment-package-${{ env.REF_NAME }}.tar.gz" >> $GITHUB_ENV
+      #     fi
+
+      # # Download the main deployment artifact
+      # # For workflow_run triggered deployments
+      # - name: Download deployment package
+      #   if: ${{ github.event_name == 'workflow_run' }}
+      #   uses: actions/download-artifact@v4
+      #   with:
+      #     name: ${{ env.ARTIFACT_NAME }}
+      #     path: ./package/
+      #     github-token: ${{ secrets.GITHUB_TOKEN }}
+      #     repository: ${{ github.repository }}
+      #     run-id: ${{ github.event.workflow_run.id }}
+
+      # # For manual deployments (latest from branch/environment)
+      # - name: Download latest branch artifact
+      #   if: ${{ github.event_name == 'workflow_dispatch' && steps.find_run.outputs.result != '' }}
+      #   uses: actions/download-artifact@v4
+      #   with:
+      #     name: ${{ env.ARTIFACT_NAME }}
+      #     path: ./package/
+      #     github-token: ${{ secrets.GITHUB_TOKEN }}
+      #     repository: ${{ github.repository }}
+      #     run-id: ${{ steps.find_run.outputs.result }}
+
+      # - name: Prepare deployment package
+      #   run: |
+      #     # Find the downloaded deployment package file
+      #     PACKAGE_FILE=$(find ./package -type f -name "*.tar.gz" | head -n 1)
+
+      #     if [ -n "$PACKAGE_FILE" ]; then
+      #       echo "Found deployment package: $PACKAGE_FILE"
+      #       # Rename for consistency in later steps
+      #       cp "$PACKAGE_FILE" ./deployment-package.tar.gz
+      #       echo "Deployment package prepared as: deployment-package.tar.gz"
+      #       ls -la ./deployment-package.tar.gz
+      #     else
+      #       echo "ERROR: No deployment package found!"
+      #       find ./package -type f
+      #       exit 1
+      #     fi
+
+      # - name: Log in to GitHub Container Registry
+      #   uses: docker/login-action@v3
+      #   with:
+      #     registry: ghcr.io
+      #     username: ${{ github.actor }}
+      #     password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup SSH
         uses: webfactory/ssh-agent@v0.9.1
@@ -221,16 +253,16 @@ jobs:
           ZFGBB_USER=${{ secrets.ZFGBB_USER }}
           ZFGBB_USER_PASSWORD=${{ secrets.ZFGBB_USER_PASSWORD }}
 
-          SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/${{ secrets.ZFGBB_DATABASE }}
+          SPRING_DATASOURCE_URL=jdbc:postgresql://zfgbb_postgresql:5432/${{ secrets.ZFGBB_DATABASE }}
           SPRING_DATASOURCE_USERNAME=${{ secrets.ZFGBB_USER }}
           SPRING_DATASOURCE_PASSWORD=${{ secrets.ZFGBB_USER_PASSWORD }}
 
-          MBG_JDBC_URL=jdbc:postgresql://localhost:5432/${{ secrets.ZFGBB_DATABASE }}
+          MBG_JDBC_URL=jdbc:postgresql://zfgbb_postgresql:5432/${{ secrets.ZFGBB_DATABASE }}
           MBG_JBDC_USERNAME=${{ secrets.ZFGBB_USER }}
           MBG_JDBC_PASSWORD=${{ secrets.ZFGBB_USER_PASSWORD }}
           EOF
 
-          scp -P ${{ secrets.SERVER_PORT }} /tmp/.env.local ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/tmp/.env
+          scp -P ${{ secrets.SERVER_PORT }} /tmp/.env.local ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/opt/zfgbb/.env
 
       - name: Pass GHCR credentials to remote server
         run: |
@@ -242,38 +274,25 @@ jobs:
           IMAGE_TAG=${{ env.DOCKER_TAG || env.IMAGE_TAG }}
           EOF
 
-          scp -P ${{ secrets.SERVER_PORT }} /tmp/ghcr.env ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/tmp/
+          scp -P ${{ secrets.SERVER_PORT }} /tmp/ghcr.env ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/opt/zfgbb/
 
-      - name: Upload deploy-script.sh to server
+      - name: Upload 02.deploy-script.sh to server
         run: |
-          scp -P ${{ secrets.SERVER_PORT }} ./scripts/docker/deploy-script.sh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/tmp/
+          scp -P ${{ secrets.SERVER_PORT }} ./scripts/docker/02.deploy-script.sh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/opt/zfgbb/
 
       # Upload deployment package to server
       - name: Upload deployment package to server
         run: |
-          scp -P ${{ secrets.SERVER_PORT }} ./deployment-package.tar.gz ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/tmp/
+          scp -P ${{ secrets.SERVER_PORT }} ./deployment-package.tar.gz ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/opt/zfgbb/
 
       - name: Run deployment script on server
         run: |
           ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} -p ${{ secrets.SERVER_PORT }} "bash -s" << 'EOT'
           set -e
-          # Ensure target directory exists
           TARGET_DIR="/opt/zfgbb"
-          if [ ! -d "$TARGET_DIR" ]; then
-            sudo mkdir -p $TARGET_DIR
-            sudo chown $(whoami):$(whoami) $TARGET_DIR
-          fi
+          # Empty target directory
+          rm -rf $TARGET_DIR/*
 
-          rm $TARGET_DIR/deploy-script.sh || true
-          mv /tmp/deploy-script.sh $TARGET_DIR/deploy-script.sh
-          chmod +x $TARGET_DIR/deploy-script.sh
-          rm $TARGET_DIR/.env || true
-          rm $TARGET_DIR/ghcr.env || true
-
-          # Move deployment package to target directory
-          mv /tmp/deployment-package.tar.gz $TARGET_DIR/
-          mv /tmp/.env $TARGET_DIR/.env
-          #mv /tmp/ghcr.env $TARGET_DIR/ghcr.env
           cat > $TARGET_DIR/ghcr.env <<EOF
           GHCR_USERNAME=${{ github.actor }}
           GHCR_TOKEN=${{ secrets.GITHUB_TOKEN }}
@@ -281,8 +300,6 @@ jobs:
           IMAGE_PREFIX=${{ env.IMAGE_PREFIX }}
           IMAGE_TAG=${{ env.DOCKER_TAG || env.IMAGE_TAG }}
           EOF
-
-          touch $TARGET_DIR/.env.local
 
           # Run deployment
           cd $TARGET_DIR
@@ -294,5 +311,6 @@ jobs:
             TAG_ARG="--branch ${{ github.ref_name }}"
           fi
 
-          bash ./deploy-script.sh --env .env --tag "$IMAGE_TAG" --package deployment-package.tar.gz $TAG_ARG || ls -la
+          bash ./deploy-script.sh --env .env $TAG_ARG || ls -la
+          rm -rf $TARGET_DIR/*.env
           EOT
