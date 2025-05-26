@@ -44,6 +44,8 @@ jobs:
 
       - name: Set deployment variables
         id: set_vars
+        env: # For manual triggers with environment but no tag, use the branch name
+          REF_NAME: ${{ github.ref_name }}
         run: |
           REPO_OWNER_LOWER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
           REPO_NAME_LOWER=$(echo "${{ github.event.repository.name }}" | tr '[:upper:]' '[:lower:]')
@@ -52,12 +54,6 @@ jobs:
           if [ "${{ github.event_name }}" == "workflow_run" ]; then
             # For workflow_run triggers, use the branch name that triggered the workflow
             REF_NAME="${{ github.event.workflow_run.head_branch }}"
-          # elif [ -n "${{ github.event.inputs.tag }}" ]; then
-          #   # For manual triggers with tag specified
-          #   REF_NAME="${{ github.event.inputs.tag }}"
-          else
-            # For manual triggers with environment but no tag, use the branch name
-            REF_NAME="${{ github.ref_name }}"
           fi
 
           # Convert ref name to lowercase and replace slashes with hyphens for compatibility
@@ -76,157 +72,24 @@ jobs:
           echo "Will look for artifact with name: $ARTIFACT_NAME"
           echo "Will look for image with tag: $REF_NAME"
 
-      # # For workflow_run triggered deployments
-      # - name: Download artifact metadata
-      #   id: download_metadata
-      #   if: ${{ github.event_name == 'workflow_run' }}
-      #   uses: actions/download-artifact@v4
-      #   with:
-      #     name: ${{ env.ARTIFACT_NAME }}-metadata
-      #     path: ./metadata/
-      #     github-token: ${{ secrets.GITHUB_TOKEN }}
-      #     repository: ${{ github.repository }}
-      #     run-id: ${{ github.event.workflow_run.id }}
-
-      # # For manual deployments (latest from branch/environment)
-      # - name: Find most recent workflow run
-      #   if: ${{ github.event_name == 'workflow_dispatch' }}
-      #   id: find_run
-      #   uses: actions/github-script@v7
-      #   with:
-      #     script: |
-      #       const head_sha = '${{ github.head_ref }}';
-      #       const workflow_id = 'docker-build-publish.yml';
-
-      #       const runs = await github.rest.actions.listWorkflowRuns({
-      #         owner: context.repo.owner,
-      #         repo: context.repo.repo,
-      #         workflow_id: workflow_id,
-      #         head_sha,
-      #         status: 'success',
-      #         per_page: 1
-      #       });
-
-      #       if (runs.data.workflow_runs.length > 0) {
-      #         const runId = runs.data.workflow_runs[0].id;
-      #         console.log(`Found workflow run ID: ${runId}`);
-      #         return runId;
-      #       } else {
-      #         console.log('No successful workflow runs found');
-      #         console.log(JSON.stringify(runs, null, 2));
-      #         return '';
-      #       }
-
       - name: Generate build identifiers
         id: build_ids
+        env: # For manual triggers with environment but no tag, use the branch name
+          REF_TYPE: ${{ github.ref_type}}
         run: |
           # Create timestamp in format YYYYMMDD-HHMMSS
           TIMESTAMP=$(date -u '+%Y%m%d-%H%M%S')
           echo "TIMESTAMP=$TIMESTAMP" >> $GITHUB_ENV
 
-          # Get branch or tag name for artifact naming
-          if [[ "${{ github.ref }}" == refs/tags/* ]]; then
-            REF_NAME=$(echo "${{ github.ref_name }}" | tr '/' '-')
-            echo "REF_TYPE=tag" >> $GITHUB_ENV
-          else
-            REF_NAME=$(echo "${{ github.ref_name }}" | tr '/' '-')
-            echo "REF_TYPE=branch" >> $GITHUB_ENV
-          fi
-          echo "REF_NAME=$REF_NAME" >> $GITHUB_ENV
-
           # Create a unique run ID that combines the REF_NAME and TIMESTAMP
           UNIQUE_RUN_ID="${REF_NAME}-${TIMESTAMP}-${GITHUB_RUN_ID}"
           echo "UNIQUE_RUN_ID=$UNIQUE_RUN_ID" >> $GITHUB_ENV
-
-          # # Create artifact name that includes ref name
-          # ARTIFACT_NAME="deployment-package-${REF_NAME}"
-          # echo "ARTIFACT_NAME=$ARTIFACT_NAME" >> $GITHUB_ENV
 
           echo "Generated IDs:"
           echo "- Timestamp: $TIMESTAMP"
           echo "- Ref Name: $REF_NAME"
           echo "- Ref Type: ${{ env.REF_TYPE }}"
           echo "- Unique Run ID: $UNIQUE_RUN_ID"
-          #echo "- Artifact Name: $ARTIFACT_NAME"
-
-      # - name: Download artifact metadata (latest)
-      #   if: ${{ github.event_name == 'workflow_dispatch' && steps.find_run.outputs.result != '' }}
-      #   uses: actions/download-artifact@v4
-      #   with:
-      #     name: ${{ env.ARTIFACT_NAME }}-metadata
-      #     path: ./metadata/
-      #     github-token: ${{ secrets.GITHUB_TOKEN }}
-      #     repository: ${{ github.repository }}
-      #     run-id: ${{ steps.find_run.outputs.result }}
-
-      # - name: Read metadata and set package filename
-      #   id: read_metadata
-      #   run: |
-      #     if [ -f "./metadata/deployment-metadata.json" ]; then
-      #       echo "Metadata file found!"
-      #       cat ./metadata/deployment-metadata.json
-
-      #       # Extract package filename from metadata
-      #       PACKAGE_FILENAME=$(jq -r '.package_filename' ./metadata/deployment-metadata.json)
-      #       DOCKER_TAG=$(jq -r '.docker_tag' ./metadata/deployment-metadata.json)
-
-      #       echo "Found package filename: $PACKAGE_FILENAME"
-      #       echo "Found Docker tag: $DOCKER_TAG"
-
-      #       echo "PACKAGE_FILENAME=$PACKAGE_FILENAME" >> $GITHUB_ENV
-      #       echo "DOCKER_TAG=$DOCKER_TAG" >> $GITHUB_ENV
-      #     else
-      #       echo "WARNING: No metadata file found, using default naming convention"
-      #       # Fallback to generic artifact name if no metadata found
-      #       echo "PACKAGE_FILENAME=deployment-package-${{ env.REF_NAME }}.tar.gz" >> $GITHUB_ENV
-      #     fi
-
-      # # Download the main deployment artifact
-      # # For workflow_run triggered deployments
-      # - name: Download deployment package
-      #   if: ${{ github.event_name == 'workflow_run' }}
-      #   uses: actions/download-artifact@v4
-      #   with:
-      #     name: ${{ env.ARTIFACT_NAME }}
-      #     path: ./package/
-      #     github-token: ${{ secrets.GITHUB_TOKEN }}
-      #     repository: ${{ github.repository }}
-      #     run-id: ${{ github.event.workflow_run.id }}
-
-      # # For manual deployments (latest from branch/environment)
-      # - name: Download latest branch artifact
-      #   if: ${{ github.event_name == 'workflow_dispatch' && steps.find_run.outputs.result != '' }}
-      #   uses: actions/download-artifact@v4
-      #   with:
-      #     name: ${{ env.ARTIFACT_NAME }}
-      #     path: ./package/
-      #     github-token: ${{ secrets.GITHUB_TOKEN }}
-      #     repository: ${{ github.repository }}
-      #     run-id: ${{ steps.find_run.outputs.result }}
-
-      # - name: Prepare deployment package
-      #   run: |
-      #     # Find the downloaded deployment package file
-      #     PACKAGE_FILE=$(find ./package -type f -name "*.tar.gz" | head -n 1)
-
-      #     if [ -n "$PACKAGE_FILE" ]; then
-      #       echo "Found deployment package: $PACKAGE_FILE"
-      #       # Rename for consistency in later steps
-      #       cp "$PACKAGE_FILE" ./deployment-package.tar.gz
-      #       echo "Deployment package prepared as: deployment-package.tar.gz"
-      #       ls -la ./deployment-package.tar.gz
-      #     else
-      #       echo "ERROR: No deployment package found!"
-      #       find ./package -type f
-      #       exit 1
-      #     fi
-
-      # - name: Log in to GitHub Container Registry
-      #   uses: docker/login-action@v3
-      #   with:
-      #     registry: ghcr.io
-      #     username: ${{ github.actor }}
-      #     password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup SSH
         uses: webfactory/ssh-agent@v0.9.1

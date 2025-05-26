@@ -49,18 +49,16 @@ jobs:
           # ARTIFACT_NAME="deployment-package-${REF_NAME}"
           # echo "ARTIFACT_NAME=$ARTIFACT_NAME" >> $GITHUB_ENV
 
+          REPO_OWNER_LOWER=$(echo '${{ github.repository_owner }}' | tr '[:upper:]' '[:lower:]')
+          REPO_NAME_LOWER=$(echo '${{ github.event.repository.name }}' | tr '[:upper:]' '[:lower:]')
+          echo "IMAGE_PREFIX=${REPO_OWNER_LOWER}/${REPO_NAME_LOWER}" >> $GITHUB_ENV
+
           echo "Generated IDs:"
           echo "- Timestamp: $TIMESTAMP"
           echo "- Ref Name: $REF_NAME"
           echo "- Ref Type: ${{ env.REF_TYPE }}"
           echo "- Unique Run ID: $UNIQUE_RUN_ID"
           #echo "- Artifact Name: $ARTIFACT_NAME"
-
-      - name: Set lowercase IMAGE_PREFIX
-        run: |
-          REPO_OWNER_LOWER=$(echo '${{ github.repository_owner }}' | tr '[:upper:]' '[:lower:]')
-          REPO_NAME_LOWER=$(echo '${{ github.event.repository.name }}' | tr '[:upper:]' '[:lower:]')
-          echo "IMAGE_PREFIX=${REPO_OWNER_LOWER}/${REPO_NAME_LOWER}" >> $GITHUB_ENV
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -135,49 +133,3 @@ jobs:
             ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}:postgresql-${{ env.DOCKER_TAG }}
             ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}:postgresql-latest
           target: database
-
-      # - name: Create deployment package
-      #   run: |
-      #     mkdir -p deployment
-      #     cp -r docker-compose.yml docker-compose.linode.yml .env.docker deployment/
-
-      #     # Create version.env with deployment metadata
-      #     cat > deployment/version.env <<EOF
-      #     DOCKER_TAG=${{ env.DOCKER_TAG }}
-      #     REGISTRY=${{ env.REGISTRY }}
-      #     IMAGE_PREFIX=${{ env.IMAGE_PREFIX }}
-      #     BUILD_TIMESTAMP=${{ env.TIMESTAMP }}
-      #     BUILD_REF_NAME=${{ env.REF_NAME }}
-      #     BUILD_REF_TYPE=${{ env.REF_TYPE }}
-      #     BUILD_RUN_ID=${{ github.run_id }}
-      #     BUILD_UNIQUE_ID=${{ env.UNIQUE_RUN_ID }}
-      #     EOF
-
-      #     # Create the deployment package with a more specific name
-      #     PACKAGE_FILENAME="deployment-package-${{ env.REF_NAME }}-${{ env.TIMESTAMP }}.tar.gz"
-      #     tar -czf $PACKAGE_FILENAME deployment/
-      #     echo "PACKAGE_FILENAME=$PACKAGE_FILENAME" >> $GITHUB_ENV
-
-      #     # Also create a metadata file to help with later identification
-      #     echo "{
-      #       \"ref_name\": \"${{ env.REF_NAME }}\",
-      #       \"ref_type\": \"${{ env.REF_TYPE }}\",
-      #       \"timestamp\": \"${{ env.TIMESTAMP }}\",
-      #       \"run_id\": \"${{ github.run_id }}\",
-      #       \"docker_tag\": \"${{ env.DOCKER_TAG }}\",
-      #       \"package_filename\": \"$PACKAGE_FILENAME\"
-      #     }" > deployment-metadata.json
-
-      # - name: Upload deployment package
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: ${{ env.ARTIFACT_NAME }}
-      #     path: ${{ env.PACKAGE_FILENAME }}
-      #     retention-days: 7
-
-      # - name: Upload deployment metadata
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: ${{ env.ARTIFACT_NAME }}-metadata
-      #     path: deployment-metadata.json
-      #     retention-days: 7
