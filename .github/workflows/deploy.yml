@@ -41,6 +41,9 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            ./scripts/deployment
 
       - name: Set deployment variables
         id: set_vars
