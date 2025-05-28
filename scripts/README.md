@@ -9,7 +9,6 @@ This directory contains scripts for various tasks related to the ZFGBB project.
   - [Folder Structure](#folder-structure)
     - [development - Local Only Development Scripts](#development---local-only-development-scripts)
     - [deployment - Deployment Scripts](#deployment---deployment-scripts)
-    - [deployment/docker - Docker Scripts](#deploymentdocker---docker-scripts)
 
 ## Folder Structure
 
@@ -27,10 +26,4 @@ This folder contains scripts that are meant to be used on the server. Use `scp` 
 
 - [deployment/00.manual.setup-runner-linux-user.sh](./deployment/00.manual.setup-runner-linux-user.sh) - A script to set up the runner user on the server.
 - [deployment/01.provision-linode.sh](./deployment/01.provision-linode.sh) - A script to provision a Linode server. This script is also used by [.github/workflows/provision-linode.yml](./.github/workflows/provision-linode.yml).
-
-### [deployment/docker](./deployment/docker) - Docker Scripts
-
-This folder contains scripts that are meant to be used with Docker.
-
-- [deployment/docker/build-docker-image.sh](./deployment/docker/build-docker-image.sh) - A script to build a Docker image.
-- [deployment/docker/deploy-docker-image.sh](./deployment/docker/deploy-docker-image.sh) - A script to deploy a Docker image.
+- [deployment/02.deploy-script.sh](./deployment/02.deploy-script.sh) - A script to deploy the application to an Ubuntu-based server.
