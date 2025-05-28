@@ -102,9 +102,9 @@ jobs:
         run: |
           ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} -p ${{ secrets.SERVER_PORT }} "chmod +x /tmp/01.provision-linode.sh && sudo /tmp/01.provision-linode.sh"
 
-      - name: Create .env.local on server
+      - name: Create .env on server
         run: |
-          cat > /tmp/.env.local <<EOF
+          cat > /tmp/.env <<EOF
           ZFGBB_DATABASE=${{ secrets.ZFGBB_DATABASE }}
           ZFGBB_USER=${{ secrets.ZFGBB_USER }}
           ZFGBB_USER_PASSWORD=${{ secrets.ZFGBB_USER_PASSWORD }}
@@ -118,7 +118,7 @@ jobs:
           MBG_JDBC_PASSWORD=${{ secrets.ZFGBB_USER_PASSWORD }}
           EOF
 
-          scp -P ${{ secrets.SERVER_PORT }} /tmp/.env.local ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/opt/zfgbb/.env
+          scp -P ${{ secrets.SERVER_PORT }} /tmp/.env ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/opt/zfgbb/.env
 
       - name: Pass GHCR credentials to remote server
         run: |
