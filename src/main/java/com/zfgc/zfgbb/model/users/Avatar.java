@@ -7,10 +7,10 @@ public class Avatar extends BaseModel {
 	@JsonIgnore
 	private Integer avatarId;
 	
-	@JsonIgnore
 	private String url;
 	private Boolean activeFlag;
 	private Integer contentResourceId;
+	private Integer userId;
 
 
 	public Integer getAvatarId() {
@@ -53,6 +53,14 @@ public class Avatar extends BaseModel {
 
 	public void setContentResourceId(Integer contentResourceId) {
 		this.contentResourceId = contentResourceId;
+	}
+
+	public Integer getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Integer userId) {
+		this.userId = userId;
 	}
 	
 }
