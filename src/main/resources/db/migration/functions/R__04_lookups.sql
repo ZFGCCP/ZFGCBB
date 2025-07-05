@@ -14,3 +14,4 @@ begin
 end; $$;
 
 select zfgbb.create_content_types(1, 'AVR', 'Avatar');
+select zfgbb.create_content_types(2, 'ATC', 'Attachment');
