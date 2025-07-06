@@ -1,0 +1,167 @@
+name: Deploy to Linode
+
+on:
+  workflow_run:
+    workflows: ["Provision Linode"]
+    types:
+      - completed
+    branches:
+      - main
+      - development
+
+  # workflow_dispatch:
+  #   inputs:
+  #     environment:
+  #       description: "Environment to deploy to"
+  #       required: true
+  #       default: "development"
+  #       type: choice
+  #       options:
+  #         - development
+  #         - main
+  #         - gm112-linode-test
+  #     tag:
+  #       description: "Specific tag to deploy (optional)"
+  #       required: false
+  #       type: string
+
+permissions:
+  contents: read
+  packages: read
+  actions: read
+
+jobs:
+  set_vars:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    outputs:
+      REF_NAME: ${{ steps.set_vars.outputs.REF_NAME }}
+      IMAGE_PREFIX: ${{ steps.set_vars.outputs.IMAGE_PREFIX }}
+      IMAGE_TAG: ${{ steps.set_vars.outputs.IMAGE_TAG }}
+      ARTIFACT_NAME: ${{ steps.set_vars.outputs.ARTIFACT_NAME }}
+      REGISTRY: ${{ steps.set_vars.outputs.REGISTRY }}
+    steps:
+      - name: Set deployment variables
+        id: set_vars
+        run: |
+          REPO_OWNER_LOWER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+          REPO_NAME_LOWER=$(echo "${{ github.event.repository.name }}" | tr '[:upper:]' '[:lower:]')
+
+          # Determine reference name (branch or tag) for artifact naming
+          if [ "${{ github.event_name }}" == "workflow_run" ]; then
+            # For workflow_run triggers, use the branch name that triggered the workflow
+            REF_NAME="${{ github.event.workflow_run.head_branch }}"
+          fi
+
+          # Convert ref name to lowercase and replace slashes with hyphens for compatibility
+          REF_NAME=$(echo "$REF_NAME" | tr '[:upper:]' '[:lower:]' | tr '/' '-')
+          echo "REF_NAME=$REF_NAME" >> $GITHUB_ENV
+
+          # Set artifact name based on ref name
+          ARTIFACT_NAME="deployment-package-${REF_NAME}"
+          echo "ARTIFACT_NAME=$ARTIFACT_NAME" >> $GITHUB_ENV
+
+          # Set registry and image info
+          echo "REGISTRY=ghcr.io/${REPO_OWNER_LOWER}/${REPO_NAME_LOWER}" >> $GITHUB_ENV
+          echo "IMAGE_PREFIX=${REPO_OWNER_LOWER}/${REPO_NAME_LOWER}" >> $GITHUB_ENV
+          echo "IMAGE_TAG=$REF_NAME" >> $GITHUB_ENV
+
+          echo "Will look for artifact with name: $ARTIFACT_NAME"
+          echo "Will look for image with tag: $REF_NAME"
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: [set_vars]
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+
+    environment:
+      name: ${{ github.ref_name }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            ./scripts/deployment
+
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.9.1
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Add server to known hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H ${{ secrets.SERVER_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Copy provisioning script to server
+        run: |
+          scp -P ${{ secrets.SERVER_PORT }} ./scripts/deployment/01.provision-linode.sh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/tmp/
+
+      - name: Execute provisioning script
+        run: |
+          ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} -p ${{ secrets.SERVER_PORT }} "chmod +x /tmp/01.provision-linode.sh && sudo /tmp/01.provision-linode.sh"
+
+      - name: Create .env on server
+        run: |
+          cat > /tmp/.env <<EOF
+          ZFGBB_DATABASE=${{ secrets.ZFGBB_DATABASE }}
+          ZFGBB_USER=${{ secrets.ZFGBB_USER }}
+          ZFGBB_USER_PASSWORD=${{ secrets.ZFGBB_USER_PASSWORD }}
+
+          SPRING_DATASOURCE_URL=jdbc:postgresql://zfgbb_postgresql:5432/${{ secrets.ZFGBB_DATABASE }}
+          SPRING_DATASOURCE_USERNAME=${{ secrets.ZFGBB_USER }}
+          SPRING_DATASOURCE_PASSWORD=${{ secrets.ZFGBB_USER_PASSWORD }}
+
+          MBG_JDBC_URL=jdbc:postgresql://zfgbb_postgresql:5432/${{ secrets.ZFGBB_DATABASE }}
+          MBG_JBDC_USERNAME=${{ secrets.ZFGBB_USER }}
+          MBG_JDBC_PASSWORD=${{ secrets.ZFGBB_USER_PASSWORD }}
+          EOF
+
+          scp -P ${{ secrets.SERVER_PORT }} /tmp/.env ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/opt/zfgbb/.env
+
+      - name: Pass GHCR credentials to remote server
+        run: |
+          cat > /tmp/ghcr.env <<EOF
+          GHCR_USERNAME=${{ github.actor }}
+          GHCR_TOKEN=${{ secrets.GITHUB_TOKEN }}
+          REGISTRY=${{ needs.set_vars.outputs.REGISTRY }}
+          IMAGE_PREFIX=${{ needs.set_vars.outputs.IMAGE_PREFIX }}
+          IMAGE_TAG=${{ needs.set_vars.outputs.IMAGE_TAG }}
+          EOF
+
+          scp -P ${{ secrets.SERVER_PORT }} /tmp/ghcr.env ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/opt/zfgbb/
+
+      - name: Upload 02.deploy-script.sh to server
+        run: |
+          scp -P ${{ secrets.SERVER_PORT }} ./scripts/docker/02.deploy-script.sh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/opt/zfgbb/
+
+      - name: Run deployment script on server
+        run: |
+          ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} -p ${{ secrets.SERVER_PORT }} "bash -s" << 'EOT'
+          set -e
+          TARGET_DIR="/opt/zfgbb"
+          # Empty target directory
+          rm -rf $TARGET_DIR/*
+
+          cat > $TARGET_DIR/ghcr.env <<EOF
+          GHCR_USERNAME=${{ github.actor }}
+          GHCR_TOKEN=${{ secrets.GITHUB_TOKEN }}
+          REGISTRY=${{ needs.set_vars.outputs.REGISTRY }}
+          IMAGE_PREFIX=${{ needs.set_vars.outputs.IMAGE_PREFIX }}
+          IMAGE_TAG=${{ needs.set_vars.outputs.IMAGE_TAG }}
+          EOF
+
+          # Run deployment
+          cd $TARGET_DIR
+
+          TAG_ARG=""
+          if [ -n "${{ github.event.inputs.tag }}" ]; then
+            TAG_ARG="--tag ${{ github.event.inputs.tag }}"
+          else
+            TAG_ARG="--branch ${{ github.ref_name }}"
+          fi
+
+          bash ./deploy-script.sh --env .env $TAG_ARG || ls -la
+          rm -rf $TARGET_DIR/*.env
+          EOT

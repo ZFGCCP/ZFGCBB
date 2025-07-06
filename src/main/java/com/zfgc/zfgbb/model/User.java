@@ -33,9 +33,6 @@ public class User extends BaseModel implements UserDetails {
 	private List<IpAddress> allKnownIpAddresses = new ArrayList<>();
 	private UserBioInfo bioInfo;
 	
-	private Avatar avatar;
-	
-	
 	public List<Permission> getPermissions() {
 		return permissions;
 	}
@@ -181,14 +178,6 @@ public class User extends BaseModel implements UserDetails {
 		}
 		
 		return false;
-	}
-
-	public Avatar getAvatar() {
-		return avatar;
-	}
-
-	public void setAvatar(Avatar avatar) {
-		this.avatar = avatar;
 	}
 	
 }

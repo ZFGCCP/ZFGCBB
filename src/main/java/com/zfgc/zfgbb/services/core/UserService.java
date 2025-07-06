@@ -19,14 +19,6 @@ import com.zfgc.zfgbb.model.User;
 @Service
 @Transactional
 public class UserService {
-	@Value("${clausius.client}")
-	private String clientId;
-	
-	@Value("${clausius.password}")
-	private String clientSecret;
-	
-	@Value("${clausius.authEndpoint}")
-	private String authEndpoint;
 	
 	@Autowired
 	private UserDataProvider userDataProvider;
@@ -38,18 +30,7 @@ public class UserService {
 	}
 	
 	private void registerUserAtIdentity(User user) {
-		RestTemplate template = new RestTemplate();
-		HttpHeaders headers = new HttpHeaders();
-		headers.setBasicAuth(clientId, clientSecret);
-		headers.setContentType(MediaType.APPLICATION_JSON);
 		
-		HttpEntity ent = new HttpEntity("{ \"username\" : \"" + user.getUsername() + "\", \"password\" : \"" + user.getPassword() + "\" }", headers);
-
-		ResponseEntity resp = template.exchange(authEndpoint + "/users/register", HttpMethod.POST, ent, String.class);
-		
-		if(resp.getStatusCode().isError()) {
-			throw new RuntimeException("Failed to create user " + user.getUsername() + " at identity provider. Error code: " + resp.getStatusCode().value());
-		}
 	}
 	
 	public User loadUser(Integer userId) {

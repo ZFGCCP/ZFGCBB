@@ -1,0 +1,64 @@
+name: Provision Linode
+
+on:
+  workflow_run:
+    workflows: ["Build and Publish Docker Images"]
+    types:
+      - completed
+    branches:
+      - main
+      - development
+
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Environment to deploy to"
+        required: true
+        default: "development"
+        type: choice
+        options:
+          - development
+          - main
+          - gm112-linode-test
+      tag:
+        description: "Specific tag to deploy (optional)"
+        required: false
+        type: string
+
+permissions:
+  contents: read
+  packages: read
+  actions: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
+
+    environment:
+      name: ${{ github.event.inputs.environment || 'development' }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            ./scripts/deployment
+
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.9.1
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Add server to known hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H ${{ secrets.SERVER_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Copy provisioning script to server
+        run: |
+          scp -P ${{ secrets.SERVER_PORT }} ./scripts/deployment/01.provision-linode.sh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}:/tmp/
+
+      - name: Execute provisioning script
+        run: |
+          ssh ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} -p ${{ secrets.SERVER_PORT }} "chmod +x /tmp/01.provision-linode.sh && sudo /tmp/01.provision-linode.sh"

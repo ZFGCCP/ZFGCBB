@@ -11,6 +11,8 @@ public class UserBioInfo extends BaseModel {
 	private String personalText;
 	private String signature;
 	
+	private Avatar avatar;
+	
 	public String getCustomTitle() {
 		return customTitle;
 	}
@@ -51,6 +53,14 @@ public class UserBioInfo extends BaseModel {
 
 	public void setSignature(String signature) {
 		this.signature = signature;
+	}
+
+	public Avatar getAvatar() {
+		return avatar;
+	}
+
+	public void setAvatar(Avatar avatar) {
+		this.avatar = avatar;
 	}
 	
 }

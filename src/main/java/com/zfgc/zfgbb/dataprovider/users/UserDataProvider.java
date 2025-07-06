@@ -79,21 +79,19 @@ public class UserDataProvider extends AbstractDataProvider {
 			if(bioInfoDbo != null) {
 				user.setBioInfo(mapper.map(bioInfoDbo, UserBioInfo.class));
 			}
-		}
-		
-		if(Boolean.TRUE.equals(loadOptions.loadAvatar())) {
-			AvatarDboExample avatarEx = new AvatarDboExample();
-			avatarEx.createCriteria().andUserIdEqualTo(userId)
-									 .andActiveFlagEqualTo(true);
 			
-			Optional<AvatarDbo> avDb = avatarDao.get(avatarEx).stream().findFirst();
-			
-			if(avDb != null) {
-				Avatar av = avDb.map((a) -> mapper.map(a, Avatar.class)).orElse(null);
-				user.setAvatar(av);
+			if(Boolean.TRUE.equals(loadOptions.loadAvatar()) && bioInfoDbo.getAvatarId() != null) {
+				AvatarDboExample avatarEx = new AvatarDboExample();
+				avatarEx.createCriteria().andAvatarIdEqualTo(bioInfoDbo.getAvatarId())
+										 .andActiveFlagEqualTo(true);
+				
+				Optional<AvatarDbo> avDb = avatarDao.get(avatarEx).stream().findFirst();
+				
+				avDb.ifPresent(av -> {
+					user.getBioInfo().setAvatar(mapper.map(av, Avatar.class));
+				});
 			}
 		}
-		
 		return user;
 	}
 	

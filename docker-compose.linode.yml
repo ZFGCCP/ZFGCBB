@@ -1,0 +1,24 @@
+name: zfgbb
+services:
+  postgresql:
+    image: ${REGISTRY}/${IMAGE_PREFIX}:postgresql-${DOCKER_TAG}
+    build: {}
+  api:
+    image: ${REGISTRY}/${IMAGE_PREFIX}:api-${DOCKER_TAG}
+    build: {}
+  apache:
+    image: httpd:2.4
+    ports:
+      - 80:80
+      - 443:443
+    volumes: # expose vhosts and logs from host on /
+      - vhosts:/usr/local/apache2/htdocs
+      - httpd_logs:/var/log/apache2
+    depends_on:
+      - api
+    links:
+      - api
+
+volumes:
+  vhosts:
+  httpd_logs:

@@ -1,42 +1,118 @@
+name: zfgbb
 services:
   postgresql:
+    container_name: zfgbb_postgresql
     build:
       context: .
       dockerfile: Dockerfile
       target: database
-    container_name: zfgcbb_postgresql
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=123456
-      - POSTGRES_DB=zfgcbb
+    env_file:
+      - .env.local
+      - .env.docker
     ports:
-      - "5432:5432"
+      - "${POSTGRES_PORT:-5432}:${POSTGRES_PORT:-5432}"
+    networks:
+      - zfgbb
     volumes:
       - data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready" ,"-d", "zfgcbb"]
+      test:
+        [
+          "CMD-SHELL",
+          "sh -c 'pg_isready -U ${POSTGRES_USER:-postgres} -d ${ZFGBB_DATABASE:-zfgc_dev}'",
+        ]
       interval: 30s
       timeout: 60s
       retries: 5
-      start_period: 80s  
+      start_period: 80s
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: "1"
+          memory: 1G
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
-  zfgcbb:
+  pgadmin:
+    container_name: zfgbb_pgadmin
+    image: dpage/pgadmin4:9.2.0
+    environment:
+      PGADMIN_LISTEN_PORT: ${PGADMIN_PORT:-5050}
+      PGADMIN_DEFAULT_EMAIL: admin@zfgc.com
+      PGADMIN_DEFAULT_PASSWORD: ${POSTGRES_PASSWORD:-123456}
+      CONFIG_DATABASE_URI: ${PGADMIN_DATABASE_URI:-postgres://postgres:123456@zfgbb_postgresql:5432/zfgc_dev}
+      PGADMIN_CONFIG_PASSWORD_STORE: "True"
+      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: "False"
+      # Whitelist allowed IP addresses
+      PGADMIN_CONFIG_ENHANCED_COOKIE_PROTECTION: "True"
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+      PGADMIN_CONFIG_ALLOWED_HOSTS: "${PGADMIN_ALLOWED_HOSTS:-['localhost', '127.0.0.1', 'host.docker.internal']}"
+      # PGADMIN_CONFIG_PASSFILE: '"/var/lib/pgadmin/.pgpass"'
+    ports:
+      - "${PGADMIN_PORT:-5050}:${PGADMIN_PORT:-5050}"
+    networks:
+      - zfgbb
+    volumes:
+      - pgadmin:/var/lib/pgadmin
+      - ./scripts/docker/pgadmin/servers.json:/pgadmin4/servers.json
+      # - ./docker/pgadmin/.pgpass:/var/lib/pgadmin/.pgpass:ro
+
+    depends_on:
+      - postgresql
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 500M
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+  api:
+    container_name: zfgbb_api
     build:
       context: .
       dockerfile: Dockerfile
       target: deploy
     ports:
-      - "8080:8080"
+      - "${ZFGBB_BACKEND_PORT:-8080}:${ZFGBB_BACKEND_PORT:-8080}"
+    networks:
+      - zfgbb
     volumes:
-      - logs:/usr/src/app/logs
-    environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://zfgcbb_postgresql:5432/zfgcbb
-      - SPRING_DATASOURCE_USERNAME=postgres   
-      - SPRING_DATASOURCE_PASSWORD=123456
-      - SPRING_JPA_HIBERNATE_DDL_AUTO=create-drop
+      - logs:/usr/local/tomcat/logs
+      - content:/usr/local/tomcat/webapps/content
+    env_file:
+      - .env.local
+      - .env.docker
     depends_on:
       - postgresql
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: "2"
+          memory: 2G
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "curl",
+          "-f",
+          "http://localhost:${ZFGBB_BACKEND_PORT:-8080}/health",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
 volumes:
+  pgadmin:
   data:
   logs:
+  content:
+
+networks:
+  zfgbb:
+    driver: bridge
