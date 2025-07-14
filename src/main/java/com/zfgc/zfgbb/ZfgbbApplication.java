@@ -52,7 +52,7 @@ public class ZfgbbApplication {
 								"http://*zfgc.com",
 								"https://*zfgc.com")
 						.allowedMethods("*")
-						.allowedHeaders("Content-Type", "Authorization")
+						.allowedHeaders("Authorization")
 						.exposedHeaders("Authorization")
 						.allowCredentials(true);
 			}
