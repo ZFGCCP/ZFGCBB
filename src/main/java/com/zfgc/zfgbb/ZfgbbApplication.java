@@ -44,8 +44,11 @@ public class ZfgbbApplication {
 			public void addCorsMappings(CorsRegistry registry) {
 				registry.addMapping("/**")
 						.allowedOriginPatterns(
+								// Development endpoints
 								"http://localhost:*",
 								"https://localhost:*",
+								"https://zfgccp.github.io",
+								// Production endpoints
 								"http://*zfgc.com",
 								"https://*zfgc.com")
 						.allowedMethods("*")
