@@ -25,24 +25,36 @@ public class ZfgbbApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(ZfgbbApplication.class, args);
 	}
-	
+
 	@Bean(name = "org.dozer.Mapper")
-    public ModelMapper modelMapper() {
+	public ModelMapper modelMapper() {
 		ModelMapper modelMapper = new ModelMapper();
-	    modelMapper.getConfiguration()
-	        .setFieldMatchingEnabled(true)
-	        .setFieldAccessLevel(AccessLevel.PUBLIC)
-	        .setMatchingStrategy(MatchingStrategies.STRICT);
-	    
-	    return modelMapper;
-    }
-	
+		modelMapper.getConfiguration()
+				.setFieldMatchingEnabled(true)
+				.setFieldAccessLevel(AccessLevel.PUBLIC)
+				.setMatchingStrategy(MatchingStrategies.STRICT);
+
+		return modelMapper;
+	}
+
 	@Bean
 	public WebMvcConfigurer corsConfigurer() {
 		return new WebMvcConfigurer() {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping("/**").allowedOrigins("http://localhost:5173","http://zfgc.com");
+				registry.addMapping("/**")
+						.allowedOriginPatterns(
+								// Development endpoints
+								"http://localhost:*",
+								"https://localhost:*",
+								"https://zfgccp.github.io",
+								// Production endpoints
+								"http://*zfgc.com",
+								"https://*zfgc.com")
+						.allowedMethods("*")
+						.allowedHeaders("Authorization")
+						.exposedHeaders("Authorization")
+						.allowCredentials(true);
 			}
 		};
 	}
