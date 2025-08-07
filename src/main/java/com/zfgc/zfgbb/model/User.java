@@ -16,8 +16,14 @@ import com.zfgc.zfgbb.model.users.Avatar;
 import com.zfgc.zfgbb.model.users.EmailAddress;
 import com.zfgc.zfgbb.model.users.Permission;
 import com.zfgc.zfgbb.model.users.UserBioInfo;
+import com.zfgc.zfgbb.model.users.UserContactInfo;
+
+import lombok.Getter;
+import lombok.Setter;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@Getter
+@Setter
 public class User extends BaseModel implements UserDetails {
 	@JsonIgnore
 	private Integer userId;
@@ -32,6 +38,7 @@ public class User extends BaseModel implements UserDetails {
 	private IpAddress currentIpAddress;
 	private List<IpAddress> allKnownIpAddresses = new ArrayList<>();
 	private UserBioInfo bioInfo;
+	private UserContactInfo contactInfo;
 	
 	public List<Permission> getPermissions() {
 		return permissions;
