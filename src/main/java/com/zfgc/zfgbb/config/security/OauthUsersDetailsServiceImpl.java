@@ -29,15 +29,6 @@ import com.zfgc.zfgbb.model.users.AuthCredentials;
 
 @Service
 public class OauthUsersDetailsServiceImpl implements UserDetailsService{
-
-	@Value("${clausius.client}")
-	private String clientId;
-	
-	@Value("${clausius.password}")
-	private String clientSecret;
-	
-	@Value("${clausius.authEndpoint}")
-	private String authEndpoint;
 	
 	@Autowired
 	private UserDataProvider userDataProvider;
@@ -48,16 +39,7 @@ public class OauthUsersDetailsServiceImpl implements UserDetailsService{
 	}
 	
 	public String getLoginToken(AuthCredentials credentials) {
-		RestTemplate template = new RestTemplate();
-		HttpHeaders headers = new HttpHeaders();
-		headers.setBasicAuth(clientId, clientSecret);
-		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-		
-		//todo: move these paramters into the request body
-		HttpEntity ent = new HttpEntity("grant_type=password&scope=all&username=" + credentials.getUsername() + "&password=" + credentials.getPassword(), headers);
-
-		ResponseEntity<String> result = template.exchange(authEndpoint + "/oauth/token", HttpMethod.POST, ent, String.class);
-		return result.getBody();
+		return "";
 	}
 	
 	

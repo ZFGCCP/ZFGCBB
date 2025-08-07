@@ -15,4 +15,8 @@ public class BasicUserLoadOptions extends BaseLoadOption {
 	public boolean loadPermissions() {
 		return false;
 	}
+	
+	public boolean loadContactInfo() {
+		return true;
+	}
 }
