@@ -82,7 +82,7 @@ public class MessageDataProvider extends AbstractDataProvider {
 							 hist.setUnparsedText(hist.getMessageText());
 							 msg.setCurrentMessage(hist);
 							 
-							 msg.setCreatedUser(userDataProvider.getUser(msg.getOwnerId(), null));
+							 msg.setCreatedUser(userDataProvider.getUser(msg.getOwnerId()));
 							 
 							 return msg;
 						 }).collect(Collectors.toList());

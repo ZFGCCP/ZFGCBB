@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import com.zfgc.zfgbb.dao.users.AvatarDao;
 import com.zfgc.zfgbb.dao.users.EmailAddressDao;
 import com.zfgc.zfgbb.dao.users.UserBioInfoDao;
+import com.zfgc.zfgbb.dao.users.UserContactInfoDao;
 import com.zfgc.zfgbb.dao.users.UserDao;
 import com.zfgc.zfgbb.config.loadoption.user.BasicUserLoadOptions;
 import com.zfgc.zfgbb.config.loadoption.user.FullUserLoadOptions;
@@ -20,13 +21,16 @@ import com.zfgc.zfgbb.dbo.AvatarDbo;
 import com.zfgc.zfgbb.dbo.AvatarDboExample;
 import com.zfgc.zfgbb.dbo.EmailAddressDbo;
 import com.zfgc.zfgbb.dbo.UserBioInfoDbo;
+import com.zfgc.zfgbb.dbo.UserContactInfoDbo;
 import com.zfgc.zfgbb.dbo.UserDbo;
 import com.zfgc.zfgbb.dbo.UserDboExample;
 import com.zfgc.zfgbb.dbo.UserPermissionViewDboExample;
 import com.zfgc.zfgbb.model.User;
 import com.zfgc.zfgbb.model.users.Avatar;
+import com.zfgc.zfgbb.model.users.EmailAddress;
 import com.zfgc.zfgbb.model.users.Permission;
 import com.zfgc.zfgbb.model.users.UserBioInfo;
+import com.zfgc.zfgbb.model.users.UserContactInfo;
 
 @Repository
 public class UserDataProvider extends AbstractDataProvider {
@@ -46,6 +50,9 @@ public class UserDataProvider extends AbstractDataProvider {
 	@Autowired
 	private AvatarDao avatarDao;
 	
+	@Autowired
+	private UserContactInfoDao contactInfoDao;
+	
 	public User getUser(String userName) {
 		UserDboExample ex = new UserDboExample();
 		ex.createCriteria().andUserNameEqualTo(userName).andActiveFlagEqualTo(true);
@@ -54,10 +61,11 @@ public class UserDataProvider extends AbstractDataProvider {
 		return getUser(userDb.getPkId(), new LoggedInUserLoadOptions());
 	}
 	
+	public User getUser(Integer userId) {
+		return getUser(userId, new BasicUserLoadOptions());
+	}
+	
 	public User getUser(Integer userId, BasicUserLoadOptions loadOptions) {
-		if(loadOptions == null) {
-			loadOptions = new BasicUserLoadOptions();
-		}
 		
 		UserDboExample ex = new UserDboExample();
 		ex.createCriteria().andUserIdEqualTo(userId).andActiveFlagEqualTo(true);
@@ -75,22 +83,33 @@ public class UserDataProvider extends AbstractDataProvider {
 		}
 		
 		if(Boolean.TRUE.equals(loadOptions.loadBio())) {
-			UserBioInfoDbo bioInfoDbo = bioInfoDao.get(userId);
-			if(bioInfoDbo != null) {
-				user.setBioInfo(mapper.map(bioInfoDbo, UserBioInfo.class));
-			}
+			Optional<UserBioInfoDbo> bioInfoDbo = Optional.ofNullable(bioInfoDao.get(userId));
 			
-			if(Boolean.TRUE.equals(loadOptions.loadAvatar()) && bioInfoDbo.getAvatarId() != null) {
-				AvatarDboExample avatarEx = new AvatarDboExample();
-				avatarEx.createCriteria().andAvatarIdEqualTo(bioInfoDbo.getAvatarId())
-										 .andActiveFlagEqualTo(true);
+			bioInfoDbo.ifPresent(bioInfo -> {
+				user.setBioInfo(mapper.map(bioInfo, UserBioInfo.class));
 				
-				Optional<AvatarDbo> avDb = avatarDao.get(avatarEx).stream().findFirst();
-				
-				avDb.ifPresent(av -> {
-					user.getBioInfo().setAvatar(mapper.map(av, Avatar.class));
-				});
-			}
+				if(Boolean.TRUE.equals(loadOptions.loadAvatar()) && bioInfo.getAvatarId() != null) {
+					AvatarDboExample avatarEx = new AvatarDboExample();
+					avatarEx.createCriteria().andAvatarIdEqualTo(bioInfo.getAvatarId())
+											 .andActiveFlagEqualTo(true);
+					
+					avatarDao.get(avatarEx).stream()
+										   .findFirst()
+										   .ifPresent(av -> {
+											   user.getBioInfo().setAvatar(mapper.map(av, Avatar.class));
+										   });
+				}
+			});
+			
+		}
+		
+		if(Boolean.TRUE.equals(loadOptions.loadContactInfo())) {
+			Optional<UserContactInfoDbo> contactInfoDbo = Optional.ofNullable(contactInfoDao.get(userId));
+			contactInfoDbo.ifPresent(ci -> {
+									EmailAddressDbo email = emailDao.get(ci.getEmailAddressId());
+									user.setContactInfo(mapper.map(ci, UserContactInfo.class));
+									user.getContactInfo().setEmailAddress(mapper.map(email, EmailAddress.class));
+								});
 		}
 		return user;
 	}
@@ -105,7 +124,6 @@ public class UserDataProvider extends AbstractDataProvider {
 		bioInfoDao.save(bioInfo);
 		
 		EmailAddressDbo emailDbo = mapper.map(user.getEmail(), EmailAddressDbo.class);
-		emailDbo.setUserId(userDbo.getPkId());
 		emailDao.save(emailDbo);
 		
 		return getUser(userDbo.getPkId(), new FullUserLoadOptions());
