@@ -1,19 +1,23 @@
 FROM maven:3.9-eclipse-temurin-17-alpine AS build
-WORKDIR /usr/src
-ADD ./mvn* ./
-ADD ./pom.xml ./
+WORKDIR /app
 
-ADD ./src ./src
-RUN mvn clean compile package -Dmaven.test.skip=true
+COPY pom.xml mvnw* ./
+COPY .mvn .mvn
+COPY src src
 
-# FIXME: This image should be switched to gcr.io/distroless/java-base-debian12 because it is much smaller. For now, this will work.
-FROM tomcat:jre17-temurin-noble AS deploy
+RUN ./mvnw clean package -DskipTests
 
-COPY --from=build /usr/src/target/*.war /usr/local/tomcat/webapps/
-RUN mkdir -p /usr/local/tomcat/webapps/content/images
+FROM gcr.io/distroless/java17-debian12
+WORKDIR /app
 
-EXPOSE ${ZFGBB_BACKEND_PORT:-8080}
-CMD ["catalina.sh", "run"]
+COPY --from=build /app/target/*.jar app.jar
+
+# Spring Boot runs on 8080 by default — can override via env
+EXPOSE 8080
+
+ENTRYPOINT ["java", "-jar", "/app/app.jar"]
+
+
 
 FROM postgres:16-alpine AS database
 ADD ./scripts/sql/provisioning/1-zfgbb.initialize-database.sh /docker-entrypoint-initdb.d/1-zfgbb.initialize-database.sh
