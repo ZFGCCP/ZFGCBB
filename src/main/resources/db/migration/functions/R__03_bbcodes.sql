@@ -100,13 +100,16 @@ select zfgbb.create_bbcode_attr(1, 0, 8, 'NAMELESS', 1);
 select zfgbb.create_bbcode_attr_mode(9,'spoiler','<span class="bb-code-spoiler">','</span>',false,false);
 select zfgbb.create_bbcode_attr_mode(10,'img','<span class="bb-code-img"><img src="{{c}}"/>','</span>',true,false);
 select zfgbb.create_bbcode_attr_mode(11,'url','<span class="bb-code-url"><a href="{{0}}">','</a></span>',false,true);
-select zfgbb.create_bbcode_attr(3, 0, 12, 'NAMELESS', 1);
+select zfgbb.create_bbcode_attr(7, 0, 11, 'NAMELESS', 1);
 
 select zfgbb.create_bbcode_attr_mode(12,'email','<span class="bb-code-email"><a href="mailto:{{0}}">','</a></span>',false,false);
+select zfgbb.create_bbcode_attr(3, 0, 12, 'NAMELESS', 1);
+
 select zfgbb.create_bbcode_attr_mode(13,'ftp','<span class="bb-code-ftp"><a href="{{0}}">','</a></span>',false,false);
 select zfgbb.create_bbcode_attr_mode(14,'move','<marquee>','</marquee>',false,false);
 select zfgbb.create_bbcode_attr_mode(15,'black','<span style="color:black">','</span>',false,false);
 select zfgbb.create_bbcode_attr_mode(16,'blue','<span style="color:blue">','</span>',false,false);
+
 
 select zfgbb.create_bbcode_attr_mode(17,'quote','<div class="bb-code-quote"><div class="bb-code-quote-body">','</div></div>',false,false);
 
