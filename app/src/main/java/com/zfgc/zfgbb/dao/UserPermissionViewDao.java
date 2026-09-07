@@ -1,41 +1,15 @@
 package com.zfgc.zfgbb.dao;
 
-import java.util.List;
-import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.zfgc.zfgbb.dao.AbstractDao;
 import com.zfgc.zfgbb.dbo.UserPermissionViewDbo;
 import com.zfgc.zfgbb.dbo.UserPermissionViewDboExample;
 import com.zfgc.zfgbb.mappers.UserPermissionViewDboMapper;
 
 @Repository
-public class UserPermissionViewDao extends AbstractDao<UserPermissionViewDboExample, UserPermissionViewDboMapper, UserPermissionViewDbo>{
+public class UserPermissionViewDao extends ReadDao<UserPermissionViewDbo, UserPermissionViewDboExample> {
 
-	@Autowired
 	public UserPermissionViewDao(UserPermissionViewDboMapper mapper) {
 		super(mapper);
-	}
-
-	@Override
-	public Optional<UserPermissionViewDbo> get(Integer id) {
-		return null;
-	}
-
-	@Override
-	public List<UserPermissionViewDbo> get(UserPermissionViewDboExample ex) {
-		return mapper.selectByExample(ex);
-	}
-
-	@Override
-	protected void update(UserPermissionViewDbo toSave) {
-		
-	}
-
-	@Override
-	protected void create(UserPermissionViewDbo toCreate) {
-		
 	}
 }

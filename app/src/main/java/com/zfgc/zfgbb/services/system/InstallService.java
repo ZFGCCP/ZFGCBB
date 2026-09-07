@@ -1,6 +1,6 @@
 package com.zfgc.zfgbb.services.system;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 import javax.sql.DataSource;
 
@@ -80,11 +80,11 @@ public class InstallService {
 		BrUserPermissionDbo siteAdmin = new BrUserPermissionDbo();
 		siteAdmin.setUserId(admin.getUserId());
 		siteAdmin.setUserPermissionId(ZFGC_SITE_ADMIN_PERMISSION_ID);
-		brUserPermissionDao.save(siteAdmin);
+		brUserPermissionDao.insert(siteAdmin);
 
 		String siteName = StringUtils.defaultIfBlank(req.siteName(), "ZFGBB");
 		systemConfigService.set(SystemConfigService.Keys.SITE_NAME, siteName);
-		systemConfigService.set(SystemConfigService.Keys.INSTALLED_AT, LocalDateTime.now().toString());
+		systemConfigService.set(SystemConfigService.Keys.INSTALLED_AT, OffsetDateTime.now().toString());
 		systemConfigService.set(SystemConfigService.Keys.INSTALLED_BY_USER_ID, String.valueOf(admin.getUserId()));
 		// Flip the marker LAST so a partial-install failure means we didnt install.
 

@@ -1,50 +1,22 @@
 package com.zfgc.zfgbb.model;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.zfgc.zfgbb.model.forum.Message;
-import com.zfgc.zfgbb.model.forum.MessageHistory;
+import java.time.OffsetDateTime;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+@Getter
+@Setter
 @SuperBuilder(toBuilder=true)
 @AllArgsConstructor
 @NoArgsConstructor
 public abstract class BaseModel {
-	@JsonIgnore
-	private LocalDateTime updatedTs;
-	@JsonIgnore
-	private LocalDateTime createdTs;
-	
+	private OffsetDateTime updatedTs;
+	private OffsetDateTime createdTs;
+
 	public abstract Integer getId();
 	public abstract void setId(Integer id);
-	
-	public LocalDateTime getUpdatedTs() {
-		return updatedTs;
-	}
-	
-	public LocalDateTime getCreatedTs() {
-		return updatedTs;
-	}
-	
-	public void setUpdatedTs(LocalDateTime updatedTs) {
-		this.updatedTs = updatedTs;
-	}
-	
-	public void setCreatedTs(LocalDateTime createdTs) {
-		this.createdTs = createdTs;
-	}
-	
-	public String getCreatedTsAsString() {
-		if(createdTs != null) {
-			return createdTs.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-		}
-		return "";
-	}
-	
 }

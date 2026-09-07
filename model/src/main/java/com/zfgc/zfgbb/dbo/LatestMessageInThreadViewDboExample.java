@@ -1,67 +1,70 @@
 package com.zfgc.zfgbb.dbo;
 
+import com.zfgc.zfgbb.persistence.LikePatterns;
 import jakarta.annotation.Generated;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public class LatestMessageInThreadViewDboExample {
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.259928981-04:00", comments="Source Table: zfgbb.latest_message_in_thread_view")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.latest_message_in_thread_view")
     protected String orderByClause;
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.259943181-04:00", comments="Source Table: zfgbb.latest_message_in_thread_view")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.latest_message_in_thread_view")
     protected boolean distinct;
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.25995979-04:00", comments="Source Table: zfgbb.latest_message_in_thread_view")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.latest_message_in_thread_view")
     protected List<Criteria> oredCriteria;
 
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.latest_message_in_thread_view")
     protected Integer limit;
 
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.latest_message_in_thread_view")
     protected Integer offset;
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.259919841-04:00", comments="Source Table: zfgbb.latest_message_in_thread_view")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.latest_message_in_thread_view")
     public LatestMessageInThreadViewDboExample() {
         oredCriteria = new ArrayList<>();
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.259934451-04:00", comments="Source Table: zfgbb.latest_message_in_thread_view")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.latest_message_in_thread_view")
     public void setOrderByClause(String orderByClause) {
         this.orderByClause = orderByClause;
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.259938921-04:00", comments="Source Table: zfgbb.latest_message_in_thread_view")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.latest_message_in_thread_view")
     public String getOrderByClause() {
         return orderByClause;
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.25994739-04:00", comments="Source Table: zfgbb.latest_message_in_thread_view")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.latest_message_in_thread_view")
     public void setDistinct(boolean distinct) {
         this.distinct = distinct;
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.25995142-04:00", comments="Source Table: zfgbb.latest_message_in_thread_view")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.latest_message_in_thread_view")
     public boolean isDistinct() {
         return distinct;
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.25996428-04:00", comments="Source Table: zfgbb.latest_message_in_thread_view")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.latest_message_in_thread_view")
     public List<Criteria> getOredCriteria() {
         return oredCriteria;
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.2599685-04:00", comments="Source Table: zfgbb.latest_message_in_thread_view")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.latest_message_in_thread_view")
     public void or(Criteria criteria) {
         oredCriteria.add(criteria);
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.25997132-04:00", comments="Source Table: zfgbb.latest_message_in_thread_view")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.latest_message_in_thread_view")
     public Criteria or() {
         Criteria criteria = createCriteriaInternal();
         oredCriteria.add(criteria);
         return criteria;
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.25997527-04:00", comments="Source Table: zfgbb.latest_message_in_thread_view")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.latest_message_in_thread_view")
     public Criteria createCriteria() {
         Criteria criteria = createCriteriaInternal();
         if (oredCriteria.size() == 0) {
@@ -70,36 +73,40 @@ public class LatestMessageInThreadViewDboExample {
         return criteria;
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.259979169-04:00", comments="Source Table: zfgbb.latest_message_in_thread_view")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.latest_message_in_thread_view")
     protected Criteria createCriteriaInternal() {
         Criteria criteria = new Criteria();
         return criteria;
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.259983049-04:00", comments="Source Table: zfgbb.latest_message_in_thread_view")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.latest_message_in_thread_view")
     public void clear() {
         oredCriteria.clear();
         orderByClause = null;
         distinct = false;
     }
 
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.latest_message_in_thread_view")
     public Integer getLimit() {
         return limit;
     }
 
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.latest_message_in_thread_view")
     public void setLimit(Integer limit) {
         this.limit = limit;
     }
 
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.latest_message_in_thread_view")
     public Integer getOffset() {
         return offset;
     }
 
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.latest_message_in_thread_view")
     public void setOffset(Integer offset) {
         this.offset = offset;
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.259988479-04:00", comments="Source Table: zfgbb.latest_message_in_thread_view")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.latest_message_in_thread_view")
     protected abstract static class GeneratedCriteria {
         protected List<Criterion> criteria;
 
@@ -242,12 +249,12 @@ public class LatestMessageInThreadViewDboExample {
         }
 
         public Criteria andThreadNameLike(String value) {
-            addCriterion("thread_name like", value, "threadName");
+            addCriterion("thread_name ilike", value, "threadName");
             return (Criteria) this;
         }
 
         public Criteria andThreadNameNotLike(String value) {
-            addCriterion("thread_name not like", value, "threadName");
+            addCriterion("thread_name not ilike", value, "threadName");
             return (Criteria) this;
         }
 
@@ -401,52 +408,52 @@ public class LatestMessageInThreadViewDboExample {
             return (Criteria) this;
         }
 
-        public Criteria andCreatedTsEqualTo(LocalDateTime value) {
+        public Criteria andCreatedTsEqualTo(OffsetDateTime value) {
             addCriterion("created_ts =", value, "createdTs");
             return (Criteria) this;
         }
 
-        public Criteria andCreatedTsNotEqualTo(LocalDateTime value) {
+        public Criteria andCreatedTsNotEqualTo(OffsetDateTime value) {
             addCriterion("created_ts <>", value, "createdTs");
             return (Criteria) this;
         }
 
-        public Criteria andCreatedTsGreaterThan(LocalDateTime value) {
+        public Criteria andCreatedTsGreaterThan(OffsetDateTime value) {
             addCriterion("created_ts >", value, "createdTs");
             return (Criteria) this;
         }
 
-        public Criteria andCreatedTsGreaterThanOrEqualTo(LocalDateTime value) {
+        public Criteria andCreatedTsGreaterThanOrEqualTo(OffsetDateTime value) {
             addCriterion("created_ts >=", value, "createdTs");
             return (Criteria) this;
         }
 
-        public Criteria andCreatedTsLessThan(LocalDateTime value) {
+        public Criteria andCreatedTsLessThan(OffsetDateTime value) {
             addCriterion("created_ts <", value, "createdTs");
             return (Criteria) this;
         }
 
-        public Criteria andCreatedTsLessThanOrEqualTo(LocalDateTime value) {
+        public Criteria andCreatedTsLessThanOrEqualTo(OffsetDateTime value) {
             addCriterion("created_ts <=", value, "createdTs");
             return (Criteria) this;
         }
 
-        public Criteria andCreatedTsIn(List<LocalDateTime> values) {
+        public Criteria andCreatedTsIn(List<OffsetDateTime> values) {
             addCriterion("created_ts in", values, "createdTs");
             return (Criteria) this;
         }
 
-        public Criteria andCreatedTsNotIn(List<LocalDateTime> values) {
+        public Criteria andCreatedTsNotIn(List<OffsetDateTime> values) {
             addCriterion("created_ts not in", values, "createdTs");
             return (Criteria) this;
         }
 
-        public Criteria andCreatedTsBetween(LocalDateTime value1, LocalDateTime value2) {
+        public Criteria andCreatedTsBetween(OffsetDateTime value1, OffsetDateTime value2) {
             addCriterion("created_ts between", value1, value2, "createdTs");
             return (Criteria) this;
         }
 
-        public Criteria andCreatedTsNotBetween(LocalDateTime value1, LocalDateTime value2) {
+        public Criteria andCreatedTsNotBetween(OffsetDateTime value1, OffsetDateTime value2) {
             addCriterion("created_ts not between", value1, value2, "createdTs");
             return (Criteria) this;
         }
@@ -461,52 +468,52 @@ public class LatestMessageInThreadViewDboExample {
             return (Criteria) this;
         }
 
-        public Criteria andUpdatedTsEqualTo(LocalDateTime value) {
+        public Criteria andUpdatedTsEqualTo(OffsetDateTime value) {
             addCriterion("updated_ts =", value, "updatedTs");
             return (Criteria) this;
         }
 
-        public Criteria andUpdatedTsNotEqualTo(LocalDateTime value) {
+        public Criteria andUpdatedTsNotEqualTo(OffsetDateTime value) {
             addCriterion("updated_ts <>", value, "updatedTs");
             return (Criteria) this;
         }
 
-        public Criteria andUpdatedTsGreaterThan(LocalDateTime value) {
+        public Criteria andUpdatedTsGreaterThan(OffsetDateTime value) {
             addCriterion("updated_ts >", value, "updatedTs");
             return (Criteria) this;
         }
 
-        public Criteria andUpdatedTsGreaterThanOrEqualTo(LocalDateTime value) {
+        public Criteria andUpdatedTsGreaterThanOrEqualTo(OffsetDateTime value) {
             addCriterion("updated_ts >=", value, "updatedTs");
             return (Criteria) this;
         }
 
-        public Criteria andUpdatedTsLessThan(LocalDateTime value) {
+        public Criteria andUpdatedTsLessThan(OffsetDateTime value) {
             addCriterion("updated_ts <", value, "updatedTs");
             return (Criteria) this;
         }
 
-        public Criteria andUpdatedTsLessThanOrEqualTo(LocalDateTime value) {
+        public Criteria andUpdatedTsLessThanOrEqualTo(OffsetDateTime value) {
             addCriterion("updated_ts <=", value, "updatedTs");
             return (Criteria) this;
         }
 
-        public Criteria andUpdatedTsIn(List<LocalDateTime> values) {
+        public Criteria andUpdatedTsIn(List<OffsetDateTime> values) {
             addCriterion("updated_ts in", values, "updatedTs");
             return (Criteria) this;
         }
 
-        public Criteria andUpdatedTsNotIn(List<LocalDateTime> values) {
+        public Criteria andUpdatedTsNotIn(List<OffsetDateTime> values) {
             addCriterion("updated_ts not in", values, "updatedTs");
             return (Criteria) this;
         }
 
-        public Criteria andUpdatedTsBetween(LocalDateTime value1, LocalDateTime value2) {
+        public Criteria andUpdatedTsBetween(OffsetDateTime value1, OffsetDateTime value2) {
             addCriterion("updated_ts between", value1, value2, "updatedTs");
             return (Criteria) this;
         }
 
-        public Criteria andUpdatedTsNotBetween(LocalDateTime value1, LocalDateTime value2) {
+        public Criteria andUpdatedTsNotBetween(OffsetDateTime value1, OffsetDateTime value2) {
             addCriterion("updated_ts not between", value1, value2, "updatedTs");
             return (Criteria) this;
         }
@@ -701,65 +708,70 @@ public class LatestMessageInThreadViewDboExample {
             return (Criteria) this;
         }
 
-        public Criteria andLastPostTsEqualTo(LocalDateTime value) {
+        public Criteria andLastPostTsEqualTo(OffsetDateTime value) {
             addCriterion("last_post_ts =", value, "lastPostTs");
             return (Criteria) this;
         }
 
-        public Criteria andLastPostTsNotEqualTo(LocalDateTime value) {
+        public Criteria andLastPostTsNotEqualTo(OffsetDateTime value) {
             addCriterion("last_post_ts <>", value, "lastPostTs");
             return (Criteria) this;
         }
 
-        public Criteria andLastPostTsGreaterThan(LocalDateTime value) {
+        public Criteria andLastPostTsGreaterThan(OffsetDateTime value) {
             addCriterion("last_post_ts >", value, "lastPostTs");
             return (Criteria) this;
         }
 
-        public Criteria andLastPostTsGreaterThanOrEqualTo(LocalDateTime value) {
+        public Criteria andLastPostTsGreaterThanOrEqualTo(OffsetDateTime value) {
             addCriterion("last_post_ts >=", value, "lastPostTs");
             return (Criteria) this;
         }
 
-        public Criteria andLastPostTsLessThan(LocalDateTime value) {
+        public Criteria andLastPostTsLessThan(OffsetDateTime value) {
             addCriterion("last_post_ts <", value, "lastPostTs");
             return (Criteria) this;
         }
 
-        public Criteria andLastPostTsLessThanOrEqualTo(LocalDateTime value) {
+        public Criteria andLastPostTsLessThanOrEqualTo(OffsetDateTime value) {
             addCriterion("last_post_ts <=", value, "lastPostTs");
             return (Criteria) this;
         }
 
-        public Criteria andLastPostTsIn(List<LocalDateTime> values) {
+        public Criteria andLastPostTsIn(List<OffsetDateTime> values) {
             addCriterion("last_post_ts in", values, "lastPostTs");
             return (Criteria) this;
         }
 
-        public Criteria andLastPostTsNotIn(List<LocalDateTime> values) {
+        public Criteria andLastPostTsNotIn(List<OffsetDateTime> values) {
             addCriterion("last_post_ts not in", values, "lastPostTs");
             return (Criteria) this;
         }
 
-        public Criteria andLastPostTsBetween(LocalDateTime value1, LocalDateTime value2) {
+        public Criteria andLastPostTsBetween(OffsetDateTime value1, OffsetDateTime value2) {
             addCriterion("last_post_ts between", value1, value2, "lastPostTs");
             return (Criteria) this;
         }
 
-        public Criteria andLastPostTsNotBetween(LocalDateTime value1, LocalDateTime value2) {
+        public Criteria andLastPostTsNotBetween(OffsetDateTime value1, OffsetDateTime value2) {
             addCriterion("last_post_ts not between", value1, value2, "lastPostTs");
+            return (Criteria) this;
+        }
+
+        public Criteria andThreadNameContains(String value) {
+            addCriterion("thread_name ilike", LikePatterns.contains(value), "threadName");
             return (Criteria) this;
         }
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.260234761-04:00", comments="do_not_delete_during_merge")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="do_not_delete_during_merge")
     public static class Criteria extends GeneratedCriteria {
         protected Criteria() {
             super();
         }
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.260244421-04:00", comments="Source Table: zfgbb.latest_message_in_thread_view")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.latest_message_in_thread_view")
     public static class Criterion {
         private String condition;
 

@@ -1,7 +1,7 @@
 package com.zfgc.zfgbb.services.core;
 
 import java.time.Duration;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -105,7 +105,7 @@ public class AuthService {
 			dbo.setPasswordHash(fresh.hash());
 			dbo.setPasswordAlgo(fresh.algo().name());
 			dbo.setPasswordSalt(fresh.salt());
-			dbo.setPasswordChangedTs(LocalDateTime.now());
+			dbo.setPasswordChangedTs(OffsetDateTime.now());
 			userDao.save(dbo);
 		}
 
@@ -134,21 +134,21 @@ public class AuthService {
 	}
 
 	private boolean isLocked(UserDbo dbo) {
-		LocalDateTime until = dbo.getLockedUntilTs();
-		return until != null && until.isAfter(LocalDateTime.now());
+		OffsetDateTime until = dbo.getLockedUntilTs();
+		return until != null && until.isAfter(OffsetDateTime.now());
 	}
 
 	private boolean isPasswordExpired(UserDbo dbo) {
 		if (passwordMaxAgeDays <= 0) {
 			return false;
 		}
-		LocalDateTime changed = dbo.getPasswordChangedTs();
+		OffsetDateTime changed = dbo.getPasswordChangedTs();
 		if (changed == null) {
 			// Account predates expiry tracking; treat as not-expired so we don't lock
 			// out legacy users on day one of the policy taking effect.
 			return false;
 		}
-		return changed.plus(Duration.ofDays(passwordMaxAgeDays)).isBefore(LocalDateTime.now());
+		return changed.plus(Duration.ofDays(passwordMaxAgeDays)).isBefore(OffsetDateTime.now());
 	}
 
 	private void recordFailedLogin(UserDbo dbo) {
@@ -156,7 +156,7 @@ public class AuthService {
 		int next = current + 1;
 		dbo.setFailedLoginCount(next);
 		if (next >= lockoutFailedAttempts) {
-			dbo.setLockedUntilTs(LocalDateTime.now().plus(Duration.ofMinutes(lockoutDurationMinutes)));
+			dbo.setLockedUntilTs(OffsetDateTime.now().plus(Duration.ofMinutes(lockoutDurationMinutes)));
 		}
 		userDao.save(dbo);
 	}

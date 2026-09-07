@@ -5,15 +5,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -33,6 +29,7 @@ import com.zfgc.zfgbb.mappers.AvatarDboMapper;
 import com.zfgc.zfgbb.mappers.ContentResourceDboMapper;
 import com.zfgc.zfgbb.mappers.GenderLkupDboMapper;
 import com.zfgc.zfgbb.mappers.UserBioInfoDboMapper;
+import com.zfgc.zfgbb.migrator.SmfTimes;
 import com.zfgc.zfgbb.migrator.jobs.JobContextHolder;
 import com.zfgc.zfgbb.migrator.jobs.JobType;
 import com.zfgc.zfgbb.migrator.jobs.LegacyEntityType;
@@ -172,9 +169,7 @@ public class UserBioInfoConverter extends AbstractConverter<Map<Integer, UserBio
 			user.setGenderId(genderId);
 			user.setPreferredTimezone(defaultTimezone);
 
-			Instant instant = Instant.ofEpochMilli(TimeUnit.SECONDS.toMillis(smfMember.getDateRegistered()));
-			LocalDate dateRegistered = LocalDate.ofInstant(instant, ZoneId.of("UTC"));
-			user.setDateRegistered(dateRegistered);
+			user.setDateRegistered(SmfTimes.fromEpochSeconds(smfMember.getDateRegistered()));
 
 			user.setMigrationHash(MigrationHasher.hash(smfMember.getIdMember().toString()
 					+ (user.getSignature() != null ? user.getSignature() : "")

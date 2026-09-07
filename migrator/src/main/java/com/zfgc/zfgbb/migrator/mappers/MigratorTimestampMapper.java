@@ -1,6 +1,6 @@
 package com.zfgc.zfgbb.migrator.mappers;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Update;
@@ -15,8 +15,8 @@ public interface MigratorTimestampMapper {
 			""")
 	int setMessageTimestamps(
 			@Param("messageId") Integer messageId,
-			@Param("createdTs") LocalDateTime createdTs,
-			@Param("updatedTs") LocalDateTime updatedTs);
+			@Param("createdTs") OffsetDateTime createdTs,
+			@Param("updatedTs") OffsetDateTime updatedTs);
 
 	@Update("""
 			update zfgbb.message_history
@@ -26,8 +26,8 @@ public interface MigratorTimestampMapper {
 			""")
 	int setMessageHistoryTimestamps(
 			@Param("messageHistoryId") Integer messageHistoryId,
-			@Param("createdTs") LocalDateTime createdTs,
-			@Param("updatedTs") LocalDateTime updatedTs);
+			@Param("createdTs") OffsetDateTime createdTs,
+			@Param("updatedTs") OffsetDateTime updatedTs);
 
 	@Update("""
 			update zfgbb.karma
@@ -37,6 +37,6 @@ public interface MigratorTimestampMapper {
 			""")
 	int setKarmaTimestamps(
 			@Param("karmaId") Integer karmaId,
-			@Param("createdTs") LocalDateTime createdTs,
-			@Param("updatedTs") LocalDateTime updatedTs);
+			@Param("createdTs") OffsetDateTime createdTs,
+			@Param("updatedTs") OffsetDateTime updatedTs);
 }

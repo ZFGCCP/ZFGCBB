@@ -1,6 +1,6 @@
 package com.zfgc.zfgbb.model.forum;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +20,7 @@ public class Poll extends BaseModel {
 	private Boolean votingLockedFlag;
 	
 	@JsonIgnore
-	private LocalDateTime expireTime;
+	private OffsetDateTime expireTime;
 	private Boolean hideResultsFlag;
 	private Boolean changeVoteFlag;
 	private Integer createdUserId;

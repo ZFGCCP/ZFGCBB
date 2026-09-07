@@ -1,67 +1,70 @@
 package com.zfgc.zfgbb.dbo;
 
+import com.zfgc.zfgbb.persistence.LikePatterns;
 import jakarta.annotation.Generated;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public class UserRefreshTokenDboExample {
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.227143581-04:00", comments="Source Table: zfgbb.user_refresh_token")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.user_refresh_token")
     protected String orderByClause;
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.227162661-04:00", comments="Source Table: zfgbb.user_refresh_token")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.user_refresh_token")
     protected boolean distinct;
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.22719153-04:00", comments="Source Table: zfgbb.user_refresh_token")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.user_refresh_token")
     protected List<Criteria> oredCriteria;
 
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.user_refresh_token")
     protected Integer limit;
 
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.user_refresh_token")
     protected Integer offset;
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.227136042-04:00", comments="Source Table: zfgbb.user_refresh_token")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.user_refresh_token")
     public UserRefreshTokenDboExample() {
         oredCriteria = new ArrayList<>();
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.227149761-04:00", comments="Source Table: zfgbb.user_refresh_token")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.user_refresh_token")
     public void setOrderByClause(String orderByClause) {
         this.orderByClause = orderByClause;
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.227157371-04:00", comments="Source Table: zfgbb.user_refresh_token")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.user_refresh_token")
     public String getOrderByClause() {
         return orderByClause;
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.227167871-04:00", comments="Source Table: zfgbb.user_refresh_token")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.user_refresh_token")
     public void setDistinct(boolean distinct) {
         this.distinct = distinct;
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.227172981-04:00", comments="Source Table: zfgbb.user_refresh_token")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.user_refresh_token")
     public boolean isDistinct() {
         return distinct;
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.22719794-04:00", comments="Source Table: zfgbb.user_refresh_token")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.user_refresh_token")
     public List<Criteria> getOredCriteria() {
         return oredCriteria;
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.22720416-04:00", comments="Source Table: zfgbb.user_refresh_token")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.user_refresh_token")
     public void or(Criteria criteria) {
         oredCriteria.add(criteria);
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.227207969-04:00", comments="Source Table: zfgbb.user_refresh_token")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.user_refresh_token")
     public Criteria or() {
         Criteria criteria = createCriteriaInternal();
         oredCriteria.add(criteria);
         return criteria;
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.227213079-04:00", comments="Source Table: zfgbb.user_refresh_token")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.user_refresh_token")
     public Criteria createCriteria() {
         Criteria criteria = createCriteriaInternal();
         if (oredCriteria.size() == 0) {
@@ -70,36 +73,40 @@ public class UserRefreshTokenDboExample {
         return criteria;
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.227218949-04:00", comments="Source Table: zfgbb.user_refresh_token")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.user_refresh_token")
     protected Criteria createCriteriaInternal() {
         Criteria criteria = new Criteria();
         return criteria;
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.227223929-04:00", comments="Source Table: zfgbb.user_refresh_token")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.user_refresh_token")
     public void clear() {
         oredCriteria.clear();
         orderByClause = null;
         distinct = false;
     }
 
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.user_refresh_token")
     public Integer getLimit() {
         return limit;
     }
 
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.user_refresh_token")
     public void setLimit(Integer limit) {
         this.limit = limit;
     }
 
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.user_refresh_token")
     public Integer getOffset() {
         return offset;
     }
 
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.user_refresh_token")
     public void setOffset(Integer offset) {
         this.offset = offset;
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.227230049-04:00", comments="Source Table: zfgbb.user_refresh_token")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.user_refresh_token")
     protected abstract static class GeneratedCriteria {
         protected List<Criterion> criteria;
 
@@ -302,12 +309,12 @@ public class UserRefreshTokenDboExample {
         }
 
         public Criteria andTokenHashLike(String value) {
-            addCriterion("token_hash like", value, "tokenHash");
+            addCriterion("token_hash ilike", value, "tokenHash");
             return (Criteria) this;
         }
 
         public Criteria andTokenHashNotLike(String value) {
-            addCriterion("token_hash not like", value, "tokenHash");
+            addCriterion("token_hash not ilike", value, "tokenHash");
             return (Criteria) this;
         }
 
@@ -341,52 +348,52 @@ public class UserRefreshTokenDboExample {
             return (Criteria) this;
         }
 
-        public Criteria andIssuedTsEqualTo(LocalDateTime value) {
+        public Criteria andIssuedTsEqualTo(OffsetDateTime value) {
             addCriterion("issued_ts =", value, "issuedTs");
             return (Criteria) this;
         }
 
-        public Criteria andIssuedTsNotEqualTo(LocalDateTime value) {
+        public Criteria andIssuedTsNotEqualTo(OffsetDateTime value) {
             addCriterion("issued_ts <>", value, "issuedTs");
             return (Criteria) this;
         }
 
-        public Criteria andIssuedTsGreaterThan(LocalDateTime value) {
+        public Criteria andIssuedTsGreaterThan(OffsetDateTime value) {
             addCriterion("issued_ts >", value, "issuedTs");
             return (Criteria) this;
         }
 
-        public Criteria andIssuedTsGreaterThanOrEqualTo(LocalDateTime value) {
+        public Criteria andIssuedTsGreaterThanOrEqualTo(OffsetDateTime value) {
             addCriterion("issued_ts >=", value, "issuedTs");
             return (Criteria) this;
         }
 
-        public Criteria andIssuedTsLessThan(LocalDateTime value) {
+        public Criteria andIssuedTsLessThan(OffsetDateTime value) {
             addCriterion("issued_ts <", value, "issuedTs");
             return (Criteria) this;
         }
 
-        public Criteria andIssuedTsLessThanOrEqualTo(LocalDateTime value) {
+        public Criteria andIssuedTsLessThanOrEqualTo(OffsetDateTime value) {
             addCriterion("issued_ts <=", value, "issuedTs");
             return (Criteria) this;
         }
 
-        public Criteria andIssuedTsIn(List<LocalDateTime> values) {
+        public Criteria andIssuedTsIn(List<OffsetDateTime> values) {
             addCriterion("issued_ts in", values, "issuedTs");
             return (Criteria) this;
         }
 
-        public Criteria andIssuedTsNotIn(List<LocalDateTime> values) {
+        public Criteria andIssuedTsNotIn(List<OffsetDateTime> values) {
             addCriterion("issued_ts not in", values, "issuedTs");
             return (Criteria) this;
         }
 
-        public Criteria andIssuedTsBetween(LocalDateTime value1, LocalDateTime value2) {
+        public Criteria andIssuedTsBetween(OffsetDateTime value1, OffsetDateTime value2) {
             addCriterion("issued_ts between", value1, value2, "issuedTs");
             return (Criteria) this;
         }
 
-        public Criteria andIssuedTsNotBetween(LocalDateTime value1, LocalDateTime value2) {
+        public Criteria andIssuedTsNotBetween(OffsetDateTime value1, OffsetDateTime value2) {
             addCriterion("issued_ts not between", value1, value2, "issuedTs");
             return (Criteria) this;
         }
@@ -401,52 +408,52 @@ public class UserRefreshTokenDboExample {
             return (Criteria) this;
         }
 
-        public Criteria andExpiresTsEqualTo(LocalDateTime value) {
+        public Criteria andExpiresTsEqualTo(OffsetDateTime value) {
             addCriterion("expires_ts =", value, "expiresTs");
             return (Criteria) this;
         }
 
-        public Criteria andExpiresTsNotEqualTo(LocalDateTime value) {
+        public Criteria andExpiresTsNotEqualTo(OffsetDateTime value) {
             addCriterion("expires_ts <>", value, "expiresTs");
             return (Criteria) this;
         }
 
-        public Criteria andExpiresTsGreaterThan(LocalDateTime value) {
+        public Criteria andExpiresTsGreaterThan(OffsetDateTime value) {
             addCriterion("expires_ts >", value, "expiresTs");
             return (Criteria) this;
         }
 
-        public Criteria andExpiresTsGreaterThanOrEqualTo(LocalDateTime value) {
+        public Criteria andExpiresTsGreaterThanOrEqualTo(OffsetDateTime value) {
             addCriterion("expires_ts >=", value, "expiresTs");
             return (Criteria) this;
         }
 
-        public Criteria andExpiresTsLessThan(LocalDateTime value) {
+        public Criteria andExpiresTsLessThan(OffsetDateTime value) {
             addCriterion("expires_ts <", value, "expiresTs");
             return (Criteria) this;
         }
 
-        public Criteria andExpiresTsLessThanOrEqualTo(LocalDateTime value) {
+        public Criteria andExpiresTsLessThanOrEqualTo(OffsetDateTime value) {
             addCriterion("expires_ts <=", value, "expiresTs");
             return (Criteria) this;
         }
 
-        public Criteria andExpiresTsIn(List<LocalDateTime> values) {
+        public Criteria andExpiresTsIn(List<OffsetDateTime> values) {
             addCriterion("expires_ts in", values, "expiresTs");
             return (Criteria) this;
         }
 
-        public Criteria andExpiresTsNotIn(List<LocalDateTime> values) {
+        public Criteria andExpiresTsNotIn(List<OffsetDateTime> values) {
             addCriterion("expires_ts not in", values, "expiresTs");
             return (Criteria) this;
         }
 
-        public Criteria andExpiresTsBetween(LocalDateTime value1, LocalDateTime value2) {
+        public Criteria andExpiresTsBetween(OffsetDateTime value1, OffsetDateTime value2) {
             addCriterion("expires_ts between", value1, value2, "expiresTs");
             return (Criteria) this;
         }
 
-        public Criteria andExpiresTsNotBetween(LocalDateTime value1, LocalDateTime value2) {
+        public Criteria andExpiresTsNotBetween(OffsetDateTime value1, OffsetDateTime value2) {
             addCriterion("expires_ts not between", value1, value2, "expiresTs");
             return (Criteria) this;
         }
@@ -521,52 +528,52 @@ public class UserRefreshTokenDboExample {
             return (Criteria) this;
         }
 
-        public Criteria andCreatedTsEqualTo(LocalDateTime value) {
+        public Criteria andCreatedTsEqualTo(OffsetDateTime value) {
             addCriterion("created_ts =", value, "createdTs");
             return (Criteria) this;
         }
 
-        public Criteria andCreatedTsNotEqualTo(LocalDateTime value) {
+        public Criteria andCreatedTsNotEqualTo(OffsetDateTime value) {
             addCriterion("created_ts <>", value, "createdTs");
             return (Criteria) this;
         }
 
-        public Criteria andCreatedTsGreaterThan(LocalDateTime value) {
+        public Criteria andCreatedTsGreaterThan(OffsetDateTime value) {
             addCriterion("created_ts >", value, "createdTs");
             return (Criteria) this;
         }
 
-        public Criteria andCreatedTsGreaterThanOrEqualTo(LocalDateTime value) {
+        public Criteria andCreatedTsGreaterThanOrEqualTo(OffsetDateTime value) {
             addCriterion("created_ts >=", value, "createdTs");
             return (Criteria) this;
         }
 
-        public Criteria andCreatedTsLessThan(LocalDateTime value) {
+        public Criteria andCreatedTsLessThan(OffsetDateTime value) {
             addCriterion("created_ts <", value, "createdTs");
             return (Criteria) this;
         }
 
-        public Criteria andCreatedTsLessThanOrEqualTo(LocalDateTime value) {
+        public Criteria andCreatedTsLessThanOrEqualTo(OffsetDateTime value) {
             addCriterion("created_ts <=", value, "createdTs");
             return (Criteria) this;
         }
 
-        public Criteria andCreatedTsIn(List<LocalDateTime> values) {
+        public Criteria andCreatedTsIn(List<OffsetDateTime> values) {
             addCriterion("created_ts in", values, "createdTs");
             return (Criteria) this;
         }
 
-        public Criteria andCreatedTsNotIn(List<LocalDateTime> values) {
+        public Criteria andCreatedTsNotIn(List<OffsetDateTime> values) {
             addCriterion("created_ts not in", values, "createdTs");
             return (Criteria) this;
         }
 
-        public Criteria andCreatedTsBetween(LocalDateTime value1, LocalDateTime value2) {
+        public Criteria andCreatedTsBetween(OffsetDateTime value1, OffsetDateTime value2) {
             addCriterion("created_ts between", value1, value2, "createdTs");
             return (Criteria) this;
         }
 
-        public Criteria andCreatedTsNotBetween(LocalDateTime value1, LocalDateTime value2) {
+        public Criteria andCreatedTsNotBetween(OffsetDateTime value1, OffsetDateTime value2) {
             addCriterion("created_ts not between", value1, value2, "createdTs");
             return (Criteria) this;
         }
@@ -581,65 +588,70 @@ public class UserRefreshTokenDboExample {
             return (Criteria) this;
         }
 
-        public Criteria andUpdatedTsEqualTo(LocalDateTime value) {
+        public Criteria andUpdatedTsEqualTo(OffsetDateTime value) {
             addCriterion("updated_ts =", value, "updatedTs");
             return (Criteria) this;
         }
 
-        public Criteria andUpdatedTsNotEqualTo(LocalDateTime value) {
+        public Criteria andUpdatedTsNotEqualTo(OffsetDateTime value) {
             addCriterion("updated_ts <>", value, "updatedTs");
             return (Criteria) this;
         }
 
-        public Criteria andUpdatedTsGreaterThan(LocalDateTime value) {
+        public Criteria andUpdatedTsGreaterThan(OffsetDateTime value) {
             addCriterion("updated_ts >", value, "updatedTs");
             return (Criteria) this;
         }
 
-        public Criteria andUpdatedTsGreaterThanOrEqualTo(LocalDateTime value) {
+        public Criteria andUpdatedTsGreaterThanOrEqualTo(OffsetDateTime value) {
             addCriterion("updated_ts >=", value, "updatedTs");
             return (Criteria) this;
         }
 
-        public Criteria andUpdatedTsLessThan(LocalDateTime value) {
+        public Criteria andUpdatedTsLessThan(OffsetDateTime value) {
             addCriterion("updated_ts <", value, "updatedTs");
             return (Criteria) this;
         }
 
-        public Criteria andUpdatedTsLessThanOrEqualTo(LocalDateTime value) {
+        public Criteria andUpdatedTsLessThanOrEqualTo(OffsetDateTime value) {
             addCriterion("updated_ts <=", value, "updatedTs");
             return (Criteria) this;
         }
 
-        public Criteria andUpdatedTsIn(List<LocalDateTime> values) {
+        public Criteria andUpdatedTsIn(List<OffsetDateTime> values) {
             addCriterion("updated_ts in", values, "updatedTs");
             return (Criteria) this;
         }
 
-        public Criteria andUpdatedTsNotIn(List<LocalDateTime> values) {
+        public Criteria andUpdatedTsNotIn(List<OffsetDateTime> values) {
             addCriterion("updated_ts not in", values, "updatedTs");
             return (Criteria) this;
         }
 
-        public Criteria andUpdatedTsBetween(LocalDateTime value1, LocalDateTime value2) {
+        public Criteria andUpdatedTsBetween(OffsetDateTime value1, OffsetDateTime value2) {
             addCriterion("updated_ts between", value1, value2, "updatedTs");
             return (Criteria) this;
         }
 
-        public Criteria andUpdatedTsNotBetween(LocalDateTime value1, LocalDateTime value2) {
+        public Criteria andUpdatedTsNotBetween(OffsetDateTime value1, OffsetDateTime value2) {
             addCriterion("updated_ts not between", value1, value2, "updatedTs");
+            return (Criteria) this;
+        }
+
+        public Criteria andTokenHashContains(String value) {
+            addCriterion("token_hash ilike", LikePatterns.contains(value), "tokenHash");
             return (Criteria) this;
         }
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.22751158-04:00", comments="do_not_delete_during_merge")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="do_not_delete_during_merge")
     public static class Criteria extends GeneratedCriteria {
         protected Criteria() {
             super();
         }
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.227524079-04:00", comments="Source Table: zfgbb.user_refresh_token")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.user_refresh_token")
     public static class Criterion {
         private String condition;
 

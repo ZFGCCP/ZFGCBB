@@ -5,7 +5,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.time.Duration;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.Base64;
 import java.util.List;
 
@@ -43,7 +43,7 @@ public class RefreshTokenService {
 
 	public String issue(Integer userId, boolean stayLoggedIn) {
 		String rawToken = generateRawToken();
-		LocalDateTime now = LocalDateTime.now();
+		OffsetDateTime now = OffsetDateTime.now();
 		Duration ttl = stayLoggedIn ? rememberedTtl : sessionTtl;
 		UserRefreshTokenDbo dbo = new UserRefreshTokenDbo();
 		dbo.setUserId(userId);
@@ -62,7 +62,7 @@ public class RefreshTokenService {
 		if (Boolean.TRUE.equals(dbo.getRevokedFlag())) {
 			throw new BadCredentialsException("Refresh token has been revoked.");
 		}
-		if (dbo.getExpiresTs() == null || dbo.getExpiresTs().isBefore(LocalDateTime.now())) {
+		if (dbo.getExpiresTs() == null || dbo.getExpiresTs().isBefore(OffsetDateTime.now())) {
 			throw new BadCredentialsException("Refresh token has expired.");
 		}
 

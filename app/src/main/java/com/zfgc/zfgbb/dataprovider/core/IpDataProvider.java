@@ -30,6 +30,6 @@ public class IpDataProvider extends AbstractDataProvider {
 			ipDao.save(result);
 		}
 		
-		return mapper.map(result, IpAddress.class);
+		return map(result, IpAddress.class);
 	}
 }

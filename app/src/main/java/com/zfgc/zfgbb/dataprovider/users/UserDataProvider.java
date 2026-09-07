@@ -137,7 +137,7 @@ public class UserDataProvider extends AbstractDataProvider {
 				? userPermissionDao.get(upEx).stream().map(permissionMap::toModel).toList()
 				: Collections.emptyList();
 
-		Optional<UserBioInfo> bioInfo = Boolean.TRUE.equals(loadOptions.loadBio()) ? bioInfoDao.get(userId)
+		Optional<UserBioInfo> bioInfo = Boolean.TRUE.equals(loadOptions.loadBio()) ? bioInfoDao.find(userId)
 				.map(bioInfoDbo -> {
 					MessageDboExample msgEx = new MessageDboExample();
 					msgEx.createCriteria().andOwnerIdEqualTo(userId);
@@ -177,9 +177,9 @@ public class UserDataProvider extends AbstractDataProvider {
 				}) : Optional.empty();
 
 		Optional<UserContactInfo> contactInfo = Boolean.TRUE.equals(loadOptions.loadContactInfo())
-				? contactInfoDao.get(userId)
+				? contactInfoDao.find(userId)
 						.map(ci -> {
-							EmailAddressDbo email = emailDao.get(ci.getEmailAddressId()).get();
+							EmailAddressDbo email = emailDao.find(ci.getEmailAddressId()).get();
 							return userContactInfoMap.toModel(ci, email);
 						})
 				: Optional.empty();
@@ -193,28 +193,28 @@ public class UserDataProvider extends AbstractDataProvider {
 	}
 
 	public User createUser(User user) {
-		UserDbo userDbo = mapper.map(user, UserDbo.class);
+		UserDbo userDbo = map(user, UserDbo.class);
 		userDao.save(userDbo);
 
-		EmailAddressDbo emailDbo = mapper.map(user.getEmail(), EmailAddressDbo.class);
+		EmailAddressDbo emailDbo = map(user.getEmail(), EmailAddressDbo.class);
 		emailDao.save(emailDbo);
 		UserContactInfoDbo contactInfo = new UserContactInfoDbo();
 		contactInfo.setUserId(userDbo.getUserId());
 		contactInfo.setEmailAddressId(emailDbo.getEmailAddressId());
 		contactInfo.setAllowEmailFlag(true);
 		contactInfo.setAllowPmFlag(true);
-		contactInfoDao.getMapper().insertSelective(contactInfo);
+		contactInfoDao.insertSelective(contactInfo);
 
 		UserBioInfoDbo bioInfo = user.getBioInfo() != null
-				? mapper.map(user.getBioInfo(), UserBioInfoDbo.class)
+				? map(user.getBioInfo(), UserBioInfoDbo.class)
 				: new UserBioInfoDbo();
 		bioInfo.setUserId(userDbo.getUserId());
-		bioInfoDao.getMapper().insertSelective(bioInfo);
+		bioInfoDao.insertSelective(bioInfo);
 
 		BrUserPermissionDbo defaultPerm = new BrUserPermissionDbo();
 		defaultPerm.setUserId(userDbo.getUserId());
 		defaultPerm.setUserPermissionId(ZFGC_USER_PERMISSION_ID);
-		brUserPermissionDao.save(defaultPerm);
+		brUserPermissionDao.insert(defaultPerm);
 
 		return findUser(userDbo.getUserId(), new FullUserLoadOptions())
 				.orElseThrow(() -> new IllegalStateException("user disappeared after createUser"));
@@ -233,12 +233,12 @@ public class UserDataProvider extends AbstractDataProvider {
 	}
 
 	public User saveUserProfile(User user) {
-		UserDbo userDbo = mapper.map(user, UserDbo.class);
+		UserDbo userDbo = map(user, UserDbo.class);
 		userDbo = userDao.save(userDbo);
 
 		if (user.getBioInfo() != null) {
-			UserBioInfoDbo bioInfoDbo = mapper.map(user.getBioInfo(), UserBioInfoDbo.class);
-			bioInfoDao.save(bioInfoDbo);
+			UserBioInfoDbo bioInfoDbo = map(user.getBioInfo(), UserBioInfoDbo.class);
+			bioInfoDao.update(bioInfoDbo);
 		}
 
 		return findUser(userDbo.getUserId(), new BasicUserLoadOptions())

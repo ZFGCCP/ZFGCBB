@@ -1,6 +1,8 @@
 package com.zfgc.zfgbb.mbg;
 
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.jspecify.annotations.NonNull;
 import org.mybatis.generator.api.IntrospectedTable;
@@ -39,6 +41,10 @@ public class PaginatedSelectPlugin extends PluginAdapter {
 		m.setReturnType(returnType);
 		m.addParameter(new Parameter(exampleType, "example"));
 
+		Set<FullyQualifiedJavaType> importedTypes = new TreeSet<>();
+		commentGenerator.addGeneralMethodAnnotation(m, introspectedTable, importedTypes);
+		interfaze.addImportedTypes(importedTypes);
+
 		interfaze.addMethod(m);
 		interfaze.addImportedType(exampleType);
 		interfaze.addImportedType(modelType);
@@ -50,14 +56,17 @@ public class PaginatedSelectPlugin extends PluginAdapter {
 	public boolean modelExampleClassGenerated(@NonNull TopLevelClass topLevelClass,
 			@NonNull IntrospectedTable introspectedTable) {
 		topLevelClass.addImportedType(INTEGER_TYPE);
-		addPaginationField(topLevelClass, "limit");
-		addPaginationField(topLevelClass, "offset");
+		addPaginationField(topLevelClass, introspectedTable, "limit");
+		addPaginationField(topLevelClass, introspectedTable, "offset");
 		return true;
 	}
 
-	private static void addPaginationField(TopLevelClass clazz, String name) {
+	private void addPaginationField(TopLevelClass clazz, IntrospectedTable introspectedTable, String name) {
 		Field field = new Field(name, INTEGER_TYPE);
 		field.setVisibility(JavaVisibility.PROTECTED);
+		Set<FullyQualifiedJavaType> importedTypes = new TreeSet<>();
+		commentGenerator.addFieldAnnotation(field, introspectedTable, importedTypes);
+		clazz.addImportedTypes(importedTypes);
 		clazz.addField(field);
 
 		String suffix = Character.toUpperCase(name.charAt(0)) + name.substring(1);
@@ -66,12 +75,18 @@ public class PaginatedSelectPlugin extends PluginAdapter {
 		getter.setVisibility(JavaVisibility.PUBLIC);
 		getter.setReturnType(INTEGER_TYPE);
 		getter.addBodyLine("return " + name + ";");
+		Set<FullyQualifiedJavaType> getterImportedTypes = new TreeSet<>();
+		commentGenerator.addGeneralMethodAnnotation(getter, introspectedTable, getterImportedTypes);
+		clazz.addImportedTypes(getterImportedTypes);
 		clazz.addMethod(getter);
 
 		Method setter = new Method("set" + suffix);
 		setter.setVisibility(JavaVisibility.PUBLIC);
 		setter.addParameter(new Parameter(INTEGER_TYPE, name));
 		setter.addBodyLine("this." + name + " = " + name + ";");
+		Set<FullyQualifiedJavaType> setterImportedTypes = new TreeSet<>();
+		commentGenerator.addGeneralMethodAnnotation(setter, introspectedTable, setterImportedTypes);
+		clazz.addImportedTypes(setterImportedTypes);
 		clazz.addMethod(setter);
 	}
 
@@ -110,9 +125,14 @@ public class PaginatedSelectPlugin extends PluginAdapter {
 		select.addElement(orderByIf);
 
 		XmlElement limitIf = new XmlElement("if");
-		limitIf.addAttribute(new Attribute("test", "limit != null and offset != null"));
-		limitIf.addElement(new TextElement("limit ${limit} offset ${offset}"));
+		limitIf.addAttribute(new Attribute("test", "limit != null"));
+		limitIf.addElement(new TextElement("limit ${limit}"));
 		select.addElement(limitIf);
+
+		XmlElement offsetIf = new XmlElement("if");
+		offsetIf.addAttribute(new Attribute("test", "offset != null"));
+		offsetIf.addElement(new TextElement("offset ${offset}"));
+		select.addElement(offsetIf);
 
 		document.getRootElement().addElement(select);
 		return true;

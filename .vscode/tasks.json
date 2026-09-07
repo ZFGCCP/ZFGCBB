@@ -3,7 +3,7 @@
     "tasks": [
         {
             "label": "Start Postgres (docker compose)",
-            "detail": "Starts the docker-compose postgresql service, waits for it to become healthy.",
+            "detail": "Start dev Postgres and wait until healthy.",
             "type": "shell",
             "command": "docker compose up -d --wait postgresql",
             "options": {
@@ -18,7 +18,7 @@
         },
         {
             "label": "Flyway migrate",
-            "detail": "Applies pending Flyway migrations (db/setup + db/migration) against the dev database.",
+            "detail": "Apply pending migrations to the dev database.",
             "type": "shell",
             "command": "mvn -pl app -am flyway:migrate",
             "options": {
@@ -32,9 +32,9 @@
         },
         {
             "label": "Reset DB",
-            "detail": "Drops the zfgbb schema and reapplies all migrations from V0 (setup) onward. After this completes, hit POST /system/install to populate admin + sample data.",
+            "detail": "Drop the zfgbb schema and reapply every migration.",
             "type": "shell",
-            "command": "docker compose exec -T postgresql psql -U zfgbb_user -d zfgc_dev -c 'drop schema if exists zfgbb cascade' && mvn -pl app -am flyway:migrate",
+            "command": "docker compose exec -T postgresql psql -U zfgbb_bootstrap -d zfgc_dev -c 'drop schema if exists zfgbb cascade' && mvn -pl app -am flyway:migrate",
             "options": {
                 "cwd": "${workspaceFolder}"
             },
@@ -49,7 +49,7 @@
         },
         {
             "label": "Maven: install upstream modules",
-            "detail": "Cleans and installs mbg-plugin/model/migrator JARs into the local Maven repo so cross-module changes are picked up on launch. Skips `app` so VS Code's JDT owns the MapStruct/Lombok annotation processing for the backend (avoids FilerException from duplicate APT runs).",
+            "detail": "Install mbg-plugin/model/migrator so launches see cross-module changes.",
             "type": "shell",
             "command": "mvn clean install -pl mbg-plugin,model,migrator -am -DskipTests",
             "options": {
@@ -63,7 +63,7 @@
         },
         {
             "label": "Prepare Backend (Docker)",
-            "detail": "Starts the docker postgres service then installs upstream module JARs. Used as the preLaunchTask for the Docker launch config.",
+            "detail": "Postgres + upstream modules, for the Docker launch config.",
             "dependsOn": [
                 "Start Postgres (docker compose)",
                 "Maven: install upstream modules"
@@ -73,7 +73,7 @@
         },
         {
             "label": "Start SMF Live (docker compose)",
-            "detail": "Brings up the empty MySQL + SMF 2.0.15 PHP/Apache web installer from the `live` profile. Reach the installer at http://localhost:${SMF_WEB_PORT:-8090}/install.php — pick whatever table prefix you like; the migrator picks it up via SmfConnectionParams.smfTablePrefix at job submit time.",
+            "detail": "Empty MySQL 5.7 for migration dev.",
             "type": "shell",
             "command": "docker compose -f docker-compose.service.smf.yml --profile live up -d --wait",
             "options": {
@@ -88,7 +88,7 @@
         },
         {
             "label": "Kill ZFGBB backend",
-            "detail": "Kills any process holding the ZFGBB backend port. Wired as postDebugTask on the Debug Backend launch configs to clean up orphaned JVMs that VS Code's Java debugger fails to terminate cleanly when you hit Stop. Cross-platform via OS-specific overrides.",
+            "detail": "Free the backend port after a debug session.",
             "type": "shell",
             "command": "echo 'Kill ZFGBB backend: no platform-specific command resolved'",
             "linux": {
@@ -109,7 +109,7 @@
         },
         {
             "label": "Stop SMF Live (docker compose)",
-            "detail": "Tears down the SMF live MySQL + web containers and their volume.",
+            "detail": "Stop the migration-dev MySQL and drop its volume.",
             "type": "shell",
             "command": "docker compose -f docker-compose.service.smf.yml --profile live down -v",
             "options": {

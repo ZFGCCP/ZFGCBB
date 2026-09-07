@@ -1,17 +1,18 @@
 package com.zfgc.zfgbb.services.system;
 
-import java.time.LocalDateTime;
+import lombok.RequiredArgsConstructor;
+
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.zfgc.zfgbb.dao.system.SystemConfigDao;
 import com.zfgc.zfgbb.dbo.SystemConfigDbo;
-import com.zfgc.zfgbb.dbo.SystemConfigDboExample;
+import com.zfgc.zfgbb.dao.meta.SystemConfigDao;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class SystemConfigService {
 
 	public static final class Keys {
@@ -24,11 +25,7 @@ public class SystemConfigService {
 		}
 	}
 
-	private final SystemConfigDao dao;
-
-	public SystemConfigService(SystemConfigDao dao) {
-		this.dao = dao;
-	}
+	private final SystemConfigDao systemConfigDao;
 
 	@Transactional(readOnly = true)
 	public boolean isInstalled() {
@@ -39,29 +36,21 @@ public class SystemConfigService {
 
 	@Transactional(readOnly = true)
 	public String get(String key) {
-		SystemConfigDboExample ex = new SystemConfigDboExample();
-		ex.createCriteria().andConfigKeyEqualTo(key);
-		return dao.get(ex).stream().findFirst().map(SystemConfigDbo::getConfigValue).orElse(null);
+		return systemConfigDao.find(key)
+				.map(SystemConfigDbo::getConfigValue)
+				.orElse(null);
 	}
 
 	public void set(String key, String value) {
-		LocalDateTime now = LocalDateTime.now();
-		SystemConfigDboExample ex = new SystemConfigDboExample();
-		ex.createCriteria().andConfigKeyEqualTo(key);
-		Optional<SystemConfigDbo> existing = dao.get(ex).stream().findFirst();
-
-		if (existing.isPresent()) {
-			SystemConfigDbo dbo = existing.get();
-			dbo.setConfigValue(value);
-			dbo.setUpdatedTs(now);
-			dao.getMapper().updateByPrimaryKey(dbo);
+		SystemConfigDbo existing = systemConfigDao.find(key).orElse(null);
+		if (existing != null) {
+			existing.setConfigValue(value);
+			systemConfigDao.update(existing);
 		} else {
-			SystemConfigDbo dbo = new SystemConfigDbo();
-			dbo.setConfigKey(key);
-			dbo.setConfigValue(value);
-			dbo.setCreatedTs(now);
-			dbo.setUpdatedTs(now);
-			dao.getMapper().insert(dbo);
+			SystemConfigDbo inserted = new SystemConfigDbo();
+			inserted.setConfigKey(key);
+			inserted.setConfigValue(value);
+			systemConfigDao.insert(inserted);
 		}
 	}
 }

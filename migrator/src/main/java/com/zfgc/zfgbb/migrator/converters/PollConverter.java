@@ -1,7 +1,7 @@
 package com.zfgc.zfgbb.migrator.converters;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.List;
@@ -78,10 +78,10 @@ public class PollConverter extends AbstractConverter<Map<Integer, PollDbo>> {
 			PollDbo poll = new PollDbo();
 
 			Instant instant = Instant.ofEpochMilli(TimeUnit.SECONDS.toMillis(smfPoll.getExpireTime()));
-			LocalDateTime expireTime = LocalDateTime.ofInstant(instant, ZoneId.of("UTC"));
+			OffsetDateTime expireTime = OffsetDateTime.ofInstant(instant, ZoneId.of("UTC"));
 
 			poll.setChangeVoteFlag(smfPoll.getChangeVote());
-			poll.setCreatedTs(LocalDateTime.now());
+			poll.setCreatedTs(OffsetDateTime.now());
 			poll.setCreatedUserId(zfgbbUserId);
 			poll.setExpireTime(smfPoll.getExpireTime() == 0 ? null : expireTime);
 			poll.setGuestVoteCount(smfPoll.getNumGuestVoters());

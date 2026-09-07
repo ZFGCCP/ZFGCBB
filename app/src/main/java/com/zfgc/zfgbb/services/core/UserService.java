@@ -51,7 +51,7 @@ public class UserService {
 				.passwordHash(hashed.hash())
 				.passwordAlgo(hashed.algo())
 				.passwordSalt(hashed.salt())
-				.passwordChangedTs(java.time.LocalDateTime.now())
+				.passwordChangedTs(java.time.OffsetDateTime.now())
 				.failedLoginCount(0)
 				.email(EmailAddress.builder().emailAddress(req.email()).spammerFlag(false).build())
 				.build();

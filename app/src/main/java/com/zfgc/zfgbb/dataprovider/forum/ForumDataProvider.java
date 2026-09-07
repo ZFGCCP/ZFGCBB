@@ -61,8 +61,8 @@ public class ForumDataProvider extends AbstractDataProvider {
 	private ChildBoardViewDboMapper childBoardMapper;
 	
 	public Board getBoard(Integer boardId, Integer pageNo, Integer threadsPerPage) {
-		Optional<BoardDbo> boardDbo = boardDao.get(boardId);
-		Board board = boardDbo.map(dbo -> mapper.map(dbo, Board.class)).orElseThrow(() -> new ZfgcNotFoundException());
+		Optional<BoardDbo> boardDbo = boardDao.find(boardId);
+		Board board = boardDbo.map(dbo -> map(dbo, Board.class)).orElseThrow(() -> new ZfgcNotFoundException());
 		
 		List<Thread> unstickyThreads = threadDataProvider.getThreadsByBoardId(boardId, pageNo, threadsPerPage, false);
 		List<Thread> stickyThreads = threadDataProvider.getThreadsByBoardId(boardId, null, null, true);
@@ -72,7 +72,7 @@ public class ForumDataProvider extends AbstractDataProvider {
 		
 		ThreadDboExample threadEx = new ThreadDboExample();
 		threadEx.createCriteria().andBoardIdEqualTo(boardId).andPinnedFlagEqualTo(false);
-		Long threadCount = threadDao.getMapper().countByExample(threadEx);
+		Long threadCount = threadDao.count(threadEx);
 		board.setThreadCount(threadCount);
 
 		board.setChildBoards(getBoardSummaries(board.getBoardId()));
@@ -90,13 +90,13 @@ public class ForumDataProvider extends AbstractDataProvider {
 	private List<BoardSummary> getBoardSummaries(List<Integer> parentBoardId){
 		BoardSummaryViewDboExample bEx = new BoardSummaryViewDboExample();
 		bEx.createCriteria().andParentBoardIdIn(parentBoardId);
-		List<BoardSummary> result = (boardSummaryMapper.selectByExample(bEx).stream().map(b -> mapper.map(b, BoardSummary.class)).collect(Collectors.toList()));
+		List<BoardSummary> result = (boardSummaryMapper.selectByExample(bEx).stream().map(b -> map(b, BoardSummary.class)).collect(Collectors.toList()));
 		
 		ChildBoardViewDboExample cEx = new ChildBoardViewDboExample();
 		cEx.createCriteria().andParentBoardIdIn(parentBoardId);
 		
 		Map<Integer, List<ChildBoard>> childBoards = childBoardMapper.selectByExample(cEx).stream()
-																					.map(c -> mapper.map(c, ChildBoard.class))
+																					.map(c -> map(c, ChildBoard.class))
 																					.collect(Collectors.groupingBy(ChildBoard::getParentBoardId));
 		
 		result.forEach(bs -> {
@@ -110,14 +110,14 @@ public class ForumDataProvider extends AbstractDataProvider {
 	private List<BoardSummary> getBoardSummariesByCategory(List<Integer> categoryId){
 		BoardSummaryViewDboExample bEx = new BoardSummaryViewDboExample();
 		bEx.createCriteria().andCategoryIdIn(categoryId);
-		List<BoardSummary> result = (boardSummaryMapper.selectByExample(bEx).stream().map(b -> mapper.map(b, BoardSummary.class)).collect(Collectors.toList()));
+		List<BoardSummary> result = (boardSummaryMapper.selectByExample(bEx).stream().map(b -> map(b, BoardSummary.class)).collect(Collectors.toList()));
 		
 		if(!result.isEmpty()) {
 			ChildBoardViewDboExample cEx = new ChildBoardViewDboExample();
 			cEx.createCriteria().andParentBoardIdIn(result.stream().map(BoardSummary::getBoardId).collect(Collectors.toList()));
 			
 			Map<Integer, List<ChildBoard>> childBoards = childBoardMapper.selectByExample(cEx).stream()
-																						.map(c -> mapper.map(c, ChildBoard.class))
+																						.map(c -> map(c, ChildBoard.class))
 																						.collect(Collectors.groupingBy(ChildBoard::getParentBoardId));
 			
 			result.forEach(bs -> {
@@ -170,7 +170,7 @@ public class ForumDataProvider extends AbstractDataProvider {
 		BoardSummaryViewDboExample bEx = new BoardSummaryViewDboExample();
 		bEx.createCriteria().andParentBoardIdIsNull();
 		List<BoardSummary> result = boardSummaryMapper.selectByExample(bEx).stream()
-				.map(b -> mapper.map(b, BoardSummary.class)).collect(Collectors.toList());
+				.map(b -> map(b, BoardSummary.class)).collect(Collectors.toList());
 
 		if (result.isEmpty()) {
 			return result;
@@ -180,7 +180,7 @@ public class ForumDataProvider extends AbstractDataProvider {
 		cEx.createCriteria().andParentBoardIdIn(result.stream().map(BoardSummary::getBoardId).toList());
 
 		Map<Integer, List<ChildBoard>> childBoards = childBoardMapper.selectByExample(cEx).stream()
-				.map(c -> mapper.map(c, ChildBoard.class))
+				.map(c -> map(c, ChildBoard.class))
 				.collect(Collectors.groupingBy(ChildBoard::getParentBoardId));
 
 		result.forEach(bs -> bs.setChildBoards(childBoards.get(bs.getBoardId())));
@@ -219,7 +219,7 @@ public class ForumDataProvider extends AbstractDataProvider {
 			ThreadDboExample tEx = new ThreadDboExample();
 			tEx.createCriteria().andBoardIdEqualTo(b.getBoardId());
 			
-			b.setThreadCount(threadDao.getMapper().countByExample(tEx));
+			b.setThreadCount(threadDao.count(tEx));
 		});
 		
 		return result;

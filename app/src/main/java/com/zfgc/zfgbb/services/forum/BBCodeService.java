@@ -1,7 +1,7 @@
 package com.zfgc.zfgbb.services.forum;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -415,7 +415,7 @@ public class BBCodeService {
 				.replace("{{msg.date}}", date);
 	}
 
-	private static String formatQuoteDate(LocalDateTime ts) {
+	private static String formatQuoteDate(OffsetDateTime ts) {
 		LocalDate today = LocalDate.now();
 		LocalDate that = ts.toLocalDate();
 		if (that.equals(today)) {

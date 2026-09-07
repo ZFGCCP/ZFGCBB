@@ -28,8 +28,6 @@ import com.zfgc.zfgbb.dbo.PollChoiceDbo;
 import com.zfgc.zfgbb.dbo.PollChoiceDboExample;
 import com.zfgc.zfgbb.dbo.PollDbo;
 import com.zfgc.zfgbb.dbo.PollDboExample;
-import com.zfgc.zfgbb.dbo.PollQuestionDbo;
-import com.zfgc.zfgbb.dbo.PollQuestionDboExample;
 import com.zfgc.zfgbb.dbo.ThreadDbo;
 import com.zfgc.zfgbb.dbo.ThreadDboExample;
 import com.zfgc.zfgbb.exception.ZfgcNotFoundException;
@@ -82,9 +80,9 @@ public class ThreadDataProvider extends AbstractDataProvider {
 	private PollMap pollMap;
 	
 	public Thread getThread(Integer threadId, Integer page, Integer count) {
-		Optional<ThreadDbo> threadDb = threadDao.get(threadId);
+		Optional<ThreadDbo> threadDb = threadDao.find(threadId);
 		return threadDb.map(threadOptional -> {
-			Thread result = mapper.map(threadOptional, Thread.class);
+			Thread result = map(threadOptional, Thread.class);
 			
 			//get messages
 			result.setMessages(super.convertDboListToModel(messageDataProvider.getMessagesForThread(threadId, page, count), Message.class));
@@ -92,7 +90,7 @@ public class ThreadDataProvider extends AbstractDataProvider {
 			//get permissions for the parent board
 			result.setBoardPermissions(getBoardPermissions(result.getBoardId()));
 
-			boardDao.get(result.getBoardId())
+			boardDao.find(result.getBoardId())
 					.ifPresent(board -> result.setBoardName(board.getBoardName()));
 
 			//get poll info
@@ -119,9 +117,6 @@ public class ThreadDataProvider extends AbstractDataProvider {
 							  	List<PollChoiceDbo> choices = pollChoiceDao.get(choiceEx);
 							  	
 							  	Poll result = pollMap.toModel(poll, choices);
-								
-							  	PollQuestionDboExample ex = new PollQuestionDboExample();
-								ex.createCriteria().andPollIdEqualTo(result.getId());
 								
 								return result;
 						  }).orElse(null);
@@ -168,14 +163,14 @@ public class ThreadDataProvider extends AbstractDataProvider {
 		//finally, link up all the data
 		result.forEach(th -> {
 			AllMessagesInThreadViewDbo latestDetails = mappedMessageDetails.get(th.getThreadId()).get(0);
-			th.setCreatedUser(userDao.get(th.getCreatedUserId())
-					.map(dbo -> super.mapper.map(dbo, User.class))
+			th.setCreatedUser(userDao.find(th.getCreatedUserId())
+					.map(dbo -> map(dbo, User.class))
 					.orElseGet(User::orphaned));
 			th.setPostCount(messageDataProvider.getTotalPostsInThread(th.getThreadId()).intValue());
 			
 			LatestMessageInThreadViewDbo latestDbo = messagesByThreadId.get(th.getThreadId());
 			if(latestDbo != null) {
-				th.setLatestMessage(mapper.map(latestDbo, LatestMessage.class));
+				th.setLatestMessage(map(latestDbo, LatestMessage.class));
 				th.getLatestMessage().setOwnerId(latestDetails.getLastPostedUserId());
 				th.getLatestMessage().setOwnerName(latestDetails.getLastPostedUser());
 			}
@@ -188,9 +183,9 @@ public class ThreadDataProvider extends AbstractDataProvider {
 	}
 	
 	public Thread getThread(Integer threadId) {
-		Optional<ThreadDbo> threadDb = threadDao.get(threadId);
+		Optional<ThreadDbo> threadDb = threadDao.find(threadId);
 		return threadDb.map(threadOpt -> {
-			Thread result = mapper.map(threadOpt, Thread.class);
+			Thread result = map(threadOpt, Thread.class);
 			
 			//get permissions for the parent board
 			result.setBoardPermissions(getBoardPermissions(result.getBoardId()));
@@ -205,7 +200,7 @@ public class ThreadDataProvider extends AbstractDataProvider {
 	}
 	
 	public Thread saveThread(Thread thread) {
-		ThreadDbo threadDbo = mapper.map(thread, ThreadDbo.class);
+		ThreadDbo threadDbo = map(thread, ThreadDbo.class);
 		
 		//create the thread dbo first
 		threadDbo = threadDao.save(threadDbo);
@@ -232,7 +227,7 @@ public class ThreadDataProvider extends AbstractDataProvider {
 		ThreadDboExample ex = new ThreadDboExample();
 		ex.createCriteria().andThreadIdEqualTo(threadId);
 		
-		threadDao.delete(ex);
+		threadDao.deleteWhere(ex);
 	}
 	
 	public Thread splitThread(ThreadSplit splitter, Thread newThread) {

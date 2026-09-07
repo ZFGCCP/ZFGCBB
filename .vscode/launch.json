@@ -10,10 +10,7 @@
             "preLaunchTask": "Maven: install upstream modules",
             "postDebugTask": "Kill ZFGBB backend",
             "envFile": "${workspaceFolder}/.env.local",
-            "env": {
-                "ZFGBB_CONTENT_PATH": "${workspaceFolder}/backend-assets",
-                "ZFGBB_CONTENT_IMAGES": "${workspaceFolder}/backend-assets"
-            },
+            "cwd": "${workspaceFolder}",
             "console": "integratedTerminal",
             "shortenCommandLine": "auto"
         },
@@ -26,10 +23,7 @@
             "preLaunchTask": "Prepare Backend (Docker)",
             "postDebugTask": "Kill ZFGBB backend",
             "envFile": "${workspaceFolder}/.env.local",
-            "env": {
-                "ZFGBB_CONTENT_PATH": "${workspaceFolder}/backend-assets",
-                "ZFGBB_CONTENT_IMAGES": "${workspaceFolder}/backend-assets"
-            },
+            "cwd": "${workspaceFolder}",
             "console": "integratedTerminal",
             "shortenCommandLine": "auto"
         }

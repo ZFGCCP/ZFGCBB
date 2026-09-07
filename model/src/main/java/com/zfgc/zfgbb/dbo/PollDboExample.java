@@ -1,67 +1,70 @@
 package com.zfgc.zfgbb.dbo;
 
+import com.zfgc.zfgbb.persistence.LikePatterns;
 import jakarta.annotation.Generated;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public class PollDboExample {
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.23948406-04:00", comments="Source Table: zfgbb.poll")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.poll")
     protected String orderByClause;
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.239498209-04:00", comments="Source Table: zfgbb.poll")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.poll")
     protected boolean distinct;
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.239517799-04:00", comments="Source Table: zfgbb.poll")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.poll")
     protected List<Criteria> oredCriteria;
 
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.poll")
     protected Integer limit;
 
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.poll")
     protected Integer offset;
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.23947381-04:00", comments="Source Table: zfgbb.poll")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.poll")
     public PollDboExample() {
         oredCriteria = new ArrayList<>();
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.23949023-04:00", comments="Source Table: zfgbb.poll")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.poll")
     public void setOrderByClause(String orderByClause) {
         this.orderByClause = orderByClause;
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.23949495-04:00", comments="Source Table: zfgbb.poll")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.poll")
     public String getOrderByClause() {
         return orderByClause;
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.239503699-04:00", comments="Source Table: zfgbb.poll")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.poll")
     public void setDistinct(boolean distinct) {
         this.distinct = distinct;
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.239508659-04:00", comments="Source Table: zfgbb.poll")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.poll")
     public boolean isDistinct() {
         return distinct;
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.239523029-04:00", comments="Source Table: zfgbb.poll")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.poll")
     public List<Criteria> getOredCriteria() {
         return oredCriteria;
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.239527618-04:00", comments="Source Table: zfgbb.poll")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.poll")
     public void or(Criteria criteria) {
         oredCriteria.add(criteria);
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.239532128-04:00", comments="Source Table: zfgbb.poll")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.poll")
     public Criteria or() {
         Criteria criteria = createCriteriaInternal();
         oredCriteria.add(criteria);
         return criteria;
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.239535108-04:00", comments="Source Table: zfgbb.poll")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.poll")
     public Criteria createCriteria() {
         Criteria criteria = createCriteriaInternal();
         if (oredCriteria.size() == 0) {
@@ -70,36 +73,40 @@ public class PollDboExample {
         return criteria;
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.239539288-04:00", comments="Source Table: zfgbb.poll")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.poll")
     protected Criteria createCriteriaInternal() {
         Criteria criteria = new Criteria();
         return criteria;
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.239543478-04:00", comments="Source Table: zfgbb.poll")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.poll")
     public void clear() {
         oredCriteria.clear();
         orderByClause = null;
         distinct = false;
     }
 
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.poll")
     public Integer getLimit() {
         return limit;
     }
 
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.poll")
     public void setLimit(Integer limit) {
         this.limit = limit;
     }
 
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.poll")
     public Integer getOffset() {
         return offset;
     }
 
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.poll")
     public void setOffset(Integer offset) {
         this.offset = offset;
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.239549188-04:00", comments="Source Table: zfgbb.poll")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.poll")
     protected abstract static class GeneratedCriteria {
         protected List<Criterion> criteria;
 
@@ -242,12 +249,12 @@ public class PollDboExample {
         }
 
         public Criteria andPollQuestionLike(String value) {
-            addCriterion("poll_question like", value, "pollQuestion");
+            addCriterion("poll_question ilike", value, "pollQuestion");
             return (Criteria) this;
         }
 
         public Criteria andPollQuestionNotLike(String value) {
-            addCriterion("poll_question not like", value, "pollQuestion");
+            addCriterion("poll_question not ilike", value, "pollQuestion");
             return (Criteria) this;
         }
 
@@ -341,52 +348,52 @@ public class PollDboExample {
             return (Criteria) this;
         }
 
-        public Criteria andCreatedTsEqualTo(LocalDateTime value) {
+        public Criteria andCreatedTsEqualTo(OffsetDateTime value) {
             addCriterion("created_ts =", value, "createdTs");
             return (Criteria) this;
         }
 
-        public Criteria andCreatedTsNotEqualTo(LocalDateTime value) {
+        public Criteria andCreatedTsNotEqualTo(OffsetDateTime value) {
             addCriterion("created_ts <>", value, "createdTs");
             return (Criteria) this;
         }
 
-        public Criteria andCreatedTsGreaterThan(LocalDateTime value) {
+        public Criteria andCreatedTsGreaterThan(OffsetDateTime value) {
             addCriterion("created_ts >", value, "createdTs");
             return (Criteria) this;
         }
 
-        public Criteria andCreatedTsGreaterThanOrEqualTo(LocalDateTime value) {
+        public Criteria andCreatedTsGreaterThanOrEqualTo(OffsetDateTime value) {
             addCriterion("created_ts >=", value, "createdTs");
             return (Criteria) this;
         }
 
-        public Criteria andCreatedTsLessThan(LocalDateTime value) {
+        public Criteria andCreatedTsLessThan(OffsetDateTime value) {
             addCriterion("created_ts <", value, "createdTs");
             return (Criteria) this;
         }
 
-        public Criteria andCreatedTsLessThanOrEqualTo(LocalDateTime value) {
+        public Criteria andCreatedTsLessThanOrEqualTo(OffsetDateTime value) {
             addCriterion("created_ts <=", value, "createdTs");
             return (Criteria) this;
         }
 
-        public Criteria andCreatedTsIn(List<LocalDateTime> values) {
+        public Criteria andCreatedTsIn(List<OffsetDateTime> values) {
             addCriterion("created_ts in", values, "createdTs");
             return (Criteria) this;
         }
 
-        public Criteria andCreatedTsNotIn(List<LocalDateTime> values) {
+        public Criteria andCreatedTsNotIn(List<OffsetDateTime> values) {
             addCriterion("created_ts not in", values, "createdTs");
             return (Criteria) this;
         }
 
-        public Criteria andCreatedTsBetween(LocalDateTime value1, LocalDateTime value2) {
+        public Criteria andCreatedTsBetween(OffsetDateTime value1, OffsetDateTime value2) {
             addCriterion("created_ts between", value1, value2, "createdTs");
             return (Criteria) this;
         }
 
-        public Criteria andCreatedTsNotBetween(LocalDateTime value1, LocalDateTime value2) {
+        public Criteria andCreatedTsNotBetween(OffsetDateTime value1, OffsetDateTime value2) {
             addCriterion("created_ts not between", value1, value2, "createdTs");
             return (Criteria) this;
         }
@@ -401,52 +408,52 @@ public class PollDboExample {
             return (Criteria) this;
         }
 
-        public Criteria andUpdatedTsEqualTo(LocalDateTime value) {
+        public Criteria andUpdatedTsEqualTo(OffsetDateTime value) {
             addCriterion("updated_ts =", value, "updatedTs");
             return (Criteria) this;
         }
 
-        public Criteria andUpdatedTsNotEqualTo(LocalDateTime value) {
+        public Criteria andUpdatedTsNotEqualTo(OffsetDateTime value) {
             addCriterion("updated_ts <>", value, "updatedTs");
             return (Criteria) this;
         }
 
-        public Criteria andUpdatedTsGreaterThan(LocalDateTime value) {
+        public Criteria andUpdatedTsGreaterThan(OffsetDateTime value) {
             addCriterion("updated_ts >", value, "updatedTs");
             return (Criteria) this;
         }
 
-        public Criteria andUpdatedTsGreaterThanOrEqualTo(LocalDateTime value) {
+        public Criteria andUpdatedTsGreaterThanOrEqualTo(OffsetDateTime value) {
             addCriterion("updated_ts >=", value, "updatedTs");
             return (Criteria) this;
         }
 
-        public Criteria andUpdatedTsLessThan(LocalDateTime value) {
+        public Criteria andUpdatedTsLessThan(OffsetDateTime value) {
             addCriterion("updated_ts <", value, "updatedTs");
             return (Criteria) this;
         }
 
-        public Criteria andUpdatedTsLessThanOrEqualTo(LocalDateTime value) {
+        public Criteria andUpdatedTsLessThanOrEqualTo(OffsetDateTime value) {
             addCriterion("updated_ts <=", value, "updatedTs");
             return (Criteria) this;
         }
 
-        public Criteria andUpdatedTsIn(List<LocalDateTime> values) {
+        public Criteria andUpdatedTsIn(List<OffsetDateTime> values) {
             addCriterion("updated_ts in", values, "updatedTs");
             return (Criteria) this;
         }
 
-        public Criteria andUpdatedTsNotIn(List<LocalDateTime> values) {
+        public Criteria andUpdatedTsNotIn(List<OffsetDateTime> values) {
             addCriterion("updated_ts not in", values, "updatedTs");
             return (Criteria) this;
         }
 
-        public Criteria andUpdatedTsBetween(LocalDateTime value1, LocalDateTime value2) {
+        public Criteria andUpdatedTsBetween(OffsetDateTime value1, OffsetDateTime value2) {
             addCriterion("updated_ts between", value1, value2, "updatedTs");
             return (Criteria) this;
         }
 
-        public Criteria andUpdatedTsNotBetween(LocalDateTime value1, LocalDateTime value2) {
+        public Criteria andUpdatedTsNotBetween(OffsetDateTime value1, OffsetDateTime value2) {
             addCriterion("updated_ts not between", value1, value2, "updatedTs");
             return (Criteria) this;
         }
@@ -521,52 +528,52 @@ public class PollDboExample {
             return (Criteria) this;
         }
 
-        public Criteria andExpireTimeEqualTo(LocalDateTime value) {
+        public Criteria andExpireTimeEqualTo(OffsetDateTime value) {
             addCriterion("expire_time =", value, "expireTime");
             return (Criteria) this;
         }
 
-        public Criteria andExpireTimeNotEqualTo(LocalDateTime value) {
+        public Criteria andExpireTimeNotEqualTo(OffsetDateTime value) {
             addCriterion("expire_time <>", value, "expireTime");
             return (Criteria) this;
         }
 
-        public Criteria andExpireTimeGreaterThan(LocalDateTime value) {
+        public Criteria andExpireTimeGreaterThan(OffsetDateTime value) {
             addCriterion("expire_time >", value, "expireTime");
             return (Criteria) this;
         }
 
-        public Criteria andExpireTimeGreaterThanOrEqualTo(LocalDateTime value) {
+        public Criteria andExpireTimeGreaterThanOrEqualTo(OffsetDateTime value) {
             addCriterion("expire_time >=", value, "expireTime");
             return (Criteria) this;
         }
 
-        public Criteria andExpireTimeLessThan(LocalDateTime value) {
+        public Criteria andExpireTimeLessThan(OffsetDateTime value) {
             addCriterion("expire_time <", value, "expireTime");
             return (Criteria) this;
         }
 
-        public Criteria andExpireTimeLessThanOrEqualTo(LocalDateTime value) {
+        public Criteria andExpireTimeLessThanOrEqualTo(OffsetDateTime value) {
             addCriterion("expire_time <=", value, "expireTime");
             return (Criteria) this;
         }
 
-        public Criteria andExpireTimeIn(List<LocalDateTime> values) {
+        public Criteria andExpireTimeIn(List<OffsetDateTime> values) {
             addCriterion("expire_time in", values, "expireTime");
             return (Criteria) this;
         }
 
-        public Criteria andExpireTimeNotIn(List<LocalDateTime> values) {
+        public Criteria andExpireTimeNotIn(List<OffsetDateTime> values) {
             addCriterion("expire_time not in", values, "expireTime");
             return (Criteria) this;
         }
 
-        public Criteria andExpireTimeBetween(LocalDateTime value1, LocalDateTime value2) {
+        public Criteria andExpireTimeBetween(OffsetDateTime value1, OffsetDateTime value2) {
             addCriterion("expire_time between", value1, value2, "expireTime");
             return (Criteria) this;
         }
 
-        public Criteria andExpireTimeNotBetween(LocalDateTime value1, LocalDateTime value2) {
+        public Criteria andExpireTimeNotBetween(OffsetDateTime value1, OffsetDateTime value2) {
             addCriterion("expire_time not between", value1, value2, "expireTime");
             return (Criteria) this;
         }
@@ -1032,12 +1039,12 @@ public class PollDboExample {
         }
 
         public Criteria andMigrationHashLike(String value) {
-            addCriterion("migration_hash like", value, "migrationHash");
+            addCriterion("migration_hash ilike", value, "migrationHash");
             return (Criteria) this;
         }
 
         public Criteria andMigrationHashNotLike(String value) {
-            addCriterion("migration_hash not like", value, "migrationHash");
+            addCriterion("migration_hash not ilike", value, "migrationHash");
             return (Criteria) this;
         }
 
@@ -1102,12 +1109,12 @@ public class PollDboExample {
         }
 
         public Criteria andAnswerTextLike(String value) {
-            addCriterion("answer_text like", value, "answerText");
+            addCriterion("answer_text ilike", value, "answerText");
             return (Criteria) this;
         }
 
         public Criteria andAnswerTextNotLike(String value) {
-            addCriterion("answer_text not like", value, "answerText");
+            addCriterion("answer_text not ilike", value, "answerText");
             return (Criteria) this;
         }
 
@@ -1130,16 +1137,31 @@ public class PollDboExample {
             addCriterion("answer_text not between", value1, value2, "answerText");
             return (Criteria) this;
         }
+
+        public Criteria andPollQuestionContains(String value) {
+            addCriterion("poll_question ilike", LikePatterns.contains(value), "pollQuestion");
+            return (Criteria) this;
+        }
+
+        public Criteria andMigrationHashContains(String value) {
+            addCriterion("migration_hash ilike", LikePatterns.contains(value), "migrationHash");
+            return (Criteria) this;
+        }
+
+        public Criteria andAnswerTextContains(String value) {
+            addCriterion("answer_text ilike", LikePatterns.contains(value), "answerText");
+            return (Criteria) this;
+        }
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.240255565-04:00", comments="do_not_delete_during_merge")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="do_not_delete_during_merge")
     public static class Criteria extends GeneratedCriteria {
         protected Criteria() {
             super();
         }
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.240278125-04:00", comments="Source Table: zfgbb.poll")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.poll")
     public static class Criterion {
         private String condition;
 

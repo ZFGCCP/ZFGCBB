@@ -1,73 +1,76 @@
 package com.zfgc.zfgbb.dbo;
 
 import jakarta.annotation.Generated;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 public class SystemConfigDbo extends AbstractDbo {
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.245439991-04:00", comments="Source field: zfgbb.system_config.config_key")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source field: zfgbb.system_config.config_key")
     private String configKey;
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.245492629-04:00", comments="Source field: zfgbb.system_config.config_value")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source field: zfgbb.system_config.config_value")
     private String configValue;
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.245535298-04:00", comments="Source field: zfgbb.system_config.created_ts")
-    private LocalDateTime createdTs;
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source field: zfgbb.system_config.created_ts")
+    private OffsetDateTime createdTs;
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.245602366-04:00", comments="Source field: zfgbb.system_config.updated_ts")
-    private LocalDateTime updatedTs;
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source field: zfgbb.system_config.updated_ts")
+    private OffsetDateTime updatedTs;
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.24545857-04:00", comments="Source field: zfgbb.system_config.config_key")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source field: zfgbb.system_config.config_key")
     public String getConfigKey() {
         return configKey;
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.24547677-04:00", comments="Source field: zfgbb.system_config.config_key")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source field: zfgbb.system_config.config_key")
     public void setConfigKey(String configKey) {
         this.configKey = configKey;
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.245506099-04:00", comments="Source field: zfgbb.system_config.config_value")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source field: zfgbb.system_config.config_value")
     public String getConfigValue() {
         return configValue;
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.245522608-04:00", comments="Source field: zfgbb.system_config.config_value")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source field: zfgbb.system_config.config_value")
     public void setConfigValue(String configValue) {
         this.configValue = configValue;
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.245568407-04:00", comments="Source field: zfgbb.system_config.created_ts")
-    public LocalDateTime getCreatedTs() {
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source field: zfgbb.system_config.created_ts")
+    public OffsetDateTime getCreatedTs() {
         return createdTs;
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.245586436-04:00", comments="Source field: zfgbb.system_config.created_ts")
-    public void setCreatedTs(LocalDateTime createdTs) {
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source field: zfgbb.system_config.created_ts")
+    public void setCreatedTs(OffsetDateTime createdTs) {
         this.createdTs = createdTs;
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.245615295-04:00", comments="Source field: zfgbb.system_config.updated_ts")
-    public LocalDateTime getUpdatedTs() {
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source field: zfgbb.system_config.updated_ts")
+    public OffsetDateTime getUpdatedTs() {
         return updatedTs;
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.245623565-04:00", comments="Source field: zfgbb.system_config.updated_ts")
-    public void setUpdatedTs(LocalDateTime updatedTs) {
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source field: zfgbb.system_config.updated_ts")
+    public void setUpdatedTs(OffsetDateTime updatedTs) {
         this.updatedTs = updatedTs;
     }
 
     @Override
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.system_config")
     public Integer getPkId() {
         return null;
     }
 
     @Override
-    public LocalDateTime getCreatedTime() {
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.system_config")
+    public OffsetDateTime getCreatedTime() {
         return createdTs;
     }
 
     @Override
-    public LocalDateTime getUpdatedTime() {
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.system_config")
+    public OffsetDateTime getUpdatedTime() {
         return updatedTs;
     }
 }

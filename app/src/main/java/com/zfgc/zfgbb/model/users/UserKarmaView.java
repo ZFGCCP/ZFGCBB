@@ -1,6 +1,6 @@
 package com.zfgc.zfgbb.model.users;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 
 import org.apache.commons.lang3.StringUtils;
@@ -29,7 +29,7 @@ public class UserKarmaView extends BaseModel {
     private String description;
     private Boolean isPositive;
     @JsonIgnore
-    private LocalDateTime karmaGivenTs;
+    private OffsetDateTime karmaGivenTs;
     private Integer commentingUserId;
     private Integer threadId;
     private String commentingUser;
@@ -45,14 +45,14 @@ public class UserKarmaView extends BaseModel {
 	
 	public String getKarmaGivenTsAsString() {
 		if(karmaGivenTs != null) {
-			return karmaGivenTs.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+			return karmaGivenTs.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
 		}
 		return "";
 	}
 
 	public void setKarmaGivenTsAsString(String ts) {
 		if(!StringUtils.isEmpty(ts)) {
-			karmaGivenTs = LocalDateTime.parse(ts, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+			karmaGivenTs = OffsetDateTime.parse(ts, DateTimeFormatter.ISO_OFFSET_DATE_TIME);
 		}
 	}
 }

@@ -1,6 +1,6 @@
 package com.zfgc.zfgbb.services.forum;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -27,7 +27,7 @@ public class QuotedMessageLookup {
 	@Autowired
 	private UserDboMapper userMapper;
 
-	public record Resolved(String authorDisplayName, LocalDateTime createdTs) {}
+	public record Resolved(String authorDisplayName, OffsetDateTime createdTs) {}
 
 	public Map<Integer, Resolved> resolve(Set<Integer> messageIds) {
 		if (messageIds == null || messageIds.isEmpty()) {

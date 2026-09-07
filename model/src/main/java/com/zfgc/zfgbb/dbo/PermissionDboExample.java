@@ -1,67 +1,70 @@
 package com.zfgc.zfgbb.dbo;
 
+import com.zfgc.zfgbb.persistence.LikePatterns;
 import jakarta.annotation.Generated;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public class PermissionDboExample {
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.202747926-04:00", comments="Source Table: zfgbb.permission")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.permission")
     protected String orderByClause;
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.202837803-04:00", comments="Source Table: zfgbb.permission")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.permission")
     protected boolean distinct;
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.20294026-04:00", comments="Source Table: zfgbb.permission")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.permission")
     protected List<Criteria> oredCriteria;
 
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.permission")
     protected Integer limit;
 
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.permission")
     protected Integer offset;
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.202653869-04:00", comments="Source Table: zfgbb.permission")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.permission")
     public PermissionDboExample() {
         oredCriteria = new ArrayList<>();
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.202787105-04:00", comments="Source Table: zfgbb.permission")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.permission")
     public void setOrderByClause(String orderByClause) {
         this.orderByClause = orderByClause;
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.202814584-04:00", comments="Source Table: zfgbb.permission")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.permission")
     public String getOrderByClause() {
         return orderByClause;
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.202862532-04:00", comments="Source Table: zfgbb.permission")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.permission")
     public void setDistinct(boolean distinct) {
         this.distinct = distinct;
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.202899911-04:00", comments="Source Table: zfgbb.permission")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.permission")
     public boolean isDistinct() {
         return distinct;
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.202967339-04:00", comments="Source Table: zfgbb.permission")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.permission")
     public List<Criteria> getOredCriteria() {
         return oredCriteria;
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.202990808-04:00", comments="Source Table: zfgbb.permission")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.permission")
     public void or(Criteria criteria) {
         oredCriteria.add(criteria);
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.203013907-04:00", comments="Source Table: zfgbb.permission")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.permission")
     public Criteria or() {
         Criteria criteria = createCriteriaInternal();
         oredCriteria.add(criteria);
         return criteria;
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.203037177-04:00", comments="Source Table: zfgbb.permission")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.permission")
     public Criteria createCriteria() {
         Criteria criteria = createCriteriaInternal();
         if (oredCriteria.size() == 0) {
@@ -70,36 +73,40 @@ public class PermissionDboExample {
         return criteria;
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.203067906-04:00", comments="Source Table: zfgbb.permission")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.permission")
     protected Criteria createCriteriaInternal() {
         Criteria criteria = new Criteria();
         return criteria;
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.203091805-04:00", comments="Source Table: zfgbb.permission")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.permission")
     public void clear() {
         oredCriteria.clear();
         orderByClause = null;
         distinct = false;
     }
 
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.permission")
     public Integer getLimit() {
         return limit;
     }
 
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.permission")
     public void setLimit(Integer limit) {
         this.limit = limit;
     }
 
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.permission")
     public Integer getOffset() {
         return offset;
     }
 
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.permission")
     public void setOffset(Integer offset) {
         this.offset = offset;
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.203135804-04:00", comments="Source Table: zfgbb.permission")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.permission")
     protected abstract static class GeneratedCriteria {
         protected List<Criterion> criteria;
 
@@ -242,12 +249,12 @@ public class PermissionDboExample {
         }
 
         public Criteria andPermissionNameLike(String value) {
-            addCriterion("permission_name like", value, "permissionName");
+            addCriterion("permission_name ilike", value, "permissionName");
             return (Criteria) this;
         }
 
         public Criteria andPermissionNameNotLike(String value) {
-            addCriterion("permission_name not like", value, "permissionName");
+            addCriterion("permission_name not ilike", value, "permissionName");
             return (Criteria) this;
         }
 
@@ -312,12 +319,12 @@ public class PermissionDboExample {
         }
 
         public Criteria andPermissionCodeLike(String value) {
-            addCriterion("permission_code like", value, "permissionCode");
+            addCriterion("permission_code ilike", value, "permissionCode");
             return (Criteria) this;
         }
 
         public Criteria andPermissionCodeNotLike(String value) {
-            addCriterion("permission_code not like", value, "permissionCode");
+            addCriterion("permission_code not ilike", value, "permissionCode");
             return (Criteria) this;
         }
 
@@ -351,52 +358,52 @@ public class PermissionDboExample {
             return (Criteria) this;
         }
 
-        public Criteria andCreatedTsEqualTo(LocalDateTime value) {
+        public Criteria andCreatedTsEqualTo(OffsetDateTime value) {
             addCriterion("created_ts =", value, "createdTs");
             return (Criteria) this;
         }
 
-        public Criteria andCreatedTsNotEqualTo(LocalDateTime value) {
+        public Criteria andCreatedTsNotEqualTo(OffsetDateTime value) {
             addCriterion("created_ts <>", value, "createdTs");
             return (Criteria) this;
         }
 
-        public Criteria andCreatedTsGreaterThan(LocalDateTime value) {
+        public Criteria andCreatedTsGreaterThan(OffsetDateTime value) {
             addCriterion("created_ts >", value, "createdTs");
             return (Criteria) this;
         }
 
-        public Criteria andCreatedTsGreaterThanOrEqualTo(LocalDateTime value) {
+        public Criteria andCreatedTsGreaterThanOrEqualTo(OffsetDateTime value) {
             addCriterion("created_ts >=", value, "createdTs");
             return (Criteria) this;
         }
 
-        public Criteria andCreatedTsLessThan(LocalDateTime value) {
+        public Criteria andCreatedTsLessThan(OffsetDateTime value) {
             addCriterion("created_ts <", value, "createdTs");
             return (Criteria) this;
         }
 
-        public Criteria andCreatedTsLessThanOrEqualTo(LocalDateTime value) {
+        public Criteria andCreatedTsLessThanOrEqualTo(OffsetDateTime value) {
             addCriterion("created_ts <=", value, "createdTs");
             return (Criteria) this;
         }
 
-        public Criteria andCreatedTsIn(List<LocalDateTime> values) {
+        public Criteria andCreatedTsIn(List<OffsetDateTime> values) {
             addCriterion("created_ts in", values, "createdTs");
             return (Criteria) this;
         }
 
-        public Criteria andCreatedTsNotIn(List<LocalDateTime> values) {
+        public Criteria andCreatedTsNotIn(List<OffsetDateTime> values) {
             addCriterion("created_ts not in", values, "createdTs");
             return (Criteria) this;
         }
 
-        public Criteria andCreatedTsBetween(LocalDateTime value1, LocalDateTime value2) {
+        public Criteria andCreatedTsBetween(OffsetDateTime value1, OffsetDateTime value2) {
             addCriterion("created_ts between", value1, value2, "createdTs");
             return (Criteria) this;
         }
 
-        public Criteria andCreatedTsNotBetween(LocalDateTime value1, LocalDateTime value2) {
+        public Criteria andCreatedTsNotBetween(OffsetDateTime value1, OffsetDateTime value2) {
             addCriterion("created_ts not between", value1, value2, "createdTs");
             return (Criteria) this;
         }
@@ -411,65 +418,75 @@ public class PermissionDboExample {
             return (Criteria) this;
         }
 
-        public Criteria andUpdatedTsEqualTo(LocalDateTime value) {
+        public Criteria andUpdatedTsEqualTo(OffsetDateTime value) {
             addCriterion("updated_ts =", value, "updatedTs");
             return (Criteria) this;
         }
 
-        public Criteria andUpdatedTsNotEqualTo(LocalDateTime value) {
+        public Criteria andUpdatedTsNotEqualTo(OffsetDateTime value) {
             addCriterion("updated_ts <>", value, "updatedTs");
             return (Criteria) this;
         }
 
-        public Criteria andUpdatedTsGreaterThan(LocalDateTime value) {
+        public Criteria andUpdatedTsGreaterThan(OffsetDateTime value) {
             addCriterion("updated_ts >", value, "updatedTs");
             return (Criteria) this;
         }
 
-        public Criteria andUpdatedTsGreaterThanOrEqualTo(LocalDateTime value) {
+        public Criteria andUpdatedTsGreaterThanOrEqualTo(OffsetDateTime value) {
             addCriterion("updated_ts >=", value, "updatedTs");
             return (Criteria) this;
         }
 
-        public Criteria andUpdatedTsLessThan(LocalDateTime value) {
+        public Criteria andUpdatedTsLessThan(OffsetDateTime value) {
             addCriterion("updated_ts <", value, "updatedTs");
             return (Criteria) this;
         }
 
-        public Criteria andUpdatedTsLessThanOrEqualTo(LocalDateTime value) {
+        public Criteria andUpdatedTsLessThanOrEqualTo(OffsetDateTime value) {
             addCriterion("updated_ts <=", value, "updatedTs");
             return (Criteria) this;
         }
 
-        public Criteria andUpdatedTsIn(List<LocalDateTime> values) {
+        public Criteria andUpdatedTsIn(List<OffsetDateTime> values) {
             addCriterion("updated_ts in", values, "updatedTs");
             return (Criteria) this;
         }
 
-        public Criteria andUpdatedTsNotIn(List<LocalDateTime> values) {
+        public Criteria andUpdatedTsNotIn(List<OffsetDateTime> values) {
             addCriterion("updated_ts not in", values, "updatedTs");
             return (Criteria) this;
         }
 
-        public Criteria andUpdatedTsBetween(LocalDateTime value1, LocalDateTime value2) {
+        public Criteria andUpdatedTsBetween(OffsetDateTime value1, OffsetDateTime value2) {
             addCriterion("updated_ts between", value1, value2, "updatedTs");
             return (Criteria) this;
         }
 
-        public Criteria andUpdatedTsNotBetween(LocalDateTime value1, LocalDateTime value2) {
+        public Criteria andUpdatedTsNotBetween(OffsetDateTime value1, OffsetDateTime value2) {
             addCriterion("updated_ts not between", value1, value2, "updatedTs");
+            return (Criteria) this;
+        }
+
+        public Criteria andPermissionNameContains(String value) {
+            addCriterion("permission_name ilike", LikePatterns.contains(value), "permissionName");
+            return (Criteria) this;
+        }
+
+        public Criteria andPermissionCodeContains(String value) {
+            addCriterion("permission_code ilike", LikePatterns.contains(value), "permissionCode");
             return (Criteria) this;
         }
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.203581299-04:00", comments="do_not_delete_during_merge")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="do_not_delete_during_merge")
     public static class Criteria extends GeneratedCriteria {
         protected Criteria() {
             super();
         }
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.203636978-04:00", comments="Source Table: zfgbb.permission")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.permission")
     public static class Criterion {
         private String condition;
 

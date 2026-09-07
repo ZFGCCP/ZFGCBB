@@ -1,42 +1,16 @@
 package com.zfgc.zfgbb.dao.users;
 
-import java.util.List;
-import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.zfgc.zfgbb.dao.AbstractDao;
+import com.zfgc.zfgbb.dao.IdentityDao;
 import com.zfgc.zfgbb.dbo.AvatarDbo;
 import com.zfgc.zfgbb.dbo.AvatarDboExample;
 import com.zfgc.zfgbb.mappers.AvatarDboMapper;
 
 @Repository
-public class AvatarDao extends AbstractDao<AvatarDboExample, AvatarDboMapper, AvatarDbo> {
+public class AvatarDao extends IdentityDao<AvatarDbo, AvatarDboExample> {
 
-	@Autowired
 	public AvatarDao(AvatarDboMapper mapper) {
 		super(mapper);
-	}
-
-	@Override
-	public Optional<AvatarDbo> get(Integer id) {
-		return Optional.ofNullable(mapper.selectByPrimaryKey(id));
-	}
-
-	@Override
-	public List<AvatarDbo> get(AvatarDboExample ex) {
-		return mapper.selectByExample(ex);
-	}
-
-	@Override
-	protected void update(AvatarDbo toSave) {
-		mapper.updateByPrimaryKey(toSave);
-		
-	}
-
-	@Override
-	protected void create(AvatarDbo toCreate) {
-		mapper.insert(toCreate);
 	}
 }

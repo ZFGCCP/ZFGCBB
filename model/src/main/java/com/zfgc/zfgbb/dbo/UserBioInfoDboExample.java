@@ -1,68 +1,71 @@
 package com.zfgc.zfgbb.dbo;
 
+import com.zfgc.zfgbb.persistence.LikePatterns;
 import jakarta.annotation.Generated;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public class UserBioInfoDboExample {
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.217785769-04:00", comments="Source Table: zfgbb.user_bio_info")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.user_bio_info")
     protected String orderByClause;
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.217879586-04:00", comments="Source Table: zfgbb.user_bio_info")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.user_bio_info")
     protected boolean distinct;
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.217944293-04:00", comments="Source Table: zfgbb.user_bio_info")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.user_bio_info")
     protected List<Criteria> oredCriteria;
 
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.user_bio_info")
     protected Integer limit;
 
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.user_bio_info")
     protected Integer offset;
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.217710851-04:00", comments="Source Table: zfgbb.user_bio_info")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.user_bio_info")
     public UserBioInfoDboExample() {
         oredCriteria = new ArrayList<>();
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.217814958-04:00", comments="Source Table: zfgbb.user_bio_info")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.user_bio_info")
     public void setOrderByClause(String orderByClause) {
         this.orderByClause = orderByClause;
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.217852546-04:00", comments="Source Table: zfgbb.user_bio_info")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.user_bio_info")
     public String getOrderByClause() {
         return orderByClause;
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.217890685-04:00", comments="Source Table: zfgbb.user_bio_info")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.user_bio_info")
     public void setDistinct(boolean distinct) {
         this.distinct = distinct;
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.217900995-04:00", comments="Source Table: zfgbb.user_bio_info")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.user_bio_info")
     public boolean isDistinct() {
         return distinct;
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.217962393-04:00", comments="Source Table: zfgbb.user_bio_info")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.user_bio_info")
     public List<Criteria> getOredCriteria() {
         return oredCriteria;
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.217971933-04:00", comments="Source Table: zfgbb.user_bio_info")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.user_bio_info")
     public void or(Criteria criteria) {
         oredCriteria.add(criteria);
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.217980042-04:00", comments="Source Table: zfgbb.user_bio_info")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.user_bio_info")
     public Criteria or() {
         Criteria criteria = createCriteriaInternal();
         oredCriteria.add(criteria);
         return criteria;
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.217987872-04:00", comments="Source Table: zfgbb.user_bio_info")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.user_bio_info")
     public Criteria createCriteria() {
         Criteria criteria = createCriteriaInternal();
         if (oredCriteria.size() == 0) {
@@ -71,36 +74,40 @@ public class UserBioInfoDboExample {
         return criteria;
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.217996222-04:00", comments="Source Table: zfgbb.user_bio_info")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.user_bio_info")
     protected Criteria createCriteriaInternal() {
         Criteria criteria = new Criteria();
         return criteria;
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.218003632-04:00", comments="Source Table: zfgbb.user_bio_info")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.user_bio_info")
     public void clear() {
         oredCriteria.clear();
         orderByClause = null;
         distinct = false;
     }
 
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.user_bio_info")
     public Integer getLimit() {
         return limit;
     }
 
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.user_bio_info")
     public void setLimit(Integer limit) {
         this.limit = limit;
     }
 
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.user_bio_info")
     public Integer getOffset() {
         return offset;
     }
 
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.user_bio_info")
     public void setOffset(Integer offset) {
         this.offset = offset;
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.218011861-04:00", comments="Source Table: zfgbb.user_bio_info")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.user_bio_info")
     protected abstract static class GeneratedCriteria {
         protected List<Criterion> criteria;
 
@@ -243,12 +250,12 @@ public class UserBioInfoDboExample {
         }
 
         public Criteria andCustomTitleLike(String value) {
-            addCriterion("custom_title like", value, "customTitle");
+            addCriterion("custom_title ilike", value, "customTitle");
             return (Criteria) this;
         }
 
         public Criteria andCustomTitleNotLike(String value) {
-            addCriterion("custom_title not like", value, "customTitle");
+            addCriterion("custom_title not ilike", value, "customTitle");
             return (Criteria) this;
         }
 
@@ -313,12 +320,12 @@ public class UserBioInfoDboExample {
         }
 
         public Criteria andPersonalTextLike(String value) {
-            addCriterion("personal_text like", value, "personalText");
+            addCriterion("personal_text ilike", value, "personalText");
             return (Criteria) this;
         }
 
         public Criteria andPersonalTextNotLike(String value) {
-            addCriterion("personal_text not like", value, "personalText");
+            addCriterion("personal_text not ilike", value, "personalText");
             return (Criteria) this;
         }
 
@@ -352,52 +359,52 @@ public class UserBioInfoDboExample {
             return (Criteria) this;
         }
 
-        public Criteria andCreatedTsEqualTo(LocalDateTime value) {
+        public Criteria andCreatedTsEqualTo(OffsetDateTime value) {
             addCriterion("created_ts =", value, "createdTs");
             return (Criteria) this;
         }
 
-        public Criteria andCreatedTsNotEqualTo(LocalDateTime value) {
+        public Criteria andCreatedTsNotEqualTo(OffsetDateTime value) {
             addCriterion("created_ts <>", value, "createdTs");
             return (Criteria) this;
         }
 
-        public Criteria andCreatedTsGreaterThan(LocalDateTime value) {
+        public Criteria andCreatedTsGreaterThan(OffsetDateTime value) {
             addCriterion("created_ts >", value, "createdTs");
             return (Criteria) this;
         }
 
-        public Criteria andCreatedTsGreaterThanOrEqualTo(LocalDateTime value) {
+        public Criteria andCreatedTsGreaterThanOrEqualTo(OffsetDateTime value) {
             addCriterion("created_ts >=", value, "createdTs");
             return (Criteria) this;
         }
 
-        public Criteria andCreatedTsLessThan(LocalDateTime value) {
+        public Criteria andCreatedTsLessThan(OffsetDateTime value) {
             addCriterion("created_ts <", value, "createdTs");
             return (Criteria) this;
         }
 
-        public Criteria andCreatedTsLessThanOrEqualTo(LocalDateTime value) {
+        public Criteria andCreatedTsLessThanOrEqualTo(OffsetDateTime value) {
             addCriterion("created_ts <=", value, "createdTs");
             return (Criteria) this;
         }
 
-        public Criteria andCreatedTsIn(List<LocalDateTime> values) {
+        public Criteria andCreatedTsIn(List<OffsetDateTime> values) {
             addCriterion("created_ts in", values, "createdTs");
             return (Criteria) this;
         }
 
-        public Criteria andCreatedTsNotIn(List<LocalDateTime> values) {
+        public Criteria andCreatedTsNotIn(List<OffsetDateTime> values) {
             addCriterion("created_ts not in", values, "createdTs");
             return (Criteria) this;
         }
 
-        public Criteria andCreatedTsBetween(LocalDateTime value1, LocalDateTime value2) {
+        public Criteria andCreatedTsBetween(OffsetDateTime value1, OffsetDateTime value2) {
             addCriterion("created_ts between", value1, value2, "createdTs");
             return (Criteria) this;
         }
 
-        public Criteria andCreatedTsNotBetween(LocalDateTime value1, LocalDateTime value2) {
+        public Criteria andCreatedTsNotBetween(OffsetDateTime value1, OffsetDateTime value2) {
             addCriterion("created_ts not between", value1, value2, "createdTs");
             return (Criteria) this;
         }
@@ -412,52 +419,52 @@ public class UserBioInfoDboExample {
             return (Criteria) this;
         }
 
-        public Criteria andUpdatedTsEqualTo(LocalDateTime value) {
+        public Criteria andUpdatedTsEqualTo(OffsetDateTime value) {
             addCriterion("updated_ts =", value, "updatedTs");
             return (Criteria) this;
         }
 
-        public Criteria andUpdatedTsNotEqualTo(LocalDateTime value) {
+        public Criteria andUpdatedTsNotEqualTo(OffsetDateTime value) {
             addCriterion("updated_ts <>", value, "updatedTs");
             return (Criteria) this;
         }
 
-        public Criteria andUpdatedTsGreaterThan(LocalDateTime value) {
+        public Criteria andUpdatedTsGreaterThan(OffsetDateTime value) {
             addCriterion("updated_ts >", value, "updatedTs");
             return (Criteria) this;
         }
 
-        public Criteria andUpdatedTsGreaterThanOrEqualTo(LocalDateTime value) {
+        public Criteria andUpdatedTsGreaterThanOrEqualTo(OffsetDateTime value) {
             addCriterion("updated_ts >=", value, "updatedTs");
             return (Criteria) this;
         }
 
-        public Criteria andUpdatedTsLessThan(LocalDateTime value) {
+        public Criteria andUpdatedTsLessThan(OffsetDateTime value) {
             addCriterion("updated_ts <", value, "updatedTs");
             return (Criteria) this;
         }
 
-        public Criteria andUpdatedTsLessThanOrEqualTo(LocalDateTime value) {
+        public Criteria andUpdatedTsLessThanOrEqualTo(OffsetDateTime value) {
             addCriterion("updated_ts <=", value, "updatedTs");
             return (Criteria) this;
         }
 
-        public Criteria andUpdatedTsIn(List<LocalDateTime> values) {
+        public Criteria andUpdatedTsIn(List<OffsetDateTime> values) {
             addCriterion("updated_ts in", values, "updatedTs");
             return (Criteria) this;
         }
 
-        public Criteria andUpdatedTsNotIn(List<LocalDateTime> values) {
+        public Criteria andUpdatedTsNotIn(List<OffsetDateTime> values) {
             addCriterion("updated_ts not in", values, "updatedTs");
             return (Criteria) this;
         }
 
-        public Criteria andUpdatedTsBetween(LocalDateTime value1, LocalDateTime value2) {
+        public Criteria andUpdatedTsBetween(OffsetDateTime value1, OffsetDateTime value2) {
             addCriterion("updated_ts between", value1, value2, "updatedTs");
             return (Criteria) this;
         }
 
-        public Criteria andUpdatedTsNotBetween(LocalDateTime value1, LocalDateTime value2) {
+        public Criteria andUpdatedTsNotBetween(OffsetDateTime value1, OffsetDateTime value2) {
             addCriterion("updated_ts not between", value1, value2, "updatedTs");
             return (Criteria) this;
         }
@@ -503,12 +510,12 @@ public class UserBioInfoDboExample {
         }
 
         public Criteria andSignatureLike(String value) {
-            addCriterion("signature like", value, "signature");
+            addCriterion("signature ilike", value, "signature");
             return (Criteria) this;
         }
 
         public Criteria andSignatureNotLike(String value) {
-            addCriterion("signature not like", value, "signature");
+            addCriterion("signature not ilike", value, "signature");
             return (Criteria) this;
         }
 
@@ -573,12 +580,12 @@ public class UserBioInfoDboExample {
         }
 
         public Criteria andMigrationHashLike(String value) {
-            addCriterion("migration_hash like", value, "migrationHash");
+            addCriterion("migration_hash ilike", value, "migrationHash");
             return (Criteria) this;
         }
 
         public Criteria andMigrationHashNotLike(String value) {
-            addCriterion("migration_hash not like", value, "migrationHash");
+            addCriterion("migration_hash not ilike", value, "migrationHash");
             return (Criteria) this;
         }
 
@@ -672,52 +679,52 @@ public class UserBioInfoDboExample {
             return (Criteria) this;
         }
 
-        public Criteria andDateRegisteredEqualTo(LocalDate value) {
+        public Criteria andDateRegisteredEqualTo(OffsetDateTime value) {
             addCriterion("date_registered =", value, "dateRegistered");
             return (Criteria) this;
         }
 
-        public Criteria andDateRegisteredNotEqualTo(LocalDate value) {
+        public Criteria andDateRegisteredNotEqualTo(OffsetDateTime value) {
             addCriterion("date_registered <>", value, "dateRegistered");
             return (Criteria) this;
         }
 
-        public Criteria andDateRegisteredGreaterThan(LocalDate value) {
+        public Criteria andDateRegisteredGreaterThan(OffsetDateTime value) {
             addCriterion("date_registered >", value, "dateRegistered");
             return (Criteria) this;
         }
 
-        public Criteria andDateRegisteredGreaterThanOrEqualTo(LocalDate value) {
+        public Criteria andDateRegisteredGreaterThanOrEqualTo(OffsetDateTime value) {
             addCriterion("date_registered >=", value, "dateRegistered");
             return (Criteria) this;
         }
 
-        public Criteria andDateRegisteredLessThan(LocalDate value) {
+        public Criteria andDateRegisteredLessThan(OffsetDateTime value) {
             addCriterion("date_registered <", value, "dateRegistered");
             return (Criteria) this;
         }
 
-        public Criteria andDateRegisteredLessThanOrEqualTo(LocalDate value) {
+        public Criteria andDateRegisteredLessThanOrEqualTo(OffsetDateTime value) {
             addCriterion("date_registered <=", value, "dateRegistered");
             return (Criteria) this;
         }
 
-        public Criteria andDateRegisteredIn(List<LocalDate> values) {
+        public Criteria andDateRegisteredIn(List<OffsetDateTime> values) {
             addCriterion("date_registered in", values, "dateRegistered");
             return (Criteria) this;
         }
 
-        public Criteria andDateRegisteredNotIn(List<LocalDate> values) {
+        public Criteria andDateRegisteredNotIn(List<OffsetDateTime> values) {
             addCriterion("date_registered not in", values, "dateRegistered");
             return (Criteria) this;
         }
 
-        public Criteria andDateRegisteredBetween(LocalDate value1, LocalDate value2) {
+        public Criteria andDateRegisteredBetween(OffsetDateTime value1, OffsetDateTime value2) {
             addCriterion("date_registered between", value1, value2, "dateRegistered");
             return (Criteria) this;
         }
 
-        public Criteria andDateRegisteredNotBetween(LocalDate value1, LocalDate value2) {
+        public Criteria andDateRegisteredNotBetween(OffsetDateTime value1, OffsetDateTime value2) {
             addCriterion("date_registered not between", value1, value2, "dateRegistered");
             return (Criteria) this;
         }
@@ -732,52 +739,52 @@ public class UserBioInfoDboExample {
             return (Criteria) this;
         }
 
-        public Criteria andLastLoginEqualTo(LocalDateTime value) {
+        public Criteria andLastLoginEqualTo(OffsetDateTime value) {
             addCriterion("last_login =", value, "lastLogin");
             return (Criteria) this;
         }
 
-        public Criteria andLastLoginNotEqualTo(LocalDateTime value) {
+        public Criteria andLastLoginNotEqualTo(OffsetDateTime value) {
             addCriterion("last_login <>", value, "lastLogin");
             return (Criteria) this;
         }
 
-        public Criteria andLastLoginGreaterThan(LocalDateTime value) {
+        public Criteria andLastLoginGreaterThan(OffsetDateTime value) {
             addCriterion("last_login >", value, "lastLogin");
             return (Criteria) this;
         }
 
-        public Criteria andLastLoginGreaterThanOrEqualTo(LocalDateTime value) {
+        public Criteria andLastLoginGreaterThanOrEqualTo(OffsetDateTime value) {
             addCriterion("last_login >=", value, "lastLogin");
             return (Criteria) this;
         }
 
-        public Criteria andLastLoginLessThan(LocalDateTime value) {
+        public Criteria andLastLoginLessThan(OffsetDateTime value) {
             addCriterion("last_login <", value, "lastLogin");
             return (Criteria) this;
         }
 
-        public Criteria andLastLoginLessThanOrEqualTo(LocalDateTime value) {
+        public Criteria andLastLoginLessThanOrEqualTo(OffsetDateTime value) {
             addCriterion("last_login <=", value, "lastLogin");
             return (Criteria) this;
         }
 
-        public Criteria andLastLoginIn(List<LocalDateTime> values) {
+        public Criteria andLastLoginIn(List<OffsetDateTime> values) {
             addCriterion("last_login in", values, "lastLogin");
             return (Criteria) this;
         }
 
-        public Criteria andLastLoginNotIn(List<LocalDateTime> values) {
+        public Criteria andLastLoginNotIn(List<OffsetDateTime> values) {
             addCriterion("last_login not in", values, "lastLogin");
             return (Criteria) this;
         }
 
-        public Criteria andLastLoginBetween(LocalDateTime value1, LocalDateTime value2) {
+        public Criteria andLastLoginBetween(OffsetDateTime value1, OffsetDateTime value2) {
             addCriterion("last_login between", value1, value2, "lastLogin");
             return (Criteria) this;
         }
 
-        public Criteria andLastLoginNotBetween(LocalDateTime value1, LocalDateTime value2) {
+        public Criteria andLastLoginNotBetween(OffsetDateTime value1, OffsetDateTime value2) {
             addCriterion("last_login not between", value1, value2, "lastLogin");
             return (Criteria) this;
         }
@@ -823,12 +830,12 @@ public class UserBioInfoDboExample {
         }
 
         public Criteria andRealNameLike(String value) {
-            addCriterion("real_name like", value, "realName");
+            addCriterion("real_name ilike", value, "realName");
             return (Criteria) this;
         }
 
         public Criteria andRealNameNotLike(String value) {
-            addCriterion("real_name not like", value, "realName");
+            addCriterion("real_name not ilike", value, "realName");
             return (Criteria) this;
         }
 
@@ -953,12 +960,12 @@ public class UserBioInfoDboExample {
         }
 
         public Criteria andWebsiteTitleLike(String value) {
-            addCriterion("website_title like", value, "websiteTitle");
+            addCriterion("website_title ilike", value, "websiteTitle");
             return (Criteria) this;
         }
 
         public Criteria andWebsiteTitleNotLike(String value) {
-            addCriterion("website_title not like", value, "websiteTitle");
+            addCriterion("website_title not ilike", value, "websiteTitle");
             return (Criteria) this;
         }
 
@@ -1023,12 +1030,12 @@ public class UserBioInfoDboExample {
         }
 
         public Criteria andWebsiteUrlLike(String value) {
-            addCriterion("website_url like", value, "websiteUrl");
+            addCriterion("website_url ilike", value, "websiteUrl");
             return (Criteria) this;
         }
 
         public Criteria andWebsiteUrlNotLike(String value) {
-            addCriterion("website_url not like", value, "websiteUrl");
+            addCriterion("website_url not ilike", value, "websiteUrl");
             return (Criteria) this;
         }
 
@@ -1093,12 +1100,12 @@ public class UserBioInfoDboExample {
         }
 
         public Criteria andLocationLike(String value) {
-            addCriterion("location like", value, "location");
+            addCriterion("location ilike", value, "location");
             return (Criteria) this;
         }
 
         public Criteria andLocationNotLike(String value) {
-            addCriterion("location not like", value, "location");
+            addCriterion("location not ilike", value, "location");
             return (Criteria) this;
         }
 
@@ -1163,12 +1170,12 @@ public class UserBioInfoDboExample {
         }
 
         public Criteria andTimeFormatLike(String value) {
-            addCriterion("time_format like", value, "timeFormat");
+            addCriterion("time_format ilike", value, "timeFormat");
             return (Criteria) this;
         }
 
         public Criteria andTimeFormatNotLike(String value) {
-            addCriterion("time_format not like", value, "timeFormat");
+            addCriterion("time_format not ilike", value, "timeFormat");
             return (Criteria) this;
         }
 
@@ -1533,12 +1540,12 @@ public class UserBioInfoDboExample {
         }
 
         public Criteria andPreferredTimezoneLike(String value) {
-            addCriterion("preferred_timezone like", value, "preferredTimezone");
+            addCriterion("preferred_timezone ilike", value, "preferredTimezone");
             return (Criteria) this;
         }
 
         public Criteria andPreferredTimezoneNotLike(String value) {
-            addCriterion("preferred_timezone not like", value, "preferredTimezone");
+            addCriterion("preferred_timezone not ilike", value, "preferredTimezone");
             return (Criteria) this;
         }
 
@@ -1561,16 +1568,66 @@ public class UserBioInfoDboExample {
             addCriterion("preferred_timezone not between", value1, value2, "preferredTimezone");
             return (Criteria) this;
         }
+
+        public Criteria andCustomTitleContains(String value) {
+            addCriterion("custom_title ilike", LikePatterns.contains(value), "customTitle");
+            return (Criteria) this;
+        }
+
+        public Criteria andPersonalTextContains(String value) {
+            addCriterion("personal_text ilike", LikePatterns.contains(value), "personalText");
+            return (Criteria) this;
+        }
+
+        public Criteria andSignatureContains(String value) {
+            addCriterion("signature ilike", LikePatterns.contains(value), "signature");
+            return (Criteria) this;
+        }
+
+        public Criteria andMigrationHashContains(String value) {
+            addCriterion("migration_hash ilike", LikePatterns.contains(value), "migrationHash");
+            return (Criteria) this;
+        }
+
+        public Criteria andRealNameContains(String value) {
+            addCriterion("real_name ilike", LikePatterns.contains(value), "realName");
+            return (Criteria) this;
+        }
+
+        public Criteria andWebsiteTitleContains(String value) {
+            addCriterion("website_title ilike", LikePatterns.contains(value), "websiteTitle");
+            return (Criteria) this;
+        }
+
+        public Criteria andWebsiteUrlContains(String value) {
+            addCriterion("website_url ilike", LikePatterns.contains(value), "websiteUrl");
+            return (Criteria) this;
+        }
+
+        public Criteria andLocationContains(String value) {
+            addCriterion("location ilike", LikePatterns.contains(value), "location");
+            return (Criteria) this;
+        }
+
+        public Criteria andTimeFormatContains(String value) {
+            addCriterion("time_format ilike", LikePatterns.contains(value), "timeFormat");
+            return (Criteria) this;
+        }
+
+        public Criteria andPreferredTimezoneContains(String value) {
+            addCriterion("preferred_timezone ilike", LikePatterns.contains(value), "preferredTimezone");
+            return (Criteria) this;
+        }
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.218846105-04:00", comments="do_not_delete_during_merge")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="do_not_delete_during_merge")
     public static class Criteria extends GeneratedCriteria {
         protected Criteria() {
             super();
         }
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.218867054-04:00", comments="Source Table: zfgbb.user_bio_info")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.user_bio_info")
     public static class Criterion {
         private String condition;
 

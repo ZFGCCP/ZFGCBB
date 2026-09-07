@@ -1,6 +1,6 @@
 package com.zfgc.zfgbb.model;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -49,11 +49,11 @@ public class User extends BaseModel implements UserDetails {
 	@JsonIgnore
 	private String passwordSalt;
 	@JsonIgnore
-	private LocalDateTime lockedUntilTs;
+	private OffsetDateTime lockedUntilTs;
 	@JsonIgnore
 	private Integer failedLoginCount;
 	@JsonIgnore
-	private LocalDateTime passwordChangedTs;
+	private OffsetDateTime passwordChangedTs;
 	private List<Permission> permissions = new ArrayList<>();
 	
 	private IpAddress currentIpAddress;
@@ -100,7 +100,7 @@ public class User extends BaseModel implements UserDetails {
 
 	@Override
 	public boolean isAccountNonLocked() {
-		return lockedUntilTs == null || lockedUntilTs.isBefore(LocalDateTime.now());
+		return lockedUntilTs == null || lockedUntilTs.isBefore(OffsetDateTime.now());
 	}
 
 	@Override

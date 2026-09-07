@@ -1,6 +1,6 @@
 package com.zfgc.zfgbb.model.forum;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 import com.zfgc.zfgbb.model.BaseModel;
 

@@ -1,42 +1,15 @@
 package com.zfgc.zfgbb.dao;
 
-import java.util.List;
-import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.zfgc.zfgbb.dao.AbstractDao;
 import com.zfgc.zfgbb.dbo.BoardDbo;
 import com.zfgc.zfgbb.dbo.BoardDboExample;
-import com.zfgc.zfgbb.mappers.BBCodeAttributeModeDboMapper;
 import com.zfgc.zfgbb.mappers.BoardDboMapper;
 
 @Repository
-public class BoardDao extends AbstractDao<BoardDboExample, BoardDboMapper, BoardDbo>{
+public class BoardDao extends IdentityDao<BoardDbo, BoardDboExample> {
 
-	@Autowired
-    public BoardDao(BoardDboMapper mapper) {
-        super(mapper);
-    }
-	
-	@Override
-	public Optional<BoardDbo> get(Integer id) {
-		return Optional.ofNullable(mapper.selectByPrimaryKey(id));
-	}
-
-	@Override
-	protected void update(BoardDbo toSave) {
-		mapper.updateByPrimaryKey(toSave);
-	}
-
-	@Override
-	protected void create(BoardDbo toCreate) {
-		mapper.insert(toCreate);
-	}
-
-	@Override
-	public List<BoardDbo> get(BoardDboExample ex) {
-		return mapper.selectByExample(ex);
+	public BoardDao(BoardDboMapper mapper) {
+		super(mapper);
 	}
 }

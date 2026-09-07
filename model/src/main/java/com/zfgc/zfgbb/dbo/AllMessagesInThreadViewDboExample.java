@@ -1,67 +1,70 @@
 package com.zfgc.zfgbb.dbo;
 
+import com.zfgc.zfgbb.persistence.LikePatterns;
 import jakarta.annotation.Generated;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public class AllMessagesInThreadViewDboExample {
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.261092724-04:00", comments="Source Table: zfgbb.all_messages_in_thread_view")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.all_messages_in_thread_view")
     protected String orderByClause;
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.261104954-04:00", comments="Source Table: zfgbb.all_messages_in_thread_view")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.all_messages_in_thread_view")
     protected boolean distinct;
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.261124053-04:00", comments="Source Table: zfgbb.all_messages_in_thread_view")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.all_messages_in_thread_view")
     protected List<Criteria> oredCriteria;
 
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.all_messages_in_thread_view")
     protected Integer limit;
 
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.all_messages_in_thread_view")
     protected Integer offset;
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.261077795-04:00", comments="Source Table: zfgbb.all_messages_in_thread_view")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.all_messages_in_thread_view")
     public AllMessagesInThreadViewDboExample() {
         oredCriteria = new ArrayList<>();
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.261097824-04:00", comments="Source Table: zfgbb.all_messages_in_thread_view")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.all_messages_in_thread_view")
     public void setOrderByClause(String orderByClause) {
         this.orderByClause = orderByClause;
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.261102104-04:00", comments="Source Table: zfgbb.all_messages_in_thread_view")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.all_messages_in_thread_view")
     public String getOrderByClause() {
         return orderByClause;
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.261108994-04:00", comments="Source Table: zfgbb.all_messages_in_thread_view")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.all_messages_in_thread_view")
     public void setDistinct(boolean distinct) {
         this.distinct = distinct;
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.261113973-04:00", comments="Source Table: zfgbb.all_messages_in_thread_view")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.all_messages_in_thread_view")
     public boolean isDistinct() {
         return distinct;
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.261132573-04:00", comments="Source Table: zfgbb.all_messages_in_thread_view")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.all_messages_in_thread_view")
     public List<Criteria> getOredCriteria() {
         return oredCriteria;
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.261140883-04:00", comments="Source Table: zfgbb.all_messages_in_thread_view")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.all_messages_in_thread_view")
     public void or(Criteria criteria) {
         oredCriteria.add(criteria);
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.261149472-04:00", comments="Source Table: zfgbb.all_messages_in_thread_view")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.all_messages_in_thread_view")
     public Criteria or() {
         Criteria criteria = createCriteriaInternal();
         oredCriteria.add(criteria);
         return criteria;
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.261157632-04:00", comments="Source Table: zfgbb.all_messages_in_thread_view")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.all_messages_in_thread_view")
     public Criteria createCriteria() {
         Criteria criteria = createCriteriaInternal();
         if (oredCriteria.size() == 0) {
@@ -70,36 +73,40 @@ public class AllMessagesInThreadViewDboExample {
         return criteria;
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.261165562-04:00", comments="Source Table: zfgbb.all_messages_in_thread_view")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.all_messages_in_thread_view")
     protected Criteria createCriteriaInternal() {
         Criteria criteria = new Criteria();
         return criteria;
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.261173422-04:00", comments="Source Table: zfgbb.all_messages_in_thread_view")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.all_messages_in_thread_view")
     public void clear() {
         oredCriteria.clear();
         orderByClause = null;
         distinct = false;
     }
 
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.all_messages_in_thread_view")
     public Integer getLimit() {
         return limit;
     }
 
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.all_messages_in_thread_view")
     public void setLimit(Integer limit) {
         this.limit = limit;
     }
 
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.all_messages_in_thread_view")
     public Integer getOffset() {
         return offset;
     }
 
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.all_messages_in_thread_view")
     public void setOffset(Integer offset) {
         this.offset = offset;
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.261183751-04:00", comments="Source Table: zfgbb.all_messages_in_thread_view")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.all_messages_in_thread_view")
     protected abstract static class GeneratedCriteria {
         protected List<Criterion> criteria;
 
@@ -242,12 +249,12 @@ public class AllMessagesInThreadViewDboExample {
         }
 
         public Criteria andThreadNameLike(String value) {
-            addCriterion("thread_name like", value, "threadName");
+            addCriterion("thread_name ilike", value, "threadName");
             return (Criteria) this;
         }
 
         public Criteria andThreadNameNotLike(String value) {
-            addCriterion("thread_name not like", value, "threadName");
+            addCriterion("thread_name not ilike", value, "threadName");
             return (Criteria) this;
         }
 
@@ -401,52 +408,52 @@ public class AllMessagesInThreadViewDboExample {
             return (Criteria) this;
         }
 
-        public Criteria andCreatedTsEqualTo(LocalDateTime value) {
+        public Criteria andCreatedTsEqualTo(OffsetDateTime value) {
             addCriterion("created_ts =", value, "createdTs");
             return (Criteria) this;
         }
 
-        public Criteria andCreatedTsNotEqualTo(LocalDateTime value) {
+        public Criteria andCreatedTsNotEqualTo(OffsetDateTime value) {
             addCriterion("created_ts <>", value, "createdTs");
             return (Criteria) this;
         }
 
-        public Criteria andCreatedTsGreaterThan(LocalDateTime value) {
+        public Criteria andCreatedTsGreaterThan(OffsetDateTime value) {
             addCriterion("created_ts >", value, "createdTs");
             return (Criteria) this;
         }
 
-        public Criteria andCreatedTsGreaterThanOrEqualTo(LocalDateTime value) {
+        public Criteria andCreatedTsGreaterThanOrEqualTo(OffsetDateTime value) {
             addCriterion("created_ts >=", value, "createdTs");
             return (Criteria) this;
         }
 
-        public Criteria andCreatedTsLessThan(LocalDateTime value) {
+        public Criteria andCreatedTsLessThan(OffsetDateTime value) {
             addCriterion("created_ts <", value, "createdTs");
             return (Criteria) this;
         }
 
-        public Criteria andCreatedTsLessThanOrEqualTo(LocalDateTime value) {
+        public Criteria andCreatedTsLessThanOrEqualTo(OffsetDateTime value) {
             addCriterion("created_ts <=", value, "createdTs");
             return (Criteria) this;
         }
 
-        public Criteria andCreatedTsIn(List<LocalDateTime> values) {
+        public Criteria andCreatedTsIn(List<OffsetDateTime> values) {
             addCriterion("created_ts in", values, "createdTs");
             return (Criteria) this;
         }
 
-        public Criteria andCreatedTsNotIn(List<LocalDateTime> values) {
+        public Criteria andCreatedTsNotIn(List<OffsetDateTime> values) {
             addCriterion("created_ts not in", values, "createdTs");
             return (Criteria) this;
         }
 
-        public Criteria andCreatedTsBetween(LocalDateTime value1, LocalDateTime value2) {
+        public Criteria andCreatedTsBetween(OffsetDateTime value1, OffsetDateTime value2) {
             addCriterion("created_ts between", value1, value2, "createdTs");
             return (Criteria) this;
         }
 
-        public Criteria andCreatedTsNotBetween(LocalDateTime value1, LocalDateTime value2) {
+        public Criteria andCreatedTsNotBetween(OffsetDateTime value1, OffsetDateTime value2) {
             addCriterion("created_ts not between", value1, value2, "createdTs");
             return (Criteria) this;
         }
@@ -461,52 +468,52 @@ public class AllMessagesInThreadViewDboExample {
             return (Criteria) this;
         }
 
-        public Criteria andUpdatedTsEqualTo(LocalDateTime value) {
+        public Criteria andUpdatedTsEqualTo(OffsetDateTime value) {
             addCriterion("updated_ts =", value, "updatedTs");
             return (Criteria) this;
         }
 
-        public Criteria andUpdatedTsNotEqualTo(LocalDateTime value) {
+        public Criteria andUpdatedTsNotEqualTo(OffsetDateTime value) {
             addCriterion("updated_ts <>", value, "updatedTs");
             return (Criteria) this;
         }
 
-        public Criteria andUpdatedTsGreaterThan(LocalDateTime value) {
+        public Criteria andUpdatedTsGreaterThan(OffsetDateTime value) {
             addCriterion("updated_ts >", value, "updatedTs");
             return (Criteria) this;
         }
 
-        public Criteria andUpdatedTsGreaterThanOrEqualTo(LocalDateTime value) {
+        public Criteria andUpdatedTsGreaterThanOrEqualTo(OffsetDateTime value) {
             addCriterion("updated_ts >=", value, "updatedTs");
             return (Criteria) this;
         }
 
-        public Criteria andUpdatedTsLessThan(LocalDateTime value) {
+        public Criteria andUpdatedTsLessThan(OffsetDateTime value) {
             addCriterion("updated_ts <", value, "updatedTs");
             return (Criteria) this;
         }
 
-        public Criteria andUpdatedTsLessThanOrEqualTo(LocalDateTime value) {
+        public Criteria andUpdatedTsLessThanOrEqualTo(OffsetDateTime value) {
             addCriterion("updated_ts <=", value, "updatedTs");
             return (Criteria) this;
         }
 
-        public Criteria andUpdatedTsIn(List<LocalDateTime> values) {
+        public Criteria andUpdatedTsIn(List<OffsetDateTime> values) {
             addCriterion("updated_ts in", values, "updatedTs");
             return (Criteria) this;
         }
 
-        public Criteria andUpdatedTsNotIn(List<LocalDateTime> values) {
+        public Criteria andUpdatedTsNotIn(List<OffsetDateTime> values) {
             addCriterion("updated_ts not in", values, "updatedTs");
             return (Criteria) this;
         }
 
-        public Criteria andUpdatedTsBetween(LocalDateTime value1, LocalDateTime value2) {
+        public Criteria andUpdatedTsBetween(OffsetDateTime value1, OffsetDateTime value2) {
             addCriterion("updated_ts between", value1, value2, "updatedTs");
             return (Criteria) this;
         }
 
-        public Criteria andUpdatedTsNotBetween(LocalDateTime value1, LocalDateTime value2) {
+        public Criteria andUpdatedTsNotBetween(OffsetDateTime value1, OffsetDateTime value2) {
             addCriterion("updated_ts not between", value1, value2, "updatedTs");
             return (Criteria) this;
         }
@@ -852,12 +859,12 @@ public class AllMessagesInThreadViewDboExample {
         }
 
         public Criteria andLastPostedUserLike(String value) {
-            addCriterion("last_posted_user like", value, "lastPostedUser");
+            addCriterion("last_posted_user ilike", value, "lastPostedUser");
             return (Criteria) this;
         }
 
         public Criteria andLastPostedUserNotLike(String value) {
-            addCriterion("last_posted_user not like", value, "lastPostedUser");
+            addCriterion("last_posted_user not ilike", value, "lastPostedUser");
             return (Criteria) this;
         }
 
@@ -891,52 +898,52 @@ public class AllMessagesInThreadViewDboExample {
             return (Criteria) this;
         }
 
-        public Criteria andPostTsEqualTo(LocalDateTime value) {
+        public Criteria andPostTsEqualTo(OffsetDateTime value) {
             addCriterion("post_ts =", value, "postTs");
             return (Criteria) this;
         }
 
-        public Criteria andPostTsNotEqualTo(LocalDateTime value) {
+        public Criteria andPostTsNotEqualTo(OffsetDateTime value) {
             addCriterion("post_ts <>", value, "postTs");
             return (Criteria) this;
         }
 
-        public Criteria andPostTsGreaterThan(LocalDateTime value) {
+        public Criteria andPostTsGreaterThan(OffsetDateTime value) {
             addCriterion("post_ts >", value, "postTs");
             return (Criteria) this;
         }
 
-        public Criteria andPostTsGreaterThanOrEqualTo(LocalDateTime value) {
+        public Criteria andPostTsGreaterThanOrEqualTo(OffsetDateTime value) {
             addCriterion("post_ts >=", value, "postTs");
             return (Criteria) this;
         }
 
-        public Criteria andPostTsLessThan(LocalDateTime value) {
+        public Criteria andPostTsLessThan(OffsetDateTime value) {
             addCriterion("post_ts <", value, "postTs");
             return (Criteria) this;
         }
 
-        public Criteria andPostTsLessThanOrEqualTo(LocalDateTime value) {
+        public Criteria andPostTsLessThanOrEqualTo(OffsetDateTime value) {
             addCriterion("post_ts <=", value, "postTs");
             return (Criteria) this;
         }
 
-        public Criteria andPostTsIn(List<LocalDateTime> values) {
+        public Criteria andPostTsIn(List<OffsetDateTime> values) {
             addCriterion("post_ts in", values, "postTs");
             return (Criteria) this;
         }
 
-        public Criteria andPostTsNotIn(List<LocalDateTime> values) {
+        public Criteria andPostTsNotIn(List<OffsetDateTime> values) {
             addCriterion("post_ts not in", values, "postTs");
             return (Criteria) this;
         }
 
-        public Criteria andPostTsBetween(LocalDateTime value1, LocalDateTime value2) {
+        public Criteria andPostTsBetween(OffsetDateTime value1, OffsetDateTime value2) {
             addCriterion("post_ts between", value1, value2, "postTs");
             return (Criteria) this;
         }
 
-        public Criteria andPostTsNotBetween(LocalDateTime value1, LocalDateTime value2) {
+        public Criteria andPostTsNotBetween(OffsetDateTime value1, OffsetDateTime value2) {
             addCriterion("post_ts not between", value1, value2, "postTs");
             return (Criteria) this;
         }
@@ -1000,16 +1007,26 @@ public class AllMessagesInThreadViewDboExample {
             addCriterion("post_in_thread not between", value1, value2, "postInThread");
             return (Criteria) this;
         }
+
+        public Criteria andThreadNameContains(String value) {
+            addCriterion("thread_name ilike", LikePatterns.contains(value), "threadName");
+            return (Criteria) this;
+        }
+
+        public Criteria andLastPostedUserContains(String value) {
+            addCriterion("last_posted_user ilike", LikePatterns.contains(value), "lastPostedUser");
+            return (Criteria) this;
+        }
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.262111352-04:00", comments="do_not_delete_during_merge")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="do_not_delete_during_merge")
     public static class Criteria extends GeneratedCriteria {
         protected Criteria() {
             super();
         }
     }
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", date="2026-05-05T08:54:46.262125571-04:00", comments="Source Table: zfgbb.all_messages_in_thread_view")
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source Table: zfgbb.all_messages_in_thread_view")
     public static class Criterion {
         private String condition;
 

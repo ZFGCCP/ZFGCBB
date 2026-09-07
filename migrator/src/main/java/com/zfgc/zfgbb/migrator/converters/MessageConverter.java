@@ -1,6 +1,6 @@
 package com.zfgc.zfgbb.migrator.converters;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -104,7 +104,7 @@ public class MessageConverter extends AbstractConverter<Void> {
 		msg.setPostInThread(postInThreadCounters.get(smfMsg.getIdTopic()).getAndIncrement());
 		msg.setCreatedTs(SmfTimes.fromEpochSeconds(smfMsg.getPosterTime()));
 
-		LocalDateTime updatedTime = SmfTimes.fromEpochSeconds(smfMsg.getModifiedTime());
+		OffsetDateTime updatedTime = SmfTimes.fromEpochSeconds(smfMsg.getModifiedTime());
 		msg.setUpdatedTs(updatedTime != null ? updatedTime : msg.getCreatedTs());
 
 		msg.setMigrationHash(MigrationHasher.hash(smfMsg.getIdMsg().toString()

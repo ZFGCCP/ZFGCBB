@@ -35,7 +35,6 @@
 
     <mapstruct.version>1.7.0.Beta2</mapstruct.version>
     <lombok.version>1.18.46</lombok.version>
-    <modelmapper.version>3.2.6</modelmapper.version>
     <commons-lang3.version>3.20.0</commons-lang3.version>
     <guava.version>33.7.1-jre</guava.version>
     <mybatis-spring-boot.version>4.1.0</mybatis-spring-boot.version>
@@ -103,12 +102,6 @@
       </dependency>
 
       <dependency>
-        <groupId>org.modelmapper</groupId>
-        <artifactId>modelmapper</artifactId>
-        <version>${modelmapper.version}</version>
-      </dependency>
-
-      <dependency>
         <groupId>org.mapstruct</groupId>
         <artifactId>mapstruct</artifactId>
         <version>${mapstruct.version}</version>
@@ -149,6 +142,14 @@
   <build>
     <pluginManagement>
       <plugins>
+        <plugin>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-maven-plugin</artifactId>
+          <configuration>
+            <skip>true</skip>
+          </configuration>
+        </plugin>
+
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>properties-maven-plugin</artifactId>

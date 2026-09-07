@@ -1,6 +1,8 @@
 package com.zfgc.zfgbb.mbg;
 
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.mybatis.generator.api.IntrospectedColumn;
 import org.mybatis.generator.api.IntrospectedTable;
@@ -13,7 +15,10 @@ import org.mybatis.generator.api.dom.java.TopLevelClass;
 public class DboOverridesPlugin extends PluginAdapter {
 
 	private static final FullyQualifiedJavaType INTEGER = new FullyQualifiedJavaType("java.lang.Integer");
-	private static final FullyQualifiedJavaType LOCAL_DATE_TIME = new FullyQualifiedJavaType("java.time.LocalDateTime");
+	private static final FullyQualifiedJavaType OFFSET_DATE_TIME = new FullyQualifiedJavaType(
+			"java.time.OffsetDateTime");
+	private static final FullyQualifiedJavaType ABSTRACT_DBO = new FullyQualifiedJavaType(
+			"com.zfgc.zfgbb.dbo.AbstractDbo");
 
 	@Override
 	public boolean validate(List<String> warnings) {
@@ -22,18 +27,24 @@ public class DboOverridesPlugin extends PluginAdapter {
 
 	@Override
 	public boolean modelBaseRecordClassGenerated(TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
-		topLevelClass.addMethod(buildPkIdOverride(introspectedTable));
-		topLevelClass.addImportedType(LOCAL_DATE_TIME);
-		topLevelClass.addMethod(buildTimestampOverride(introspectedTable, "created_ts", "getCreatedTime", "createdTs"));
-		topLevelClass.addMethod(buildTimestampOverride(introspectedTable, "updated_ts", "getUpdatedTime", "updatedTs"));
+		topLevelClass.setSuperClass(ABSTRACT_DBO);
+		topLevelClass.addMethod(buildPkIdOverride(introspectedTable, topLevelClass));
+		topLevelClass.addImportedType(OFFSET_DATE_TIME);
+		topLevelClass.addMethod(
+				buildTimestampOverride(introspectedTable, topLevelClass, "created_ts", "getCreatedTime", "createdTs"));
+		topLevelClass.addMethod(
+				buildTimestampOverride(introspectedTable, topLevelClass, "updated_ts", "getUpdatedTime", "updatedTs"));
 		return true;
 	}
 
-	private Method buildPkIdOverride(IntrospectedTable table) {
+	private Method buildPkIdOverride(IntrospectedTable table, TopLevelClass topLevelClass) {
 		Method m = new Method("getPkId");
 		m.setVisibility(JavaVisibility.PUBLIC);
 		m.setReturnType(INTEGER);
 		m.addAnnotation("@Override");
+		Set<FullyQualifiedJavaType> importedTypes = new TreeSet<>();
+		commentGenerator.addGeneralMethodAnnotation(m, table, importedTypes);
+		topLevelClass.addImportedTypes(importedTypes);
 
 		List<IntrospectedColumn> pks = table.getPrimaryKeyColumns();
 		if (pks.isEmpty()) {
@@ -41,10 +52,7 @@ public class DboOverridesPlugin extends PluginAdapter {
 		} else {
 			IntrospectedColumn pk = pks.get(0);
 			String pkJavaType = pk.getFullyQualifiedJavaType().getFullyQualifiedName();
-			// Single-column Integer PK is the convention. Tables with a non-Integer
-			// PK (e.g. system_config keyed by text) get null here -- they don't go
-			// through AbstractDao.save anyway.
-			if ("java.lang.Integer".equals(pkJavaType)) {
+			if (java.lang.Integer.class.getName().equals(pkJavaType)) {
 				m.addBodyLine("return " + pk.getJavaProperty() + ";");
 			} else {
 				m.addBodyLine("return null;");
@@ -53,12 +61,16 @@ public class DboOverridesPlugin extends PluginAdapter {
 		return m;
 	}
 
-	private Method buildTimestampOverride(IntrospectedTable table, String columnName, String methodName,
+	private Method buildTimestampOverride(IntrospectedTable table, TopLevelClass topLevelClass, String columnName,
+			String methodName,
 			String fieldName) {
 		Method m = new Method(methodName);
 		m.setVisibility(JavaVisibility.PUBLIC);
-		m.setReturnType(LOCAL_DATE_TIME);
+		m.setReturnType(OFFSET_DATE_TIME);
 		m.addAnnotation("@Override");
+		Set<FullyQualifiedJavaType> importedTypes = new TreeSet<>();
+		commentGenerator.addGeneralMethodAnnotation(m, table, importedTypes);
+		topLevelClass.addImportedTypes(importedTypes);
 
 		boolean hasColumn = table.getAllColumns().stream()
 				.anyMatch(c -> columnName.equalsIgnoreCase(c.getActualColumnName()));

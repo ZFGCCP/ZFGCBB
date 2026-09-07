@@ -28,6 +28,7 @@ import com.zfgc.zfgbb.dbo.MessageDbo;
 import com.zfgc.zfgbb.dbo.MessageDboExample;
 import com.zfgc.zfgbb.dbo.MessageHistoryDbo;
 import com.zfgc.zfgbb.dbo.MessageHistoryDboExample;
+import com.zfgc.zfgbb.exception.ZfgcNotFoundException;
 import com.zfgc.zfgbb.mappers.ContentResourceDboMapper;
 import com.zfgc.zfgbb.mappers.MessageDboMapper;
 import com.zfgc.zfgbb.mapstruct.forum.MessageMap;
@@ -60,7 +61,7 @@ public class MessageDataProvider extends AbstractDataProvider {
 	private MessageMap messageMap;
 	
 	public Message getMessage(Integer messageId) {
-		Message message = mapper.map(messageDao.get(messageId), Message.class);
+		Message message = map(messageDao.find(messageId).orElseThrow(ZfgcNotFoundException::new), Message.class);
 		MessageHistoryDboExample ex = new MessageHistoryDboExample();
 		ex.createCriteria().andMessageIdEqualTo(messageId).andCurrentFlagEqualTo(true);
 		List<MessageHistory> history = super.convertDboListToModel(messageHistoryDao.get(ex), MessageHistory.class);
@@ -70,13 +71,13 @@ public class MessageDataProvider extends AbstractDataProvider {
 	}
 	
 	public Message saveMessage(Message message) {
-		MessageDbo messageDbo = mapper.map(message, MessageDbo.class);
+		MessageDbo messageDbo = map(message, MessageDbo.class);
 		
 		messageDbo = messageDao.save(messageDbo);
 		
 		MessageHistory history = message.getCurrentMessage();
 		history.setMessageId(messageDbo.getMessageId());
-		MessageHistoryDbo historyDbo = mapper.map(history, MessageHistoryDbo.class);
+		MessageHistoryDbo historyDbo = map(history, MessageHistoryDbo.class);
 		historyDbo.setMessageText(history.getUnparsedText());
 		// New history rows are always the current revision; the older revision (if any)
 		// will be flipped to false when an edit comes in. Default here so the caller
@@ -86,8 +87,8 @@ public class MessageDataProvider extends AbstractDataProvider {
 		}
 		historyDbo = messageHistoryDao.save(historyDbo);
 		
-		Message result = mapper.map(messageDbo, Message.class);
-		result.setCurrentMessage(mapper.map(historyDbo, MessageHistory.class));
+		Message result = map(messageDbo, Message.class);
+		result.setCurrentMessage(map(historyDbo, MessageHistory.class));
 		
 		return result;
 	}
@@ -146,7 +147,7 @@ public class MessageDataProvider extends AbstractDataProvider {
 	
 	private Message mapMessage(CurrentMessageDbo msgDbo){
 		 
-		 MessageHistory hist = mapper.map(msgDbo, MessageHistory.class);
+		 MessageHistory hist = map(msgDbo, MessageHistory.class);
 		 hist.setUnparsedText(hist.getMessageText());
 		 
 		 User createdUser = userDataProvider.findUser(msgDbo.getOwnerId())
@@ -164,16 +165,16 @@ public class MessageDataProvider extends AbstractDataProvider {
 		Preconditions.checkNotNull(threadId, "threadId cannot be null.");
 		//ensure we have the right thread set
 		message.setThreadId(threadId);
-		MessageDbo db = mapper.map(message, MessageDbo.class);
+		MessageDbo db = map(message, MessageDbo.class);
 		
 		//insert a message history record
-		MessageHistoryDbo histDb = mapper.map(message.getCurrentMessage(), 
+		MessageHistoryDbo histDb = map(message.getCurrentMessage(), 
 											  MessageHistoryDbo.class);
 		
 		histDb = messageHistoryDao.save(histDb);
 		
-		Message result = mapper.map(messageDao.save(db), Message.class);
-		result.setCurrentMessage(mapper.map(histDb, MessageHistory.class));
+		Message result = map(messageDao.save(db), Message.class);
+		result.setCurrentMessage(map(histDb, MessageHistory.class));
 		
 		return result;
 	}
@@ -182,7 +183,7 @@ public class MessageDataProvider extends AbstractDataProvider {
 		Preconditions.checkNotNull(message, "message cannot be null.");
 		Preconditions.checkNotNull(message.getCurrentMessage(), "message history cannot be null.");
 		
-		MessageHistoryDbo histDb = mapper.map(message, MessageHistoryDbo.class);
+		MessageHistoryDbo histDb = map(message, MessageHistoryDbo.class);
 		messageHistoryDao.save(histDb);
 		
 		return getMessage(message.getMessageId());
@@ -197,8 +198,8 @@ public class MessageDataProvider extends AbstractDataProvider {
 		MessageHistoryDboExample hEx = new MessageHistoryDboExample();
 		hEx.createCriteria().andMessageIdIn(messageIds);
 		
-		messageHistoryDao.delete(hEx);
-		messageDao.delete(ex);
+		messageHistoryDao.deleteWhere(hEx);
+		messageDao.deleteWhere(ex);
 	}
 	
 	public void moveMessagesToNewThread(List<Integer> messageIds, Integer newThreadId) {
@@ -215,7 +216,7 @@ public class MessageDataProvider extends AbstractDataProvider {
 	public Long getTotalPostsInThread(Integer threadId) {
 		MessageDboExample ex = new MessageDboExample();
 		ex.createCriteria().andThreadIdEqualTo(threadId);
-		Long count = messageDao.getMapper().countByExample(ex);
+		Long count = messageDao.count(ex);
 		
 		return count;
 	}

@@ -1,6 +1,7 @@
 package com.zfgc.zfgbb.model.users;
 
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -34,8 +35,8 @@ public class UserBioInfo extends BaseModel {
 	private String location;
 	
 	private String birthDate;
-	private String lastLogin;
-	private String dateRegistered;
+	private OffsetDateTime lastLogin;
+	private OffsetDateTime dateRegistered;
 	private String dateFormat;
 	private String timeFormat;
 	private String preferredTimezone;
