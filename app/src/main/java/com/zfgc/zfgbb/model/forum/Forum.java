@@ -6,7 +6,7 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.zfgc.zfgbb.model.BaseModel;
 import com.zfgc.zfgbb.model.users.Permission;
-import com.zfgc.zfgbb.security.Securable;
+import com.zfgc.zfgbb.model.Securable;
 
 public class Forum extends BaseModel implements Securable{
 

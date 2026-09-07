@@ -12,7 +12,6 @@ import java.util.stream.Stream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.zfgc.zfgbb.dbo.ContentResourceDbo;
@@ -23,8 +22,10 @@ import com.zfgc.zfgbb.migrator.jobs.JobType;
 import com.zfgc.zfgbb.migrator.smf.dbo.SMFAttachmentsDb;
 import com.zfgc.zfgbb.migrator.smf.dbo.SMFAttachmentsDbExample;
 import com.zfgc.zfgbb.migrator.smf.mappers.SMFAttachmentsDbMapper;
+import lombok.RequiredArgsConstructor;
 
 @Component
+@RequiredArgsConstructor
 public class AttachmentFilesConverter extends AbstractConverter<Void> {
 
 	@Override
@@ -34,11 +35,9 @@ public class AttachmentFilesConverter extends AbstractConverter<Void> {
 
 	private static final Logger logger = LoggerFactory.getLogger(AttachmentFilesConverter.class);
 
-	@Autowired
-	private SMFAttachmentsDbMapper smfAttachmentsMapper;
+	private final SMFAttachmentsDbMapper smfAttachmentsMapper;
 
-	@Autowired
-	private ContentResourceDboMapper contentResourceMapper;
+	private final ContentResourceDboMapper contentResourceMapper;
 
 	@Override
 	public Void convertToZfgbb() throws IOException {

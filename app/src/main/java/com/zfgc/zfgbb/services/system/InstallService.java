@@ -7,7 +7,6 @@ import javax.sql.DataSource;
 import org.apache.commons.lang3.StringUtils;
 import org.flywaydb.core.Flyway;
 import org.flywaydb.core.api.MigrationVersion;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,12 +14,12 @@ import org.springframework.transaction.annotation.Transactional;
 import com.zfgc.zfgbb.dao.users.BrUserPermissionDao;
 import com.zfgc.zfgbb.dbo.BrUserPermissionDbo;
 import com.zfgc.zfgbb.exception.ZfgcInvalidRequestException;
-import com.zfgc.zfgbb.model.User;
 import com.zfgc.zfgbb.model.system.InstallRequest;
 import com.zfgc.zfgbb.model.system.InstallResponse;
 import com.zfgc.zfgbb.model.system.InstallResult;
 import com.zfgc.zfgbb.model.users.RegistrationRequest;
-import com.zfgc.zfgbb.services.core.UserService;
+import com.zfgc.zfgbb.model.users.User;
+import com.zfgc.zfgbb.services.users.UserRegistrationService;
 
 @Service
 public class InstallService {
@@ -28,17 +27,16 @@ public class InstallService {
 	public static final Integer ZFGC_SITE_ADMIN_PERMISSION_ID = 10;
 
 	private final SystemConfigService systemConfigService;
-	private final UserService userService;
+	private final UserRegistrationService userRegistrationService;
 	private final BrUserPermissionDao brUserPermissionDao;
 	private final DataSource dataSource;
 
-	@Autowired
 	public InstallService(SystemConfigService systemConfigService,
-			UserService userService,
+			UserRegistrationService userRegistrationService,
 			BrUserPermissionDao brUserPermissionDao,
 			DataSource dataSource) {
 		this.systemConfigService = systemConfigService;
-		this.userService = userService;
+		this.userRegistrationService = userRegistrationService;
 		this.brUserPermissionDao = brUserPermissionDao;
 		this.dataSource = dataSource;
 	}
@@ -66,14 +64,12 @@ public class InstallService {
 
 	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	protected User installCore(InstallRequest req) {
-		// UserService validates the registration fields for us (username regex,
-		// email format, password length). Reuse to avoid drift.
 		RegistrationRequest reg = new RegistrationRequest(
 				req.adminUserName(),
 				req.adminDisplayName(),
 				req.adminEmail(),
 				req.adminPassword());
-		User admin = userService.createNewUser(reg);
+		User admin = userRegistrationService.createNewUser(reg);
 
 		// createNewUser grants ZFGC_USER; the install endpoint also grants
 		// ZFGC_SITE_ADMIN.

@@ -2,7 +2,6 @@ package com.zfgc.zfgbb.controller.forum;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,16 +16,19 @@ import com.zfgc.zfgbb.controller.BaseController;
 import com.zfgc.zfgbb.model.forum.Message;
 import com.zfgc.zfgbb.model.forum.Thread;
 import com.zfgc.zfgbb.services.forum.ForumService;
+import com.zfgc.zfgbb.authorization.AllowAnonymous;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/message")
+@RequiredArgsConstructor
 public class MessageController extends BaseController {
 	
-	@Autowired
-	private ForumService forumService;
+	private final ForumService forumService;
 	
 	@GetMapping("/template")
 	//@PreAuthorize("hasRole('ROLE_ZFGC_THREAD_CREATOR')")
+	@AllowAnonymous
 	public ResponseEntity getMessageTemplate(@RequestParam("threadId") Integer threadId) {
 		Message template = forumService.getMessageTemplate(null, threadId, null, super.zfgcUser());
 		return ResponseEntity.ok(template);
@@ -39,8 +41,11 @@ public class MessageController extends BaseController {
 	}
 	
 	@GetMapping("/user/{userId}")
-	public List<Message> getMessagesByUser(@PathVariable Integer userId) {
-		return forumService.getMessagesByUserId(userId, null, null);
+	@AllowAnonymous
+	public List<Message> getMessagesByUser(@PathVariable Integer userId,
+			@RequestParam(name = "page", required = false) Integer page,
+			@RequestParam(name = "pageSize", required = false) Integer pageSize) {
+		return forumService.getMessagesByUserId(userId, page, pageSize, super.zfgcUser().permissionIds());
 	}
 	
 }

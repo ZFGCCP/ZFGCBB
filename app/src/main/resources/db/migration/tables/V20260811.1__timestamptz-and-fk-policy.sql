@@ -87,7 +87,6 @@ alter table zfgbb.user_poll_choice add constraint user_poll_choice_user_id_fkey 
 alter table zfgbb.user_refresh_token drop constraint user_refresh_token_user_id_fkey;
 alter table zfgbb.user_refresh_token add constraint user_refresh_token_user_id_fkey FOREIGN KEY (user_id) REFERENCES zfgbb."user"(user_id) ON DELETE CASCADE;
 
-alter table zfgbb.permission_group_assoc add column if not exists migration_hash text;
 drop index if exists zfgbb.contact_types_lookup_upper_idx;
 drop index if exists zfgbb.content_resource_type_upper_idx;
 

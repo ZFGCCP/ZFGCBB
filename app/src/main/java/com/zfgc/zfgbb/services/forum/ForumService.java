@@ -5,49 +5,46 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.zfgc.zfgbb.dataprovider.forum.ForumDataProvider;
 import com.zfgc.zfgbb.dataprovider.forum.MessageDataProvider;
 import com.zfgc.zfgbb.dataprovider.forum.ThreadDataProvider;
 import com.zfgc.zfgbb.exception.ZfgcNotFoundException;
-import com.zfgc.zfgbb.model.User;
+import com.zfgc.zfgbb.model.users.User;
 import com.zfgc.zfgbb.model.forum.Board;
 import com.zfgc.zfgbb.model.forum.BoardSummary;
 import com.zfgc.zfgbb.model.forum.Forum;
 import com.zfgc.zfgbb.model.forum.Message;
 import com.zfgc.zfgbb.model.forum.MessageHistory;
 import com.zfgc.zfgbb.services.AbstractService;
-import com.zfgc.zfgbb.services.core.IpService;
+import com.zfgc.zfgbb.dataprovider.meta.IpDataProvider;
 import com.zfgc.zfgbb.services.system.SystemConfigService;
 import com.zfgc.zfgbb.model.forum.Thread;
 import com.zfgc.zfgbb.model.forum.ThreadSplit;
 import com.zfgc.zfgbb.model.meta.IpAddress;
 import com.zfgc.zfgbb.model.users.Permission;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class ForumService extends AbstractService {
 
-	@Autowired
-	private ForumDataProvider forumDataProvider;
+	private final ForumDataProvider forumDataProvider;
 
-	@Autowired
-	private BBCodeService bbCodeService;
+	private final BBCodeService bbCodeService;
 
-	@Autowired
-	private ThreadDataProvider threadDataProvider;
+	private final ThreadDataProvider threadDataProvider;
 
-	@Autowired
-	private MessageDataProvider messageDataProvider;
+	private final MessageDataProvider messageDataProvider;
 
-	@Autowired
-	private IpService ipService;
+	private final IpDataProvider ipDataProvider;
 
-	@Autowired
-	private SystemConfigService systemConfigService;
+	private final SystemConfigService systemConfigService;
 
 	public Forum getForum(User zfgcUser) {
 		Forum forum = forumDataProvider.getForum();
@@ -178,6 +175,14 @@ public class ForumService extends AbstractService {
 		return thread;
 	}
 
+	private IpAddress clientIpAddress() {
+		ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+		String remoteAddress = (requestAttributes != null && requestAttributes.getRequest() != null)
+				? requestAttributes.getRequest().getRemoteAddr()
+				: "127.0.0.1";
+		return ipDataProvider.createOrRetrieveIp(remoteAddress);
+	}
+
 	public Message saveMessage(Message message, User user) {
 		Thread thread = threadDataProvider.getThread(message.getThreadId());
 		Long postCount = messageDataProvider.getTotalPostsInThread(thread.getThreadId());
@@ -187,7 +192,7 @@ public class ForumService extends AbstractService {
 		// always stamp owner from the authenticated user — never trust the request >: O
 		message.setOwnerId(user.getUserId());
 
-		IpAddress ip = ipService.getClientIp();
+		IpAddress ip = clientIpAddress();
 		if (message.getCurrentMessage() != null && ip != null) {
 			message.getCurrentMessage().setIpAddressId(ip.getId());
 		}
@@ -245,9 +250,8 @@ public class ForumService extends AbstractService {
 		return threadDataProvider.splitThread(split, newThread);
 	}
 
-	public List<Message> getMessagesByUserId(Integer userId, Integer pageNo, Integer count) {
-		// todo: permissions from thread
-		return messageDataProvider.getMessagesByUser(userId, pageNo, count)
+	public List<Message> getMessagesByUserId(Integer userId, Integer pageNo, Integer count, List<Integer> permissionIds) {
+		return messageDataProvider.getMessagesByUser(userId, pageNo, count, permissionIds)
 				.stream()
 				.map(message -> {
 					String parsed = bbCodeService.parseText(message.getCurrentMessage().getMessageText());

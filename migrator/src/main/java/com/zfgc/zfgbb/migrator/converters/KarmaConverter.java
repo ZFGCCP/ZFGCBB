@@ -8,7 +8,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,8 +22,10 @@ import com.zfgc.zfgbb.migrator.mappers.MigratorTimestampMapper;
 import com.zfgc.zfgbb.migrator.smf.dbo.SMFLogKarmaDbExample;
 import com.zfgc.zfgbb.migrator.smf.dbo.SMFLogKarmaDbWithBLOBs;
 import com.zfgc.zfgbb.migrator.smf.mappers.SMFLogKarmaDbMapper;
+import lombok.RequiredArgsConstructor;
 
 @Component
+@RequiredArgsConstructor
 public class KarmaConverter extends AbstractConverter<Map<Integer, KarmaDbo>> {
 
 	@Override
@@ -32,17 +33,13 @@ public class KarmaConverter extends AbstractConverter<Map<Integer, KarmaDbo>> {
 		return JobType.KARMA;
 	}
 
-	@Autowired
-	private KarmaDboMapper karmaMapper;
+	private final KarmaDboMapper karmaMapper;
 
-	@Autowired
-	private SMFLogKarmaDbMapper SMFKarmaMapper;
+	private final SMFLogKarmaDbMapper SMFKarmaMapper;
 
-	@Autowired
-	private MigratorIdMapService idMap;
+	private final MigratorIdMapService idMap;
 
-	@Autowired
-	private MigratorTimestampMapper migratorTimestampMapper;
+	private final MigratorTimestampMapper migratorTimestampMapper;
 
 	private final String MSG_REGEX = "[0-9]+$";
 

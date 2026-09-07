@@ -1,46 +1,21 @@
 package com.zfgc.zfgbb.controller;
 
-import java.security.Principal;
+import java.util.List;
+import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 
-import com.zfgc.zfgbb.model.User;
-import com.zfgc.zfgbb.model.users.Permission;
-
-import jakarta.servlet.http.HttpServletRequest;
+import com.zfgc.zfgbb.authorization.RequestingUser;
+import com.zfgc.zfgbb.model.users.User;
 
 public class BaseController {
-	@Autowired
-	HttpServletRequest request;
-	
-	protected User zfgcUser(){
-		Principal userPrincipal = request.getUserPrincipal();
-		
-		if(userPrincipal == null) {
-			return createGuest();
-		}
-		
-		
-		
-		return (User) ((Authentication) userPrincipal).getPrincipal();
+
+	protected static List<Map<String, Object>> toFacet(List<Map.Entry<String, Long>> values) {
+		return values.stream()
+				.map(entry -> Map.<String, Object>of("value", entry.getKey(), "count", entry.getValue()))
+				.toList();
 	}
-	
-	private User createGuest() {
-		User guest = new User();
-		Permission guestPerm = new Permission();
-		guest.setDisplayName("Friend");
-		guest.setUserId(-1);
-		guestPerm.setId(2);
-		guestPerm.setPermissionCode("ZFGC_GUEST");
-		
-		Permission readPerm = new Permission();
-		readPerm.setId(9);
-		readPerm.setPermissionCode("ZFGC_READ_ONLY");
-		
-		guest.getPermissions().add(guestPerm);
-		guest.getPermissions().add(readPerm);
-		
-		return guest;
+
+	protected User zfgcUser() {
+		return RequestingUser.onThisRequest();
 	}
 }

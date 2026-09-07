@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.zfgc.zfgbb.dao.bbcode.BBCodeAttributeDao;
@@ -26,18 +25,17 @@ import com.zfgc.zfgbb.model.forum.AttributeDataType;
 import com.zfgc.zfgbb.model.forum.BBCodeAttribute;
 import com.zfgc.zfgbb.model.forum.BBCodeAttributeMode;
 import com.zfgc.zfgbb.model.forum.BBCodeConfig;
+import lombok.RequiredArgsConstructor;
 
 @Repository
+@RequiredArgsConstructor
 public class BBCodeDataProvider extends AbstractDataProvider {
 	
-	@Autowired
-	private BBCodeConfigDao bbCodeConfigDao;
+	private final BBCodeConfigDao bbCodeConfigDao;
 	
-	@Autowired
-	private BBCodeAttributeModeDao bbCodeAttributeModeDao;
+	private final BBCodeAttributeModeDao bbCodeAttributeModeDao;
 	
-	@Autowired
-	private BBCodeAttributeDao bbCodeAttributeDao;
+	private final BBCodeAttributeDao bbCodeAttributeDao;
 	
 	public List<BBCodeConfig> getValidBbCodes() {
 		BBCodeConfigDboExample ex = new BBCodeConfigDboExample();

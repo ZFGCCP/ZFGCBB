@@ -2,7 +2,6 @@ package com.zfgc.zfgbb.controller;
 
 import java.net.MalformedURLException;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -14,15 +13,18 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.zfgc.zfgbb.dbo.ContentResourceDbo;
 import com.zfgc.zfgbb.services.core.ContentService;
+import com.zfgc.zfgbb.authorization.AllowAnonymous;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/content")
+@RequiredArgsConstructor
 public class ContentController extends BaseController {
 
-	@Autowired
-	private ContentService contentService;
+	private final ContentService contentService;
 
 	@GetMapping("image/{resourceId}")
+	@AllowAnonymous
 	public ResponseEntity<Resource> getImageResource(@PathVariable("resourceId") Integer resourceId)
 			throws MalformedURLException {
 		ContentResourceDbo dbo = contentService.getContentResourceDbo(resourceId);

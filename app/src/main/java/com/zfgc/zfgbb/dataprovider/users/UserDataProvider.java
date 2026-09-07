@@ -1,212 +1,316 @@
 package com.zfgc.zfgbb.dataprovider.users;
 
+import java.util.UUID;
+import com.zfgc.zfgbb.dao.cms.ContentResourceDao;
+import com.zfgc.zfgbb.dao.users.AccountDeletionAuditDao;
+import com.zfgc.zfgbb.dbo.AccountDeletionAuditDbo;
+import com.zfgc.zfgbb.dbo.AccountDeletionAuditDboExample;
+import com.zfgc.zfgbb.dbo.ContentResourceDboExample;
+import com.zfgc.zfgbb.dao.users.UserPermissionViewDao;
+import com.zfgc.zfgbb.dao.users.UserRefreshTokenDao;
+import com.zfgc.zfgbb.dbo.UserPermissionViewDbo;
+import com.zfgc.zfgbb.dbo.UserPermissionViewDboExample;
+import com.zfgc.zfgbb.dbo.UserRefreshTokenDbo;
+import com.zfgc.zfgbb.dbo.UserRefreshTokenDboExample;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.time.OffsetDateTime;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.zfgc.zfgbb.dao.users.AvatarDao;
 import com.zfgc.zfgbb.dao.users.BrUserPermissionDao;
 import com.zfgc.zfgbb.dao.users.EmailAddressDao;
 import com.zfgc.zfgbb.dao.users.UserBioInfoDao;
-import com.zfgc.zfgbb.dao.users.UserContactInfoDao;
 import com.zfgc.zfgbb.dao.users.UserDao;
-import com.zfgc.zfgbb.config.loadoption.user.BasicUserLoadOptions;
-import com.zfgc.zfgbb.config.loadoption.user.FullUserLoadOptions;
-import com.zfgc.zfgbb.config.loadoption.user.LoggedInUserLoadOptions;
-import com.zfgc.zfgbb.dao.UserPermissionViewDao;
-import com.zfgc.zfgbb.dataprovider.AbstractDataProvider;
-import com.zfgc.zfgbb.dataprovider.forum.MessageDataProvider;
-import com.zfgc.zfgbb.dbo.AvatarDbo;
-import com.zfgc.zfgbb.dbo.AvatarDboExample;
+import com.zfgc.zfgbb.dao.users.UserErasureDao;
+import com.zfgc.zfgbb.dao.users.UserPermissionGroupAssocDao;
+import com.zfgc.zfgbb.dbo.BrUserPermissionDboExample;
+import com.zfgc.zfgbb.dbo.UserBioInfoDboExample;
+import com.zfgc.zfgbb.dbo.UserPermissionGroupAssocDboExample;
+import com.zfgc.zfgbb.dbo.UserSettingsDboExample;
+import com.zfgc.zfgbb.model.users.UserSummary;
+import com.zfgc.zfgbb.dataprovider.loadoption.UserLoadOptions;
 import com.zfgc.zfgbb.dbo.BrUserPermissionDbo;
 import com.zfgc.zfgbb.dbo.EmailAddressDbo;
 import com.zfgc.zfgbb.dbo.EmailAddressDboExample;
-import com.zfgc.zfgbb.dbo.MessageDboExample;
 import com.zfgc.zfgbb.dbo.UserBioInfoDbo;
 import com.zfgc.zfgbb.dbo.UserContactInfoDbo;
+import com.zfgc.zfgbb.dbo.UserContactInfoDboExample;
+import com.zfgc.zfgbb.dbo.AvatarDbo;
+import com.zfgc.zfgbb.dbo.AvatarDboExample;
 import com.zfgc.zfgbb.dbo.UserDbo;
 import com.zfgc.zfgbb.dbo.UserDboExample;
-import com.zfgc.zfgbb.dbo.UserKarmaViewDbo;
-import com.zfgc.zfgbb.dbo.UserKarmaViewDboExample;
-import com.zfgc.zfgbb.dbo.UserPermissionViewDboExample;
-import com.zfgc.zfgbb.mappers.MessageDboMapper;
-import com.zfgc.zfgbb.mappers.UserKarmaViewDboMapper;
+import com.zfgc.zfgbb.dbo.UserSettingsDbo;
+import com.zfgc.zfgbb.dao.users.UserContactInfoDao;
+import com.zfgc.zfgbb.dao.users.UserSettingsDao;
 import com.zfgc.zfgbb.mapstruct.users.AvatarMap;
-import com.zfgc.zfgbb.mapstruct.users.KarmaMap;
-import com.zfgc.zfgbb.mapstruct.users.PermissionMap;
+import com.zfgc.zfgbb.mapstruct.users.EmailAddressMap;
 import com.zfgc.zfgbb.mapstruct.users.UserBioInfoMap;
 import com.zfgc.zfgbb.mapstruct.users.UserContactInfoMap;
 import com.zfgc.zfgbb.mapstruct.users.UserMap;
-import com.zfgc.zfgbb.model.User;
-import com.zfgc.zfgbb.model.users.Avatar;
-import com.zfgc.zfgbb.model.users.EmailAddress;
+import com.zfgc.zfgbb.mapstruct.users.PermissionMap;
+import com.zfgc.zfgbb.mapstruct.users.UserSettingsMap;
 import com.zfgc.zfgbb.model.users.Permission;
+import com.zfgc.zfgbb.model.users.User;
 import com.zfgc.zfgbb.model.users.UserBioInfo;
 import com.zfgc.zfgbb.model.users.UserContactInfo;
-import com.zfgc.zfgbb.model.users.UserKarmaView;
-import com.zfgc.zfgbb.services.forum.BBCodeService;
+import com.zfgc.zfgbb.model.users.EmailAddress;
+import com.zfgc.zfgbb.model.users.UserSettings;
+import lombok.RequiredArgsConstructor;
 
 @Repository
-public class UserDataProvider extends AbstractDataProvider {
+@RequiredArgsConstructor
+public class UserDataProvider {
+
+	private static final String SITE_ADMIN_PERMISSION_CODE = "ZFGC_SITE_ADMIN";
+
+	private static final int ANONYMIZATION_SENTINEL_USER_ID = 0;
 
 	private static final Integer ZFGC_USER_PERMISSION_ID = 1;
 
-	@Autowired
-	private UserDao userDao;
+	private final UserDao userDao;
 
-	@Autowired
-	private UserPermissionViewDao userPermissionDao;
+	private final BrUserPermissionDao brUserPermissionDao;
 
-	@Autowired
-	private BrUserPermissionDao brUserPermissionDao;
+	private final EmailAddressDao emailDao;
 
-	@Autowired
-	private EmailAddressDao emailDao;
+	private final UserBioInfoDao bioInfoDao;
 
-	@Autowired
-	private UserBioInfoDao bioInfoDao;
+	private final UserContactInfoDao userContactInfoDao;
 
-	@Autowired
-	private AvatarDao avatarDao;
+	private final UserMap userMap;
 
-	@Autowired
-	private UserContactInfoDao contactInfoDao;
+	private final UserSettingsMap userSettingsMap;
 
-	@Autowired
-	private BBCodeService bbcodeService;
+	private final UserBioInfoMap userBioInfoMap;
 
-	@Autowired
-	private UserMap userMap;
+	private final EmailAddressMap emailAddressMap;
 
-	@Autowired
-	private UserBioInfoMap userBioInfoMap;
+	private final UserSettingsDao userSettingsDao;
 
-	@Autowired
-	private MessageDboMapper messageDboMapper;
+	private final UserPermissionViewDao userPermissionViewDao;
 
-	@Autowired
-	private UserKarmaViewDboMapper karmaViewDboMapper;
+	private final UserRefreshTokenDao userRefreshTokenDao;
 
-	@Autowired
-	private KarmaMap karmaMap;
+	private final UserErasureDao userErasureDao;
 
-	@Autowired
-	private UserContactInfoMap userContactInfoMap;
+	private final AccountDeletionAuditDao accountDeletionAuditDao;
 
-	@Autowired
-	private AvatarMap avatarMap;
+	private final ContentResourceDao contentResourceDao;
 
-	@Autowired
-	private PermissionMap permissionMap;
+	private final UserPermissionGroupAssocDao userPermissionGroupAssocDao;
 
-	public Optional<User> findUser(String userName) {
-		if (userName == null || userName.isBlank()) {
+	private final AvatarDao avatarDao;
+
+	public static final String SENTINEL_SSO_KEY = "__deleted__";
+
+	private static final String SENTINEL_DISPLAY_NAME = "[deleted]";
+
+	private final PermissionMap permissionMap;
+
+	private final AvatarMap avatarMap;
+
+	private final UserContactInfoMap userContactInfoMap;
+
+	public Optional<User> findUserForAuthentication(String userName) {
+		if (userName == null || userName.isBlank())
 			return Optional.empty();
-		}
 		UserDboExample ex = new UserDboExample();
-		ex.createCriteria().andUserNameEqualTo(userName).andActiveFlagEqualTo(true);
-		return userDao.get(ex).stream().findFirst()
-				.flatMap(dbo -> findUser(dbo.getUserId(), new LoggedInUserLoadOptions()));
+		ex.createCriteria().andUserNameEqualTo(userName);
+		return userDao.getOne(ex)
+				.flatMap(dbo -> hydrateUser(dbo, UserLoadOptions.loggedIn()));
 	}
 
 	public Optional<User> findUser(Integer userId) {
-		return findUser(userId, new BasicUserLoadOptions());
+		return findUser(userId, UserLoadOptions.basic());
 	}
 
-	public Optional<User> findUser(Integer userId, BasicUserLoadOptions loadOptions) {
+	public Optional<User> findUser(Integer userId, UserLoadOptions loadOptions) {
 		if (userId == null) {
 			return Optional.empty();
 		}
 		UserDboExample ex = new UserDboExample();
 		ex.createCriteria().andUserIdEqualTo(userId).andActiveFlagEqualTo(true);
-		return userDao.get(ex).stream().findFirst()
-				.map(userDb -> hydrateUser(userDb, loadOptions));
+		return userDao.getOne(ex)
+				.flatMap(userDb -> hydrateUser(userDb, loadOptions));
 	}
 
-	private User hydrateUser(UserDbo userDb, BasicUserLoadOptions loadOptions) {
-		Integer userId = userDb.getUserId();
+	private Optional<User> hydrateUser(UserDbo userDb, UserLoadOptions loadOptions) {
+		Map<Integer, User> users = loadUsersByIds(List.of(userDb.getUserId()), loadOptions);
+		return Optional.ofNullable(users.get(userDb.getUserId()));
+	}
 
-		// todo: setup guest permissions
-		UserPermissionViewDboExample upEx = new UserPermissionViewDboExample();
-		upEx.createCriteria().andUserIdEqualTo(userId);
-		List<Permission> permissions = Boolean.TRUE.equals(loadOptions.loadPermissions())
-				? userPermissionDao.get(upEx).stream().map(permissionMap::toModel).toList()
-				: Collections.emptyList();
+	private Map<Integer, User> loadUsersByIds(Collection<Integer> userIds, UserLoadOptions loadOptions) {
+		if (userIds == null || userIds.isEmpty())
+			return Collections.emptyMap();
+		List<Integer> distinctIds = userIds.stream().filter(id -> id != null).distinct().toList();
+		if (distinctIds.isEmpty())
+			return Collections.emptyMap();
 
-		Optional<UserBioInfo> bioInfo = Boolean.TRUE.equals(loadOptions.loadBio()) ? bioInfoDao.find(userId)
-				.map(bioInfoDbo -> {
-					MessageDboExample msgEx = new MessageDboExample();
-					msgEx.createCriteria().andOwnerIdEqualTo(userId);
+		UserDboExample userEx = new UserDboExample();
+		userEx.createCriteria().andUserIdIn(distinctIds);
+		List<UserDbo> userRows = userDao.get(userEx);
+		if (userRows.isEmpty())
+			return Collections.emptyMap();
 
-					Integer postCount = (int) messageDboMapper.countByExample(msgEx);
+		Map<Integer, UserBioInfoDbo> biosByUserId = Collections.emptyMap();
+		if (loadOptions.loadBio()) {
+			UserBioInfoDboExample bioEx = new UserBioInfoDboExample();
+			bioEx.createCriteria().andUserIdIn(distinctIds);
+			biosByUserId = bioInfoDao.get(bioEx).stream()
+					.collect(Collectors.toMap(UserBioInfoDbo::getUserId, bio -> bio));
+		}
 
-					String signatureParsed = "";
-					signatureParsed = bbcodeService.parseText(bioInfoDbo.getSignature());
+		Map<Integer, UserContactInfoDbo> contactsByUserId = Collections.emptyMap();
+		if (loadOptions.loadContactInfo()) {
+			UserContactInfoDboExample contactEx = new UserContactInfoDboExample();
+			contactEx.createCriteria().andUserIdIn(distinctIds);
+			contactsByUserId = userContactInfoDao.get(contactEx).stream()
+					.collect(Collectors.toMap(UserContactInfoDbo::getUserId, contact -> contact));
+		}
 
-					// load avatar
-					AvatarDboExample avatarEx = new AvatarDboExample();
-					if (bioInfoDbo.getAvatarId() != null) {
-						avatarEx.createCriteria().andAvatarIdEqualTo(bioInfoDbo.getAvatarId())
-								.andActiveFlagEqualTo(true);
-					}
-					Optional<Avatar> avatar = Boolean.TRUE.equals(loadOptions.loadAvatar())
-							&& bioInfoDbo.getAvatarId() != null
-									? avatarDao.get(avatarEx).stream()
-											.findFirst()
-											.map(avatarMap::toModel)
-									: Optional.empty();
+		Map<Integer, UserSettingsDbo> settingsByUserId = Collections.emptyMap();
+		if (loadOptions.loadSettings()) {
+			UserSettingsDboExample settingsEx = new UserSettingsDboExample();
+			settingsEx.createCriteria().andUserIdIn(distinctIds);
+			settingsByUserId = userSettingsDao.get(settingsEx).stream()
+					.collect(Collectors.toMap(UserSettingsDbo::getUserId, settings -> settings));
+		}
 
-					// load karma
-					UserKarmaViewDboExample karmaEx = new UserKarmaViewDboExample();
-					karmaEx.createCriteria().andReceivingUserIdEqualTo(userId);
-					List<UserKarmaView> karmaList = Boolean.TRUE.equals(loadOptions.loadKarma())
-							? karmaViewDboMapper.selectByExample(karmaEx).stream().map(karmaMap::toViewModel).toList()
-							: Collections.emptyList();
+		Map<Integer, AvatarDbo> avatarsById = Collections.emptyMap();
+		if (loadOptions.loadAvatar()) {
+			List<Integer> avatarIds = biosByUserId.values().stream()
+					.map(UserBioInfoDbo::getAvatarId)
+					.filter(id -> id != null)
+					.distinct()
+					.toList();
+			if (!avatarIds.isEmpty()) {
+				AvatarDboExample avatarEx = new AvatarDboExample();
+				avatarEx.createCriteria().andAvatarIdIn(avatarIds).andActiveFlagEqualTo(true);
+				avatarsById = avatarDao.get(avatarEx).stream()
+						.collect(Collectors.toMap(AvatarDbo::getAvatarId, avatar -> avatar));
+			}
+		}
 
-					return userBioInfoMap.toModel(bioInfoDbo)
-							.toBuilder()
-							.postCount(postCount)
-							.signatureParsed(signatureParsed)
-							.karma(karmaList)
-							.avatar(avatar.orElse(null))
-							.build();
-				}) : Optional.empty();
+		Map<Integer, EmailAddressDbo> emailsById = Collections.emptyMap();
+		List<Integer> emailAddressIds = contactsByUserId.values().stream()
+				.map(UserContactInfoDbo::getEmailAddressId)
+				.filter(id -> id != null)
+				.distinct()
+				.toList();
+		if (!emailAddressIds.isEmpty()) {
+			EmailAddressDboExample emailEx = new EmailAddressDboExample();
+			emailEx.createCriteria().andEmailAddressIdIn(emailAddressIds);
+			emailsById = emailDao.get(emailEx).stream()
+					.collect(Collectors.toMap(EmailAddressDbo::getEmailAddressId, email -> email));
+		}
 
-		Optional<UserContactInfo> contactInfo = Boolean.TRUE.equals(loadOptions.loadContactInfo())
-				? contactInfoDao.find(userId)
-						.map(ci -> {
-							EmailAddressDbo email = emailDao.find(ci.getEmailAddressId()).get();
-							return userContactInfoMap.toModel(ci, email);
-						})
-				: Optional.empty();
+		Map<Integer, List<Permission>> permissionsByUserId = Collections.emptyMap();
+		if (loadOptions.loadPermissions()) {
+			UserPermissionViewDboExample permissionEx = new UserPermissionViewDboExample();
+			permissionEx.createCriteria().andUserIdIn(distinctIds);
+			permissionsByUserId = userPermissionViewDao.get(permissionEx).stream()
+					.collect(Collectors.groupingBy(UserPermissionViewDbo::getUserId,
+							Collectors.mapping(permissionMap::toModel, Collectors.toList())));
+		}
 
-		return userMap.toModel(userDb)
-				.toBuilder()
-				.bioInfo(bioInfo.orElse(null))
-				.contactInfo(contactInfo.orElse(null))
-				.permissions(permissions)
-				.build();
+		Map<Integer, User> users = new HashMap<>();
+		for (UserDbo userRow : userRows) {
+			Integer userId = userRow.getUserId();
+			UserBioInfoDbo bioRow = biosByUserId.get(userId);
+			UserBioInfo bioInfo = null;
+			if (bioRow != null && loadOptions.loadBio()) {
+				AvatarDbo avatarRow = bioRow.getAvatarId() != null ? avatarsById.get(bioRow.getAvatarId()) : null;
+				bioInfo = userBioInfoMap.toModel(bioRow)
+						.toBuilder()
+						.avatar(avatarRow != null && loadOptions.loadAvatar() ? avatarMap.toModel(avatarRow) : null)
+						.build();
+			}
+
+			UserContactInfoDbo contactRow = contactsByUserId.get(userId);
+			EmailAddressDbo emailRow = contactRow != null ? emailsById.get(contactRow.getEmailAddressId()) : null;
+			UserContactInfo contactInfo = null;
+			if (contactRow != null && emailRow != null && loadOptions.loadContactInfo()) {
+				contactInfo = userContactInfoMap.toModel(contactRow, emailRow);
+			}
+
+			UserSettings settings = null;
+			if (loadOptions.loadSettings()) {
+				UserSettingsDbo settingsRow = settingsByUserId.get(userId);
+				settings = settingsRow != null
+						? userSettingsMap.toModel(settingsRow)
+						: new UserSettings();
+			}
+
+			User user = userMap.toModel(userRow)
+					.toBuilder()
+					.bioInfo(bioInfo)
+					.contactInfo(contactInfo)
+					.awards(Collections.emptyList())
+					.permissions(permissionsByUserId.getOrDefault(userId, Collections.emptyList()))
+					.settings(settings)
+					.build();
+
+			users.put(userId, user);
+		}
+		return users;
+	}
+
+
+
+	public Map<Integer, User> findPublicAuthorsByIds(Collection<Integer> requestedUserIds) {
+		UserLoadOptions loadOptions = UserLoadOptions.publicProfile();
+		Map<Integer, User> users = loadUsersByIds(requestedUserIds, loadOptions);
+		for (User author : users.values()) {
+			author.retainPublicRankPermissions();
+			if (author.getBioInfo() != null)
+				author.getBioInfo().setSignature(null);
+		}
+		return users;
+	}
+
+	public UserSettings saveUserSettings(Integer userId, UserSettings settings) {
+		Optional<UserSettingsDbo> existing = userSettingsDao.find(userId);
+		if (existing.isPresent()) {
+			UserSettingsDbo current = existing.get();
+			userSettingsMap.applyOnto(settings, current);
+			userSettingsDao.update(current);
+		} else {
+			UserSettingsDbo created = new UserSettingsDbo();
+			created.setUserId(userId);
+			userSettingsMap.applyOnto(settings, created);
+			userSettingsDao.insertSelective(created);
+		}
+		return userSettingsDao.find(userId).map(userSettingsMap::toModel).orElseGet(UserSettings::new);
 	}
 
 	public User createUser(User user) {
-		UserDbo userDbo = map(user, UserDbo.class);
+		UserDbo userDbo = userMap.toDbo(user);
 		userDao.save(userDbo);
+		return createUserAssociations(user, userDbo);
+	}
 
-		EmailAddressDbo emailDbo = map(user.getEmail(), EmailAddressDbo.class);
+	private User createUserAssociations(User user, UserDbo userDbo) {
+		EmailAddressDbo emailDbo = emailAddressMap.toDbo(user.getEmail());
 		emailDao.save(emailDbo);
 		UserContactInfoDbo contactInfo = new UserContactInfoDbo();
 		contactInfo.setUserId(userDbo.getUserId());
 		contactInfo.setEmailAddressId(emailDbo.getEmailAddressId());
 		contactInfo.setAllowEmailFlag(true);
 		contactInfo.setAllowPmFlag(true);
-		contactInfoDao.insertSelective(contactInfo);
+		userContactInfoDao.insertSelective(contactInfo);
 
 		UserBioInfoDbo bioInfo = user.getBioInfo() != null
-				? map(user.getBioInfo(), UserBioInfoDbo.class)
+				? userBioInfoMap.toDbo(user.getBioInfo())
 				: new UserBioInfoDbo();
 		bioInfo.setUserId(userDbo.getUserId());
 		bioInfoDao.insertSelective(bioInfo);
@@ -216,33 +320,336 @@ public class UserDataProvider extends AbstractDataProvider {
 		defaultPerm.setUserPermissionId(ZFGC_USER_PERMISSION_ID);
 		brUserPermissionDao.insert(defaultPerm);
 
-		return findUser(userDbo.getUserId(), new FullUserLoadOptions())
+		return findUser(userDbo.getUserId(), UserLoadOptions.full())
 				.orElseThrow(() -> new IllegalStateException("user disappeared after createUser"));
+	}
+
+	public User replaceUserIdentity(User identity, int userId) {
+		if (identity == null || identity.getEmail() == null
+				|| identity.getEmail().getEmailAddress() == null
+				|| identity.getEmail().getEmailAddress().isBlank())
+			throw new IllegalArgumentException(
+					"Replacing a user identity requires an email address.");
+		UserDbo existing = userDao.find(userId).orElseThrow(() -> new IllegalStateException(
+				"Cannot replace the identity of user " + userId + " because that user does not exist."));
+		UserDbo replacement = userMap.toDbo(identity);
+		replacement.setUserId(userId);
+		replacement.setMigrationHash(existing.getMigrationHash());
+		replacement.setTokensValidAfterTs(identity.getPasswordChangedTs());
+		userDao.save(replacement);
+		replaceEmailAddress(userId, identity.getEmail());
+		return findUser(userId, UserLoadOptions.full())
+				.orElseThrow(() -> new IllegalStateException("user disappeared after replaceUserIdentity"));
+	}
+
+	private void replaceEmailAddress(int userId, EmailAddress requested) {
+		Optional<UserContactInfoDbo> contactInfo = userContactInfoDao.find(userId);
+		Optional<EmailAddressDbo> currentAddress = contactInfo
+				.map(UserContactInfoDbo::getEmailAddressId)
+				.flatMap(emailDao::find);
+		if (currentAddress.filter(current -> requested.getEmailAddress().equals(current.getEmailAddress()))
+				.isPresent())
+			return;
+		Optional<EmailAddressDbo> adoptable = findByEmail(requested.getEmailAddress())
+				.filter(unclaimed -> !emailAddressIsClaimedBySomeUser(unclaimed.getEmailAddressId()));
+		if (adoptable.isEmpty() && currentAddress.isPresent()
+				&& !isEmailAddressSharedWithAnotherUser(currentAddress.get().getEmailAddressId(), userId)) {
+			EmailAddressDbo owned = currentAddress.get();
+			owned.setEmailAddress(requested.getEmailAddress());
+			owned.setSpammerFlag(Boolean.TRUE.equals(requested.getSpammerFlag()));
+			emailDao.save(owned);
+			return;
+		}
+		EmailAddressDbo replacement = adoptable.orElseGet(() -> newEmailAddress(requested));
+		replacement.setSpammerFlag(Boolean.TRUE.equals(requested.getSpammerFlag()));
+		emailDao.save(replacement);
+		UserContactInfoDbo link = contactInfo.orElseGet(UserContactInfoDbo::new);
+		link.setUserId(userId);
+		link.setEmailAddressId(replacement.getEmailAddressId());
+		if (contactInfo.isPresent()) {
+			userContactInfoDao.updateSelective(link);
+			return;
+		}
+		link.setAllowEmailFlag(true);
+		link.setAllowPmFlag(true);
+		userContactInfoDao.insertSelective(link);
+	}
+
+	private EmailAddressDbo newEmailAddress(EmailAddress requested) {
+		EmailAddressDbo created = emailAddressMap.toDbo(requested);
+		created.setEmailAddressId(null);
+		return created;
+	}
+
+	private boolean isEmailAddressSharedWithAnotherUser(Integer emailAddressId, int userId) {
+		UserContactInfoDboExample ex = new UserContactInfoDboExample();
+		ex.createCriteria().andEmailAddressIdEqualTo(emailAddressId).andUserIdNotEqualTo(userId);
+		return !userContactInfoDao.get(ex).isEmpty();
+	}
+
+	public boolean emailAddressIsClaimedBySomeUser(Integer emailAddressId) {
+		UserContactInfoDboExample ex = new UserContactInfoDboExample();
+		ex.createCriteria().andEmailAddressIdEqualTo(emailAddressId);
+		return !userContactInfoDao.get(ex).isEmpty();
+	}
+
+	public boolean emailAddressBelongsTo(Integer emailAddressId, int userId) {
+		UserContactInfoDboExample ex = new UserContactInfoDboExample();
+		ex.createCriteria().andEmailAddressIdEqualTo(emailAddressId).andUserIdEqualTo(userId);
+		return !userContactInfoDao.get(ex).isEmpty();
 	}
 
 	public Optional<UserDbo> findByUserName(String userName) {
 		UserDboExample ex = new UserDboExample();
 		ex.createCriteria().andUserNameEqualTo(userName);
-		return userDao.get(ex).stream().findFirst();
+		return userDao.getOne(ex);
+	}
+
+	public Optional<UserDbo> findBySsoKey(String ssoKey) {
+		UserDboExample ex = new UserDboExample();
+		ex.createCriteria().andSsoKeyEqualTo(ssoKey);
+		return userDao.getOne(ex);
+	}
+
+	public List<Integer> findUserIdsHoldingIdentity(String identity) {
+		if (identity == null || identity.isBlank())
+			return List.of();
+		UserDboExample ex = new UserDboExample();
+		ex.createCriteria().andUserNameEqualTo(identity);
+		ex.or().andSsoKeyEqualTo(identity);
+		return userDao.get(ex).stream()
+				.map(UserDbo::getUserId)
+				.distinct()
+				.sorted()
+				.toList();
+	}
+
+	public int cutOffExistingTokensForAllUsers(OffsetDateTime cutoff) {
+		UserDbo update = new UserDbo();
+		update.setTokensValidAfterTs(cutoff);
+		return userDao.updateWhere(update, new UserDboExample());
 	}
 
 	public Optional<EmailAddressDbo> findByEmail(String email) {
 		EmailAddressDboExample ex = new EmailAddressDboExample();
 		ex.createCriteria().andEmailAddressEqualTo(email);
-		return emailDao.get(ex).stream().findFirst();
+		return emailDao.getOne(ex);
 	}
 
-	public User saveUserProfile(User user) {
-		UserDbo userDbo = map(user, UserDbo.class);
-		userDbo = userDao.save(userDbo);
 
-		if (user.getBioInfo() != null) {
-			UserBioInfoDbo bioInfoDbo = map(user.getBioInfo(), UserBioInfoDbo.class);
-			bioInfoDao.update(bioInfoDbo);
+
+
+	public List<Integer> siteAdministratorIdsWithUsableCredentials() {
+		UserPermissionViewDboExample siteAdministrators = new UserPermissionViewDboExample();
+		siteAdministrators.createCriteria().andPermissionCodeEqualTo(SITE_ADMIN_PERMISSION_CODE)
+				.andUserIdNotEqualTo(ANONYMIZATION_SENTINEL_USER_ID);
+		List<Integer> candidates = userPermissionViewDao.get(siteAdministrators).stream()
+				.map(UserPermissionViewDbo::getUserId)
+				.distinct()
+				.toList();
+		if (candidates.isEmpty())
+			return List.of();
+
+		UserDboExample withPassword = new UserDboExample();
+		withPassword.createCriteria().andUserIdIn(candidates)
+				.andPasswordHashIsNotNull().andPasswordHashNotEqualTo("");
+		Set<Integer> usable = userDao.get(withPassword).stream()
+				.map(UserDbo::getUserId)
+				.collect(Collectors.toCollection(LinkedHashSet::new));
+
+		UserRefreshTokenDboExample withRefreshToken = new UserRefreshTokenDboExample();
+		withRefreshToken.createCriteria().andUserIdIn(candidates);
+		userRefreshTokenDao.get(withRefreshToken).stream()
+				.map(UserRefreshTokenDbo::getUserId)
+				.forEach(usable::add);
+
+		return candidates.stream().filter(usable::contains).sorted().toList();
+	}
+
+	public boolean hasUsableCredentialsOutside(int anchorAdministratorId) {
+		List<Integer> exempt = List.of(anchorAdministratorId, ANONYMIZATION_SENTINEL_USER_ID);
+
+		UserDboExample foreignPassword = new UserDboExample();
+		foreignPassword.createCriteria().andUserIdNotIn(exempt)
+				.andPasswordHashIsNotNull().andPasswordHashNotEqualTo("");
+		foreignPassword.or(foreignPassword.createCriteria().andUserIdNotIn(exempt)
+				.andPasswordAlgoIsNotNull().andPasswordAlgoNotEqualTo(""));
+		foreignPassword.or(foreignPassword.createCriteria().andUserIdNotIn(exempt)
+				.andPasswordSaltIsNotNull().andPasswordSaltNotEqualTo(""));
+		if (userDao.exists(foreignPassword))
+			return true;
+
+		UserRefreshTokenDboExample foreignRefreshToken = new UserRefreshTokenDboExample();
+		foreignRefreshToken.createCriteria().andUserIdNotEqualTo(anchorAdministratorId);
+		return userRefreshTokenDao.exists(foreignRefreshToken);
+	}
+
+	public Integer ensureSentinelUser() {
+		Optional<Integer> existing = userErasureDao.findUserIdBySsoKey(SENTINEL_SSO_KEY);
+		if (existing.isPresent())
+			return existing.get();
+		UserDbo sentinel = new UserDbo();
+		sentinel.setSsoKey(SENTINEL_SSO_KEY);
+		sentinel.setUserName(SENTINEL_SSO_KEY);
+		sentinel.setDisplayName(SENTINEL_DISPLAY_NAME);
+		sentinel.setActiveFlag(false);
+		sentinel.setFailedLoginCount(0);
+		userDao.save(sentinel);
+		return sentinel.getUserId();
+	}
+
+	public List<UserSummary> listUsers() {
+		return userErasureDao.listUsers();
+	}
+
+	public boolean isSentinelUser(Integer userId) {
+		return userErasureDao.findUserIdBySsoKey(SENTINEL_SSO_KEY).filter(userId::equals).isPresent();
+	}
+
+	public boolean isSiteAdmin(Integer userId) {
+		return userErasureDao.isSiteAdmin(userId);
+	}
+
+	public boolean isLastSiteAdmin(Integer userId) {
+		userErasureDao.acquireAdminRosterLock();
+		return userErasureDao.isSiteAdmin(userId) && userErasureDao.countSiteAdmins() <= 1;
+	}
+
+	public boolean adminReplacementRequired(Integer userId) {
+		return userErasureDao.isSiteAdmin(userId) && userErasureDao.countSiteAdmins() <= 1;
+	}
+
+	public Optional<String> findUserName(Integer userId) {
+		return userErasureDao.findUserName(userId);
+	}
+
+	public Optional<String> findPrimaryEmailAddress(Integer userId) {
+		return userErasureDao.findPrimaryEmailAddress(userId);
+	}
+
+	public List<Integer> findEmailAddressIds(Integer userId) {
+		return userErasureDao.findEmailAddressIds(userId);
+	}
+
+	public void neutralizeIdentity(Integer userId) {
+		userErasureDao.neutralizeUserRow(userId, SENTINEL_SSO_KEY + userId);
+		userErasureDao.scrubUserBioInfo(userId);
+		BrUserPermissionDboExample brUserPermissionExample = new BrUserPermissionDboExample();
+		brUserPermissionExample.createCriteria().andUserIdEqualTo(userId);
+		brUserPermissionDao.deleteWhere(brUserPermissionExample);
+		UserPermissionGroupAssocDboExample userPermissionGroupAssocExample = new UserPermissionGroupAssocDboExample();
+		userPermissionGroupAssocExample.createCriteria().andUserIdEqualTo(userId);
+		userPermissionGroupAssocDao.deleteWhere(userPermissionGroupAssocExample);
+		userErasureDao.deleteUserContactTypes(userId);
+		UserSettingsDboExample userSettingsExample = new UserSettingsDboExample();
+		userSettingsExample.createCriteria().andUserIdEqualTo(userId);
+		userSettingsDao.deleteWhere(userSettingsExample);
+		UserContactInfoDboExample userContactInfoExample = new UserContactInfoDboExample();
+		userContactInfoExample.createCriteria().andUserIdEqualTo(userId);
+		userContactInfoDao.deleteWhere(userContactInfoExample);
+	}
+
+	public List<Integer> releaseEmailAddresses(List<Integer> emailAddressIds) {
+		List<Integer> retainedSharedAddressIds = new ArrayList<>();
+		for (Integer emailAddressId : emailAddressIds.stream().distinct().toList()) {
+			userErasureDao.deleteEmailAddressIfUnreferenced(emailAddressId);
+			if (emailDao.existsWithPrimaryKey(emailAddressId))
+				retainedSharedAddressIds.add(emailAddressId);
 		}
-
-		return findUser(userDbo.getUserId(), new BasicUserLoadOptions())
-				.orElseThrow(() -> new IllegalStateException("user disappeared after saveUserProfile"));
+		return retainedSharedAddressIds;
 	}
 
+	public Optional<Integer> findBioAvatarId(Integer userId) {
+		return userErasureDao.findBioAvatarId(userId);
+	}
+
+	public Optional<Integer> findAvatarContentResourceId(Integer avatarId) {
+		return userErasureDao.findAvatarContentResourceId(avatarId);
+	}
+
+	public void deleteBioInfo(Integer userId) {
+		UserBioInfoDboExample bioInfoExample = new UserBioInfoDboExample();
+		bioInfoExample.createCriteria().andUserIdEqualTo(userId);
+		bioInfoDao.deleteWhere(bioInfoExample);
+	}
+
+	public void deleteAvatar(Integer avatarId) {
+		avatarDao.delete(avatarId);
+	}
+
+	public void deleteUserRow(Integer userId) {
+		userDao.delete(userId);
+	}
+
+	public void nullAwardGranters(Integer userId) {
+		userErasureDao.nullAwardGranters(userId);
+	}
+
+	public void scrubIssuedWarnings(Integer userId) {
+		userErasureDao.scrubIssuedWarnings(userId);
+	}
+
+	public void reassignContentResources(Integer userId, Integer sentinelId) {
+		userErasureDao.reassignContentResources(userId, sentinelId);
+	}
+
+	public List<Integer> findOwnedUnreferencedContentResourceIds(Integer userId, int chunkSize) {
+		return userErasureDao.findOwnedUnreferencedContentResourceIds(userId, chunkSize);
+	}
+
+	public void recordDeletionRequestedAudit(Integer userId, String mode, OffsetDateTime requestedTs) {
+		AccountDeletionAuditDbo audit = findOrCreateOpenAuditRow(userId, mode, requestedTs);
+		audit.setMode(mode);
+		audit.setRequestedTs(requestedTs);
+		accountDeletionAuditDao.save(audit);
+	}
+
+	public void stampAuditConfirmed(Integer userId, String mode, OffsetDateTime requestedTs, OffsetDateTime now) {
+		AccountDeletionAuditDbo audit = findOrCreateOpenAuditRow(userId, mode,
+				requestedTs != null ? requestedTs : now);
+		if (audit.getConfirmedTs() != null)
+			return;
+		audit.setConfirmedTs(now);
+		accountDeletionAuditDao.save(audit);
+	}
+
+	public void stampAuditExecuted(Integer userId, OffsetDateTime now) {
+		AccountDeletionAuditDboExample ex = new AccountDeletionAuditDboExample();
+		ex.createCriteria().andSubjectUserIdSnapshotEqualTo(userId).andExecutedTsIsNull();
+		ex.setOrderByClause("deletion_id desc");
+		accountDeletionAuditDao.getOne(ex).ifPresent(audit -> {
+			audit.setExecutedTs(now);
+			accountDeletionAuditDao.save(audit);
+		});
+	}
+
+	private AccountDeletionAuditDbo findOrCreateOpenAuditRow(Integer userId, String mode, OffsetDateTime timestamp) {
+		AccountDeletionAuditDboExample ex = new AccountDeletionAuditDboExample();
+		ex.createCriteria().andSubjectUserIdSnapshotEqualTo(userId).andExecutedTsIsNull();
+		ex.setOrderByClause("deletion_id desc");
+		Optional<AccountDeletionAuditDbo> existing = accountDeletionAuditDao.getOne(ex);
+		if (existing.isPresent())
+			return existing.get();
+		AccountDeletionAuditDbo audit = new AccountDeletionAuditDbo();
+		audit.setSubjectUserIdSnapshot(userId);
+		audit.setSubjectPseudonym(UUID.randomUUID().toString().replace("-", ""));
+		audit.setMode(mode);
+		audit.setInitiatedBy("SELF");
+		audit.setRequestedTs(timestamp);
+		audit.setMessageCount(userErasureDao.countOwnedMessages(userId));
+		audit.setContentResourceCount(countOwnedContentResources(userId));
+		audit.setCreatedTs(timestamp);
+		accountDeletionAuditDao.insertSelective(audit);
+		return audit;
+	}
+
+	public int countOwnedMessages(Integer userId) {
+		return userErasureDao.countOwnedMessages(userId);
+	}
+
+	public int countOwnedContentResources(Integer userId) {
+		ContentResourceDboExample ownedResourcesExample = new ContentResourceDboExample();
+		ownedResourcesExample.createCriteria().andUploadedUserIdEqualTo(userId);
+		return (int) contentResourceDao.count(ownedResourcesExample);
+	}
 }

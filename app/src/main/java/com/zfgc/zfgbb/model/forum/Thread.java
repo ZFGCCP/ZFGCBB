@@ -6,9 +6,9 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.zfgc.zfgbb.model.BaseModel;
-import com.zfgc.zfgbb.model.User;
+import com.zfgc.zfgbb.model.users.User;
 import com.zfgc.zfgbb.model.users.Permission;
-import com.zfgc.zfgbb.security.Securable;
+import com.zfgc.zfgbb.model.Securable;
 
 import lombok.Data;
 

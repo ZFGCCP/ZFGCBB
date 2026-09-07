@@ -7,7 +7,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.util.HtmlUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,21 +21,19 @@ import com.zfgc.zfgbb.migrator.jobs.MigratorPermissionService;
 import com.zfgc.zfgbb.migrator.smf.dbo.SMFBoardDb;
 import com.zfgc.zfgbb.migrator.smf.dbo.SMFBoardDbExample;
 import com.zfgc.zfgbb.migrator.smf.mappers.SMFBoardDbMapper;
+import lombok.RequiredArgsConstructor;
 
 @Component
+@RequiredArgsConstructor
 public class BoardConverter extends AbstractConverter<Map<Integer, BoardDbo>> {
 
-	@Autowired
-	private SMFBoardDbMapper smfBoardMapper;
+	private final SMFBoardDbMapper smfBoardMapper;
 
-	@Autowired
-	private BoardDboMapper boardMapper;
+	private final BoardDboMapper boardMapper;
 
-	@Autowired
-	private MigratorIdMapService idMap;
+	private final MigratorIdMapService idMap;
 
-	@Autowired
-	private MigratorPermissionService permissions;
+	private final MigratorPermissionService permissions;
 
 	@Override
 	public JobType getType() {

@@ -5,7 +5,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.zfgc.zfgbb.dbo.BrBoardPermissionDbo;
@@ -17,8 +16,10 @@ import com.zfgc.zfgbb.dbo.PermissionDboExample;
 import com.zfgc.zfgbb.mappers.BrBoardPermissionDboMapper;
 import com.zfgc.zfgbb.mappers.BrUserPermissionDboMapper;
 import com.zfgc.zfgbb.mappers.PermissionDboMapper;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class MigratorPermissionService {
 
 	public static final List<String> DEFAULT_BOARD_PERMISSION_CODES =
@@ -32,14 +33,11 @@ public class MigratorPermissionService {
 	public static final String CODE_SITE_MODERATOR = "ZFGC_SITE_MODERATOR";
 	public static final String CODE_SITE_ADMIN = "ZFGC_SITE_ADMIN";
 
-	@Autowired
-	private PermissionDboMapper permissionMapper;
+	private final PermissionDboMapper permissionMapper;
 
-	@Autowired
-	private BrBoardPermissionDboMapper brBoardPermissionMapper;
+	private final BrBoardPermissionDboMapper brBoardPermissionMapper;
 
-	@Autowired
-	private BrUserPermissionDboMapper brUserPermissionMapper;
+	private final BrUserPermissionDboMapper brUserPermissionMapper;
 
 	public Integer permissionIdByCode(String code) {
 		PermissionDboExample ex = new PermissionDboExample();

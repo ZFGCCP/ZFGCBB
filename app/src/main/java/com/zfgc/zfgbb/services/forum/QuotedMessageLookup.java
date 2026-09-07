@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.zfgc.zfgbb.dbo.MessageDbo;
@@ -17,15 +16,15 @@ import com.zfgc.zfgbb.dbo.UserDbo;
 import com.zfgc.zfgbb.dbo.UserDboExample;
 import com.zfgc.zfgbb.mappers.MessageDboMapper;
 import com.zfgc.zfgbb.mappers.UserDboMapper;
+import lombok.RequiredArgsConstructor;
 
 @Component
+@RequiredArgsConstructor
 public class QuotedMessageLookup {
 
-	@Autowired
-	private MessageDboMapper messageMapper;
+	private final MessageDboMapper messageMapper;
 
-	@Autowired
-	private UserDboMapper userMapper;
+	private final UserDboMapper userMapper;
 
 	public record Resolved(String authorDisplayName, OffsetDateTime createdTs) {}
 

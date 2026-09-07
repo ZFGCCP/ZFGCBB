@@ -13,4 +13,16 @@ public class BrUserPermissionDao extends KeyedDao<BrUserPermissionDbo, BrUserPer
 	public BrUserPermissionDao(BrUserPermissionDboMapper mapper) {
 		super(mapper);
 	}
+
+	public int grantIfAbsent(Integer userId, Integer userPermissionId) {
+		BrUserPermissionDboExample example = new BrUserPermissionDboExample();
+		example.createCriteria().andUserIdEqualTo(userId).andUserPermissionIdEqualTo(userPermissionId);
+		if (exists(example))
+			return 0;
+		BrUserPermissionDbo grant = new BrUserPermissionDbo();
+		grant.setUserId(userId);
+		grant.setUserPermissionId(userPermissionId);
+		insert(grant);
+		return 1;
+	}
 }

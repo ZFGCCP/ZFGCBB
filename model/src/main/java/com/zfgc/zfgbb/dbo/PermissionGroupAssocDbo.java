@@ -19,9 +19,6 @@ public class PermissionGroupAssocDbo extends AbstractDbo {
     @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source field: zfgbb.permission_group_assoc.updated_ts")
     private OffsetDateTime updatedTs;
 
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source field: zfgbb.permission_group_assoc.migration_hash")
-    private String migrationHash;
-
     @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source field: zfgbb.permission_group_assoc.permission_group_assoc_id")
     public Integer getPermissionGroupAssocId() {
         return permissionGroupAssocId;
@@ -70,16 +67,6 @@ public class PermissionGroupAssocDbo extends AbstractDbo {
     @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source field: zfgbb.permission_group_assoc.updated_ts")
     public void setUpdatedTs(OffsetDateTime updatedTs) {
         this.updatedTs = updatedTs;
-    }
-
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source field: zfgbb.permission_group_assoc.migration_hash")
-    public String getMigrationHash() {
-        return migrationHash;
-    }
-
-    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source field: zfgbb.permission_group_assoc.migration_hash")
-    public void setMigrationHash(String migrationHash) {
-        this.migrationHash = migrationHash;
     }
 
     @Override

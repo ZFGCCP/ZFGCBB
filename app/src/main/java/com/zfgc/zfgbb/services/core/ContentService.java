@@ -5,7 +5,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -13,14 +12,16 @@ import org.springframework.http.MediaType;
 import org.springframework.http.MediaTypeFactory;
 import org.springframework.stereotype.Service;
 
-import com.zfgc.zfgbb.dao.core.ContentResourceDao;
+import com.zfgc.zfgbb.dao.cms.ContentResourceDao;
 import com.zfgc.zfgbb.dbo.ContentResourceDbo;
 import com.zfgc.zfgbb.dbo.ContentResourceDboExample;
 import com.zfgc.zfgbb.exception.ZfgcNotFoundException;
 import com.zfgc.zfgbb.services.AbstractService;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @ConfigurationProperties(prefix = "zfgbb.content")
+@RequiredArgsConstructor
 public class ContentService extends AbstractService {
 	private String path;
 	private String images;
@@ -33,8 +34,7 @@ public class ContentService extends AbstractService {
 		this.images = images;
 	}
 
-	@Autowired
-	private ContentResourceDao contentResourceDao;
+	private final ContentResourceDao contentResourceDao;
 
 	public ContentResourceDbo getContentResourceDbo(Integer resourceId) {
 		ContentResourceDboExample ex = new ContentResourceDboExample();

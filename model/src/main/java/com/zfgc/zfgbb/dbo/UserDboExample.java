@@ -1058,6 +1058,66 @@ public class UserDboExample {
             return (Criteria) this;
         }
 
+        public Criteria andTokensValidAfterTsIsNull() {
+            addCriterion("tokens_valid_after_ts is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTokensValidAfterTsIsNotNull() {
+            addCriterion("tokens_valid_after_ts is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andTokensValidAfterTsEqualTo(OffsetDateTime value) {
+            addCriterion("tokens_valid_after_ts =", value, "tokensValidAfterTs");
+            return (Criteria) this;
+        }
+
+        public Criteria andTokensValidAfterTsNotEqualTo(OffsetDateTime value) {
+            addCriterion("tokens_valid_after_ts <>", value, "tokensValidAfterTs");
+            return (Criteria) this;
+        }
+
+        public Criteria andTokensValidAfterTsGreaterThan(OffsetDateTime value) {
+            addCriterion("tokens_valid_after_ts >", value, "tokensValidAfterTs");
+            return (Criteria) this;
+        }
+
+        public Criteria andTokensValidAfterTsGreaterThanOrEqualTo(OffsetDateTime value) {
+            addCriterion("tokens_valid_after_ts >=", value, "tokensValidAfterTs");
+            return (Criteria) this;
+        }
+
+        public Criteria andTokensValidAfterTsLessThan(OffsetDateTime value) {
+            addCriterion("tokens_valid_after_ts <", value, "tokensValidAfterTs");
+            return (Criteria) this;
+        }
+
+        public Criteria andTokensValidAfterTsLessThanOrEqualTo(OffsetDateTime value) {
+            addCriterion("tokens_valid_after_ts <=", value, "tokensValidAfterTs");
+            return (Criteria) this;
+        }
+
+        public Criteria andTokensValidAfterTsIn(List<OffsetDateTime> values) {
+            addCriterion("tokens_valid_after_ts in", values, "tokensValidAfterTs");
+            return (Criteria) this;
+        }
+
+        public Criteria andTokensValidAfterTsNotIn(List<OffsetDateTime> values) {
+            addCriterion("tokens_valid_after_ts not in", values, "tokensValidAfterTs");
+            return (Criteria) this;
+        }
+
+        public Criteria andTokensValidAfterTsBetween(OffsetDateTime value1, OffsetDateTime value2) {
+            addCriterion("tokens_valid_after_ts between", value1, value2, "tokensValidAfterTs");
+            return (Criteria) this;
+        }
+
+        public Criteria andTokensValidAfterTsNotBetween(OffsetDateTime value1, OffsetDateTime value2) {
+            addCriterion("tokens_valid_after_ts not between", value1, value2, "tokensValidAfterTs");
+            return (Criteria) this;
+        }
+
         public Criteria andSsoKeyContains(String value) {
             addCriterion("sso_key ilike", LikePatterns.contains(value), "ssoKey");
             return (Criteria) this;

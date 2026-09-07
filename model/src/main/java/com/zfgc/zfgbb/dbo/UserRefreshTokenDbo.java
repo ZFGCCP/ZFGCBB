@@ -28,6 +28,18 @@ public class UserRefreshTokenDbo extends AbstractDbo {
     @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source field: zfgbb.user_refresh_token.updated_ts")
     private OffsetDateTime updatedTs;
 
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source field: zfgbb.user_refresh_token.rotated_ts")
+    private OffsetDateTime rotatedTs;
+
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source field: zfgbb.user_refresh_token.family_id")
+    private String familyId;
+
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source field: zfgbb.user_refresh_token.successor_id")
+    private Integer successorId;
+
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source field: zfgbb.user_refresh_token.revoked_ts")
+    private OffsetDateTime revokedTs;
+
     @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source field: zfgbb.user_refresh_token.user_refresh_token_id")
     public Integer getUserRefreshTokenId() {
         return userRefreshTokenId;
@@ -106,6 +118,46 @@ public class UserRefreshTokenDbo extends AbstractDbo {
     @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source field: zfgbb.user_refresh_token.updated_ts")
     public void setUpdatedTs(OffsetDateTime updatedTs) {
         this.updatedTs = updatedTs;
+    }
+
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source field: zfgbb.user_refresh_token.rotated_ts")
+    public OffsetDateTime getRotatedTs() {
+        return rotatedTs;
+    }
+
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source field: zfgbb.user_refresh_token.rotated_ts")
+    public void setRotatedTs(OffsetDateTime rotatedTs) {
+        this.rotatedTs = rotatedTs;
+    }
+
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source field: zfgbb.user_refresh_token.family_id")
+    public String getFamilyId() {
+        return familyId;
+    }
+
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source field: zfgbb.user_refresh_token.family_id")
+    public void setFamilyId(String familyId) {
+        this.familyId = familyId;
+    }
+
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source field: zfgbb.user_refresh_token.successor_id")
+    public Integer getSuccessorId() {
+        return successorId;
+    }
+
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source field: zfgbb.user_refresh_token.successor_id")
+    public void setSuccessorId(Integer successorId) {
+        this.successorId = successorId;
+    }
+
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source field: zfgbb.user_refresh_token.revoked_ts")
+    public OffsetDateTime getRevokedTs() {
+        return revokedTs;
+    }
+
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source field: zfgbb.user_refresh_token.revoked_ts")
+    public void setRevokedTs(OffsetDateTime revokedTs) {
+        this.revokedTs = revokedTs;
     }
 
     @Override

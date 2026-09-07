@@ -17,6 +17,10 @@ public abstract class KeyedDao<Dbo, Example, PrimaryKey> extends ReadDao<Dbo, Ex
 		return Optional.ofNullable(crudMapper.selectByPrimaryKey(primaryKey));
 	}
 
+	public Optional<Dbo> lockForUpdate(PrimaryKey primaryKey) {
+		return Optional.ofNullable(crudMapper.selectByPrimaryKeyForUpdate(primaryKey));
+	}
+
 	public boolean existsWithPrimaryKey(PrimaryKey primaryKey) {
 		return find(primaryKey).isPresent();
 	}

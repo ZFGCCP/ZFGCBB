@@ -1,5 +1,7 @@
 package com.zfgc.zfgbb.dao.users;
 
+import java.time.OffsetDateTime;
+
 import org.springframework.stereotype.Repository;
 
 import com.zfgc.zfgbb.dao.IdentityDao;
@@ -12,5 +14,16 @@ public class UserRefreshTokenDao extends IdentityDao<UserRefreshTokenDbo, UserRe
 
 	public UserRefreshTokenDao(UserRefreshTokenDboMapper mapper) {
 		super(mapper);
+	}
+
+	public int consume(Integer userRefreshTokenId, OffsetDateTime now) {
+		UserRefreshTokenDbo consumed = new UserRefreshTokenDbo();
+		consumed.setRevokedFlag(true);
+		consumed.setRotatedTs(now);
+		UserRefreshTokenDboExample example = new UserRefreshTokenDboExample();
+		example.createCriteria().andUserRefreshTokenIdEqualTo(userRefreshTokenId)
+				.andRevokedFlagEqualTo(false)
+				.andExpiresTsGreaterThanOrEqualTo(now);
+		return updateWhere(consumed, example);
 	}
 }

@@ -13,7 +13,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.mutable.MutableInt;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.zfgc.zfgbb.dataprovider.forum.BBCodeDataProvider;
@@ -26,8 +25,10 @@ import jakarta.annotation.PostConstruct;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import lombok.RequiredArgsConstructor;
 
 @Component
+@RequiredArgsConstructor
 public class BBCodeService {
 
 	public Map<String, BBCodeConfig> validBbCodes = new HashMap<>();
@@ -35,14 +36,11 @@ public class BBCodeService {
 	private Boolean outputContent = true;
 	private Logger LOGGER = LogManager.getLogger(BBCodeService.class);
 
-	@Autowired
-	BBCodeDataProvider bbCodeDataProvider;
+	private final BBCodeDataProvider bbCodeDataProvider;
 
-	@Autowired
-	BBCodeOutputSanitizer outputSanitizer;
+	private final BBCodeOutputSanitizer outputSanitizer;
 
-	@Autowired
-	QuotedMessageLookup quotedMessageLookup;
+	private final QuotedMessageLookup quotedMessageLookup;
 
 	private static final Pattern QUOTE_MSG_ID = Pattern.compile(
 			"\\[quote\\b[^\\]]*\\bmsg=(\\d+)", Pattern.CASE_INSENSITIVE);

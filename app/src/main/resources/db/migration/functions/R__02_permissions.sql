@@ -1,16 +1,16 @@
-create or replace function zfgbb.create_permission(p_permission_id int, p_permission_name text, p_permission_code text) 
+create or replace function zfgbb.create_permission(p_permission_id int, p_permission_name text, p_permission_code text)
 returns void
 language plpgsql
 as $$
 begin
-	
+
 	insert into zfgbb.permission(permission_id, permission_name, permission_code)
 	values(p_permission_id, p_permission_name, p_permission_code)
 	on conflict (permission_id)
 	do update set permission_name = p_permission_name, permission_code = p_permission_code;
-	
+
 	return;
-	
+
 end; $$;
 
 create or replace function zfgbb.create_permission_group(p_group_id int,
@@ -61,12 +61,12 @@ end; $$;
 
 select zfgbb.create_permission(1, 'ZFGC User', 'ZFGC_USER');
 select zfgbb.create_permission(2, 'ZFGC Guest', 'ZFGC_GUEST');
-select zfgbb.create_permission(3, 'User Profile Viewer', 'ZFGC_PROFILE_VIEWER');
-select zfgbb.create_permission(4, 'User Profile Editor', 'ZFGC_PROFILE_EDITOR');
-select zfgbb.create_permission(5, 'User Profile Admin', 'ZFGC_PROFILE_ADMIN');
-select zfgbb.create_permission(6, 'Message Viewer', 'ZFGC_MESSAGE_VIEWER');
-select zfgbb.create_permission(7, 'Message Editor', 'ZFGC_MESSAGE_EDITOR');
-select zfgbb.create_permission(8, 'Message Admin', 'ZFGC_MESSAGE_ADMIN');
+select zfgbb.create_permission(3, 'Profile Read', 'ZFGC_PROFILE_READ');
+select zfgbb.create_permission(4, 'Profile Write', 'ZFGC_PROFILE_WRITE');
+select zfgbb.create_permission(5, 'Profile Admin', 'ZFGC_PROFILE_ADMIN');
+select zfgbb.create_permission(6, 'Forum Read', 'ZFGC_FORUM_READ');
+select zfgbb.create_permission(7, 'Forum Write', 'ZFGC_FORUM_WRITE');
+select zfgbb.create_permission(8, 'Forum Moderate', 'ZFGC_FORUM_MODERATE');
 select zfgbb.create_permission(9, 'Read Only', 'ZFGC_READ_ONLY');
 select zfgbb.create_permission(10, 'Site Admin', 'ZFGC_SITE_ADMIN');
 select zfgbb.create_permission(11, 'Site Moderator', 'ZFGC_SITE_MODERATOR');

@@ -6,6 +6,8 @@ public interface CrudMapper<Dbo, Example, PrimaryKey> extends ReadMapper<Dbo, Ex
 
 	Dbo selectByPrimaryKey(PrimaryKey primaryKey);
 
+	Dbo selectByPrimaryKeyForUpdate(PrimaryKey primaryKey);
+
 	int insert(Dbo row);
 
 	int insertSelective(Dbo row);

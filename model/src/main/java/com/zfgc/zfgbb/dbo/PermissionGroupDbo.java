@@ -28,6 +28,9 @@ public class PermissionGroupDbo extends AbstractDbo {
     @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source field: zfgbb.permission_group.star_image")
     private Integer starImage;
 
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source field: zfgbb.permission_group.color")
+    private String color;
+
     @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source field: zfgbb.permission_group.permission_group_id")
     public Integer getPermissionGroupId() {
         return permissionGroupId;
@@ -106,6 +109,16 @@ public class PermissionGroupDbo extends AbstractDbo {
     @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source field: zfgbb.permission_group.star_image")
     public void setStarImage(Integer starImage) {
         this.starImage = starImage;
+    }
+
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source field: zfgbb.permission_group.color")
+    public String getColor() {
+        return color;
+    }
+
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source field: zfgbb.permission_group.color")
+    public void setColor(String color) {
+        this.color = color;
     }
 
     @Override

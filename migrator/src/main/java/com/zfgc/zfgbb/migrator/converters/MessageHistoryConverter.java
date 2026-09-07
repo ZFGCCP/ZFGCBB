@@ -12,7 +12,6 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.HtmlUtils;
@@ -35,33 +34,28 @@ import com.zfgc.zfgbb.migrator.smf.dbo.SMFMessageHistoryDbExample;
 import com.zfgc.zfgbb.migrator.smf.mappers.SMFMessageDbMapper;
 import com.zfgc.zfgbb.migrator.smf.mappers.SMFMessageHistoryDbMapper;
 import com.zfgc.zfgbb.migrator.smf.queries.SmfMessageStreamMapper;
+import lombok.RequiredArgsConstructor;
 
 @Component
+@RequiredArgsConstructor
 public class MessageHistoryConverter extends AbstractConverter<Void> {
 
-	@Autowired
-	private SMFMessageHistoryDbMapper smfMsgHistoryMapper;
+	private final SMFMessageHistoryDbMapper smfMsgHistoryMapper;
 
-	@Autowired
-	private SMFMessageDbMapper smfMsgMapper;
+	private final SMFMessageDbMapper smfMsgMapper;
 
-	@Autowired
-	private SmfMessageStreamMapper smfMessageStreamMapper;
+	private final SmfMessageStreamMapper smfMessageStreamMapper;
 
-	@Autowired
-	private MessageHistoryDboMapper msgHistoryMapper;
+	private final MessageHistoryDboMapper msgHistoryMapper;
 
-	@Autowired
-	private IpAddressDboMapper ipMapper;
+	private final IpAddressDboMapper ipMapper;
 
-	@Autowired
-	private MigratorIdMapService idMap;
+	private final MigratorIdMapService idMap;
 
-	@Autowired
-	private SqlSessionFactory sqlSessionFactory;
+	private final SqlSessionFactory sqlSessionFactory;
 
 	@Value("${zfgbb.migrator.batch-size:5000}")
-	private int batchSize;
+	private final int batchSize;
 
 	private static final Logger logger = LoggerFactory.getLogger(MessageHistoryConverter.class);
 

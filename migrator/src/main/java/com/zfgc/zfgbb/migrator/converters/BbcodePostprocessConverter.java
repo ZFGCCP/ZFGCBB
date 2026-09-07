@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,17 +14,17 @@ import com.zfgc.zfgbb.migrator.jobs.JobContextHolder;
 import com.zfgc.zfgbb.migrator.jobs.JobType;
 import com.zfgc.zfgbb.migrator.jobs.LegacyEntityType;
 import com.zfgc.zfgbb.migrator.jobs.MigratorIdMapService;
+import lombok.RequiredArgsConstructor;
 
 @Component
+@RequiredArgsConstructor
 public class BbcodePostprocessConverter extends AbstractConverter<Void> {
 
 	private static final Logger logger = LoggerFactory.getLogger(BbcodePostprocessConverter.class);
 
-	@Autowired
-	private MessageHistoryDboMapper messageHistoryMapper;
+	private final MessageHistoryDboMapper messageHistoryMapper;
 
-	@Autowired
-	private MigratorIdMapService idMap;
+	private final MigratorIdMapService idMap;
 
 	@Override
 	public JobType getType() {

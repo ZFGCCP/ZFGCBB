@@ -638,8 +638,263 @@ public class UserRefreshTokenDboExample {
             return (Criteria) this;
         }
 
+        public Criteria andRotatedTsIsNull() {
+            addCriterion("rotated_ts is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRotatedTsIsNotNull() {
+            addCriterion("rotated_ts is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRotatedTsEqualTo(OffsetDateTime value) {
+            addCriterion("rotated_ts =", value, "rotatedTs");
+            return (Criteria) this;
+        }
+
+        public Criteria andRotatedTsNotEqualTo(OffsetDateTime value) {
+            addCriterion("rotated_ts <>", value, "rotatedTs");
+            return (Criteria) this;
+        }
+
+        public Criteria andRotatedTsGreaterThan(OffsetDateTime value) {
+            addCriterion("rotated_ts >", value, "rotatedTs");
+            return (Criteria) this;
+        }
+
+        public Criteria andRotatedTsGreaterThanOrEqualTo(OffsetDateTime value) {
+            addCriterion("rotated_ts >=", value, "rotatedTs");
+            return (Criteria) this;
+        }
+
+        public Criteria andRotatedTsLessThan(OffsetDateTime value) {
+            addCriterion("rotated_ts <", value, "rotatedTs");
+            return (Criteria) this;
+        }
+
+        public Criteria andRotatedTsLessThanOrEqualTo(OffsetDateTime value) {
+            addCriterion("rotated_ts <=", value, "rotatedTs");
+            return (Criteria) this;
+        }
+
+        public Criteria andRotatedTsIn(List<OffsetDateTime> values) {
+            addCriterion("rotated_ts in", values, "rotatedTs");
+            return (Criteria) this;
+        }
+
+        public Criteria andRotatedTsNotIn(List<OffsetDateTime> values) {
+            addCriterion("rotated_ts not in", values, "rotatedTs");
+            return (Criteria) this;
+        }
+
+        public Criteria andRotatedTsBetween(OffsetDateTime value1, OffsetDateTime value2) {
+            addCriterion("rotated_ts between", value1, value2, "rotatedTs");
+            return (Criteria) this;
+        }
+
+        public Criteria andRotatedTsNotBetween(OffsetDateTime value1, OffsetDateTime value2) {
+            addCriterion("rotated_ts not between", value1, value2, "rotatedTs");
+            return (Criteria) this;
+        }
+
+        public Criteria andFamilyIdIsNull() {
+            addCriterion("family_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFamilyIdIsNotNull() {
+            addCriterion("family_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andFamilyIdEqualTo(String value) {
+            addCriterion("family_id =", value, "familyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andFamilyIdNotEqualTo(String value) {
+            addCriterion("family_id <>", value, "familyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andFamilyIdGreaterThan(String value) {
+            addCriterion("family_id >", value, "familyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andFamilyIdGreaterThanOrEqualTo(String value) {
+            addCriterion("family_id >=", value, "familyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andFamilyIdLessThan(String value) {
+            addCriterion("family_id <", value, "familyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andFamilyIdLessThanOrEqualTo(String value) {
+            addCriterion("family_id <=", value, "familyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andFamilyIdLike(String value) {
+            addCriterion("family_id ilike", value, "familyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andFamilyIdNotLike(String value) {
+            addCriterion("family_id not ilike", value, "familyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andFamilyIdIn(List<String> values) {
+            addCriterion("family_id in", values, "familyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andFamilyIdNotIn(List<String> values) {
+            addCriterion("family_id not in", values, "familyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andFamilyIdBetween(String value1, String value2) {
+            addCriterion("family_id between", value1, value2, "familyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andFamilyIdNotBetween(String value1, String value2) {
+            addCriterion("family_id not between", value1, value2, "familyId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSuccessorIdIsNull() {
+            addCriterion("successor_id is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSuccessorIdIsNotNull() {
+            addCriterion("successor_id is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andSuccessorIdEqualTo(Integer value) {
+            addCriterion("successor_id =", value, "successorId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSuccessorIdNotEqualTo(Integer value) {
+            addCriterion("successor_id <>", value, "successorId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSuccessorIdGreaterThan(Integer value) {
+            addCriterion("successor_id >", value, "successorId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSuccessorIdGreaterThanOrEqualTo(Integer value) {
+            addCriterion("successor_id >=", value, "successorId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSuccessorIdLessThan(Integer value) {
+            addCriterion("successor_id <", value, "successorId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSuccessorIdLessThanOrEqualTo(Integer value) {
+            addCriterion("successor_id <=", value, "successorId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSuccessorIdIn(List<Integer> values) {
+            addCriterion("successor_id in", values, "successorId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSuccessorIdNotIn(List<Integer> values) {
+            addCriterion("successor_id not in", values, "successorId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSuccessorIdBetween(Integer value1, Integer value2) {
+            addCriterion("successor_id between", value1, value2, "successorId");
+            return (Criteria) this;
+        }
+
+        public Criteria andSuccessorIdNotBetween(Integer value1, Integer value2) {
+            addCriterion("successor_id not between", value1, value2, "successorId");
+            return (Criteria) this;
+        }
+
+        public Criteria andRevokedTsIsNull() {
+            addCriterion("revoked_ts is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRevokedTsIsNotNull() {
+            addCriterion("revoked_ts is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andRevokedTsEqualTo(OffsetDateTime value) {
+            addCriterion("revoked_ts =", value, "revokedTs");
+            return (Criteria) this;
+        }
+
+        public Criteria andRevokedTsNotEqualTo(OffsetDateTime value) {
+            addCriterion("revoked_ts <>", value, "revokedTs");
+            return (Criteria) this;
+        }
+
+        public Criteria andRevokedTsGreaterThan(OffsetDateTime value) {
+            addCriterion("revoked_ts >", value, "revokedTs");
+            return (Criteria) this;
+        }
+
+        public Criteria andRevokedTsGreaterThanOrEqualTo(OffsetDateTime value) {
+            addCriterion("revoked_ts >=", value, "revokedTs");
+            return (Criteria) this;
+        }
+
+        public Criteria andRevokedTsLessThan(OffsetDateTime value) {
+            addCriterion("revoked_ts <", value, "revokedTs");
+            return (Criteria) this;
+        }
+
+        public Criteria andRevokedTsLessThanOrEqualTo(OffsetDateTime value) {
+            addCriterion("revoked_ts <=", value, "revokedTs");
+            return (Criteria) this;
+        }
+
+        public Criteria andRevokedTsIn(List<OffsetDateTime> values) {
+            addCriterion("revoked_ts in", values, "revokedTs");
+            return (Criteria) this;
+        }
+
+        public Criteria andRevokedTsNotIn(List<OffsetDateTime> values) {
+            addCriterion("revoked_ts not in", values, "revokedTs");
+            return (Criteria) this;
+        }
+
+        public Criteria andRevokedTsBetween(OffsetDateTime value1, OffsetDateTime value2) {
+            addCriterion("revoked_ts between", value1, value2, "revokedTs");
+            return (Criteria) this;
+        }
+
+        public Criteria andRevokedTsNotBetween(OffsetDateTime value1, OffsetDateTime value2) {
+            addCriterion("revoked_ts not between", value1, value2, "revokedTs");
+            return (Criteria) this;
+        }
+
         public Criteria andTokenHashContains(String value) {
             addCriterion("token_hash ilike", LikePatterns.contains(value), "tokenHash");
+            return (Criteria) this;
+        }
+
+        public Criteria andFamilyIdContains(String value) {
+            addCriterion("family_id ilike", LikePatterns.contains(value), "familyId");
             return (Criteria) this;
         }
     }

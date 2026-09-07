@@ -1,6 +1,5 @@
 package com.zfgc.zfgbb.dbo;
 
-import com.zfgc.zfgbb.persistence.LikePatterns;
 import jakarta.annotation.Generated;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -445,81 +444,6 @@ public class PermissionGroupAssocDboExample {
 
         public Criteria andUpdatedTsNotBetween(OffsetDateTime value1, OffsetDateTime value2) {
             addCriterion("updated_ts not between", value1, value2, "updatedTs");
-            return (Criteria) this;
-        }
-
-        public Criteria andMigrationHashIsNull() {
-            addCriterion("migration_hash is null");
-            return (Criteria) this;
-        }
-
-        public Criteria andMigrationHashIsNotNull() {
-            addCriterion("migration_hash is not null");
-            return (Criteria) this;
-        }
-
-        public Criteria andMigrationHashEqualTo(String value) {
-            addCriterion("migration_hash =", value, "migrationHash");
-            return (Criteria) this;
-        }
-
-        public Criteria andMigrationHashNotEqualTo(String value) {
-            addCriterion("migration_hash <>", value, "migrationHash");
-            return (Criteria) this;
-        }
-
-        public Criteria andMigrationHashGreaterThan(String value) {
-            addCriterion("migration_hash >", value, "migrationHash");
-            return (Criteria) this;
-        }
-
-        public Criteria andMigrationHashGreaterThanOrEqualTo(String value) {
-            addCriterion("migration_hash >=", value, "migrationHash");
-            return (Criteria) this;
-        }
-
-        public Criteria andMigrationHashLessThan(String value) {
-            addCriterion("migration_hash <", value, "migrationHash");
-            return (Criteria) this;
-        }
-
-        public Criteria andMigrationHashLessThanOrEqualTo(String value) {
-            addCriterion("migration_hash <=", value, "migrationHash");
-            return (Criteria) this;
-        }
-
-        public Criteria andMigrationHashLike(String value) {
-            addCriterion("migration_hash ilike", value, "migrationHash");
-            return (Criteria) this;
-        }
-
-        public Criteria andMigrationHashNotLike(String value) {
-            addCriterion("migration_hash not ilike", value, "migrationHash");
-            return (Criteria) this;
-        }
-
-        public Criteria andMigrationHashIn(List<String> values) {
-            addCriterion("migration_hash in", values, "migrationHash");
-            return (Criteria) this;
-        }
-
-        public Criteria andMigrationHashNotIn(List<String> values) {
-            addCriterion("migration_hash not in", values, "migrationHash");
-            return (Criteria) this;
-        }
-
-        public Criteria andMigrationHashBetween(String value1, String value2) {
-            addCriterion("migration_hash between", value1, value2, "migrationHash");
-            return (Criteria) this;
-        }
-
-        public Criteria andMigrationHashNotBetween(String value1, String value2) {
-            addCriterion("migration_hash not between", value1, value2, "migrationHash");
-            return (Criteria) this;
-        }
-
-        public Criteria andMigrationHashContains(String value) {
-            addCriterion("migration_hash ilike", LikePatterns.contains(value), "migrationHash");
             return (Criteria) this;
         }
     }

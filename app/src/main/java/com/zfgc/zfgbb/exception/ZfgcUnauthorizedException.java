@@ -1,6 +1,6 @@
 package com.zfgc.zfgbb.exception;
 
-import com.zfgc.zfgbb.model.User;
+import com.zfgc.zfgbb.model.users.User;
 
 public class ZfgcUnauthorizedException extends RuntimeException {
 	

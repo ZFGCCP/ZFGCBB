@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,8 +22,10 @@ import com.zfgc.zfgbb.migrator.jobs.LegacyEntityType;
 import com.zfgc.zfgbb.migrator.jobs.MigratorIdMapService;
 import com.zfgc.zfgbb.migrator.smf.dbo.SMFMembersDbExample;
 import com.zfgc.zfgbb.migrator.smf.mappers.SMFMembersDbMapper;
+import lombok.RequiredArgsConstructor;
 
 @Component
+@RequiredArgsConstructor
 public class UserContactInfoConverter extends AbstractConverter<Map<Integer, UserContactInfoDbo>> {
 
 	@Override
@@ -34,17 +35,13 @@ public class UserContactInfoConverter extends AbstractConverter<Map<Integer, Use
 
 	Logger logger = LoggerFactory.getLogger(UserContactInfoConverter.class);
 
-	@Autowired
-	private SMFMembersDbMapper membersMapper;
+	private final SMFMembersDbMapper membersMapper;
 
-	@Autowired
-	private UserContactInfoDboMapper contactInfoMapper;
+	private final UserContactInfoDboMapper contactInfoMapper;
 
-	@Autowired
-	private EmailAddressDboMapper emailMapper;
+	private final EmailAddressDboMapper emailMapper;
 
-	@Autowired
-	private MigratorIdMapService idMap;
+	private final MigratorIdMapService idMap;
 
 	@Override
 	@Transactional

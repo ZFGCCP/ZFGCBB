@@ -4,13 +4,17 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Streams;
+import com.zfgc.zfgbb.dao.cms.ContentResourceDao;
+import com.zfgc.zfgbb.dao.forum.AllMessagesInThreadViewDao;
+import com.zfgc.zfgbb.dao.forum.BoardPermissionViewDao;
 import com.zfgc.zfgbb.dao.forum.CurrentMessageDao;
 import com.zfgc.zfgbb.dao.forum.FileAttachmentsDao;
 import com.zfgc.zfgbb.dao.forum.MessageDao;
@@ -18,6 +22,10 @@ import com.zfgc.zfgbb.dao.forum.MessageHistoryDao;
 import com.zfgc.zfgbb.dao.users.UserDao;
 import com.zfgc.zfgbb.dataprovider.AbstractDataProvider;
 import com.zfgc.zfgbb.dataprovider.users.UserDataProvider;
+import com.zfgc.zfgbb.dbo.AllMessagesInThreadViewDbo;
+import com.zfgc.zfgbb.dbo.AllMessagesInThreadViewDboExample;
+import com.zfgc.zfgbb.dbo.BoardPermissionViewDbo;
+import com.zfgc.zfgbb.dbo.BoardPermissionViewDboExample;
 import com.zfgc.zfgbb.dbo.ContentResourceDbo;
 import com.zfgc.zfgbb.dbo.ContentResourceDboExample;
 import com.zfgc.zfgbb.dbo.CurrentMessageDbo;
@@ -29,36 +37,33 @@ import com.zfgc.zfgbb.dbo.MessageDboExample;
 import com.zfgc.zfgbb.dbo.MessageHistoryDbo;
 import com.zfgc.zfgbb.dbo.MessageHistoryDboExample;
 import com.zfgc.zfgbb.exception.ZfgcNotFoundException;
-import com.zfgc.zfgbb.mappers.ContentResourceDboMapper;
-import com.zfgc.zfgbb.mappers.MessageDboMapper;
 import com.zfgc.zfgbb.mapstruct.forum.MessageMap;
-import com.zfgc.zfgbb.model.User;
+import com.zfgc.zfgbb.model.users.User;
 import com.zfgc.zfgbb.model.forum.FileAttachment;
 import com.zfgc.zfgbb.model.forum.Message;
 import com.zfgc.zfgbb.model.forum.MessageHistory;
+import lombok.RequiredArgsConstructor;
 
 @Repository
+@RequiredArgsConstructor
 public class MessageDataProvider extends AbstractDataProvider {
-	@Autowired
-	private MessageDao messageDao;
+	private final MessageDao messageDao;
 	
-	@Autowired
-	private MessageHistoryDao messageHistoryDao;
+	private final MessageHistoryDao messageHistoryDao;
 
-	@Autowired
-	private CurrentMessageDao currentMessageDao;
+	private final CurrentMessageDao currentMessageDao;
 	
-	@Autowired
-	private UserDataProvider userDataProvider;
+	private final UserDataProvider userDataProvider;
 
-	@Autowired
-	private FileAttachmentsDao fileAttachmentsDao;
+	private final FileAttachmentsDao fileAttachmentsDao;
 
-	@Autowired
-	private ContentResourceDboMapper contentResourceMapper;
+	private final ContentResourceDao contentResourceDao;
 
-	@Autowired
-	private MessageMap messageMap;
+	private final BoardPermissionViewDao boardPermissionViewDao;
+
+	private final AllMessagesInThreadViewDao allMessagesInThreadViewDao;
+
+	private final MessageMap messageMap;
 	
 	public Message getMessage(Integer messageId) {
 		Message message = map(messageDao.find(messageId).orElseThrow(ZfgcNotFoundException::new), Message.class);
@@ -124,7 +129,7 @@ public class MessageDataProvider extends AbstractDataProvider {
 				.map(FileAttachmentDbo::getContentResourceId).distinct().toList();
 		ContentResourceDboExample crEx = new ContentResourceDboExample();
 		crEx.createCriteria().andContentResourceIdIn(resourceIds);
-		Map<Integer, ContentResourceDbo> resourceById = contentResourceMapper.selectByExample(crEx).stream()
+		Map<Integer, ContentResourceDbo> resourceById = contentResourceDao.get(crEx).stream()
 				.collect(Collectors.toMap(ContentResourceDbo::getContentResourceId, r -> r));
 
 		Map<Integer, List<FileAttachment>> byMessageId = attachmentDbos.stream()
@@ -221,14 +226,44 @@ public class MessageDataProvider extends AbstractDataProvider {
 		return count;
 	}
 	
-	public List<Message> getMessagesByUser(Integer userId, Integer page, Integer count){
-		//Integer start = ((page - 1)*count) + 1;
-		CurrentMessageDboExample ex = new CurrentMessageDboExample();
-		ex.createCriteria().andOwnerIdEqualTo(userId);;
-		ex.setOrderByClause("post_in_thread asc");
+	public List<Message> getMessagesByUser(Integer userId, Integer pageNumber, Integer count, List<Integer> permissionIds){
+		int resolvedPageNumber = pageNumber == null || pageNumber < 1 ? 1 : pageNumber;
+		int pageSize = count == null || count < 1 ? 25 : Math.min(count, 50);
+		long offset = (long) (resolvedPageNumber - 1) * pageSize;
+		if (offset > Integer.MAX_VALUE)
+			return List.of();
 
-		return currentMessageDao.get(ex)
-						 .stream()
-						 .map(this::mapMessage).toList();
+		List<Integer> visibleBoardIds = visibleBoardIds(permissionIds);
+		if (visibleBoardIds.isEmpty())
+			return List.of();
+
+		AllMessagesInThreadViewDboExample pageExample = new AllMessagesInThreadViewDboExample();
+		pageExample.createCriteria().andLastPostedUserIdEqualTo(userId).andBoardIdIn(visibleBoardIds);
+		pageExample.setOrderByClause("post_ts desc");
+		pageExample.setLimit(pageSize);
+		pageExample.setOffset((int) offset);
+		List<Integer> pageMessageIds = allMessagesInThreadViewDao.get(pageExample).stream()
+				.map(AllMessagesInThreadViewDbo::getMessageId).toList();
+		if (pageMessageIds.isEmpty())
+			return List.of();
+
+		CurrentMessageDboExample bodyExample = new CurrentMessageDboExample();
+		bodyExample.createCriteria().andMessageIdIn(pageMessageIds);
+		Map<Integer, CurrentMessageDbo> bodiesByMessageId = currentMessageDao.get(bodyExample).stream()
+				.collect(Collectors.toMap(CurrentMessageDbo::getMessageId, Function.identity()));
+		return pageMessageIds.stream()
+				.map(bodiesByMessageId::get)
+				.filter(Objects::nonNull)
+				.map(this::mapMessage)
+				.toList();
+	}
+
+	private List<Integer> visibleBoardIds(List<Integer> permissionIds) {
+		if (permissionIds == null || permissionIds.isEmpty())
+			return List.of();
+		BoardPermissionViewDboExample visibleExample = new BoardPermissionViewDboExample();
+		visibleExample.createCriteria().andPermissionIdIn(permissionIds);
+		return boardPermissionViewDao.get(visibleExample).stream()
+				.map(BoardPermissionViewDbo::getBoardId).distinct().toList();
 	}
 }

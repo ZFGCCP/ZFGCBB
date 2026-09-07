@@ -9,11 +9,10 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.zfgc.zfgbb.dao.BoardDao;
-import com.zfgc.zfgbb.dao.BoardPermissionViewDao;
+import com.zfgc.zfgbb.dao.forum.BoardPermissionViewDao;
 import com.zfgc.zfgbb.dao.CategoryDao;
 import com.zfgc.zfgbb.dao.ThreadDao;
 import com.zfgc.zfgbb.dataprovider.AbstractDataProvider;
@@ -35,30 +34,25 @@ import com.zfgc.zfgbb.model.forum.ChildBoard;
 import com.zfgc.zfgbb.model.forum.Forum;
 import com.zfgc.zfgbb.model.forum.Thread;
 import com.zfgc.zfgbb.model.users.Permission;
+import lombok.RequiredArgsConstructor;
 
 @Repository
+@RequiredArgsConstructor
 public class ForumDataProvider extends AbstractDataProvider {
 	
-	@Autowired
-	private BoardDao boardDao;
+	private final BoardDao boardDao;
 	
-	@Autowired
-	private CategoryDao categoryDao;
+	private final CategoryDao categoryDao;
 	
-	@Autowired
-	private ThreadDao threadDao;
+	private final ThreadDao threadDao;
 	
-	@Autowired
-	private ThreadDataProvider threadDataProvider;
+	private final ThreadDataProvider threadDataProvider;
 	
-	@Autowired
-	private BoardPermissionViewDao boardPermissionDao;
+	private final BoardPermissionViewDao boardPermissionDao;
 	
-	@Autowired
-	private BoardSummaryViewDboMapper boardSummaryMapper;
+	private final BoardSummaryViewDboMapper boardSummaryMapper;
 	
-	@Autowired
-	private ChildBoardViewDboMapper childBoardMapper;
+	private final ChildBoardViewDboMapper childBoardMapper;
 	
 	public Board getBoard(Integer boardId, Integer pageNo, Integer threadsPerPage) {
 		Optional<BoardDbo> boardDbo = boardDao.find(boardId);

@@ -6,15 +6,22 @@ import org.springframework.dao.ConcurrencyFailureException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.zfgc.zfgbb.exception.ZfgcInvalidRequestException;
+import com.zfgc.zfgbb.exception.ZfgcUnauthorizedException;
 
 import jakarta.servlet.http.HttpServletRequest;
 
 @RestControllerAdvice
 public class RuntimeExceptionHandler {
+
+	@ExceptionHandler(value = AuthenticationException.class)
+	public ProblemDetail handleAuthenticationFailure(HttpServletRequest request, AuthenticationException exception) {
+		return ProblemDetail.forStatusAndDetail(HttpStatus.UNAUTHORIZED, "Invalid username or password.");
+	}
 
 	@ExceptionHandler(value = DataIntegrityViolationException.class)
 	public ProblemDetail handleDataIntegrityViolation(HttpServletRequest request, DataIntegrityViolationException exception) {
@@ -34,6 +41,11 @@ public class RuntimeExceptionHandler {
 	@ExceptionHandler(value = ZfgcInvalidRequestException.class)
 	public ProblemDetail handleInvalidRequest(HttpServletRequest request, ZfgcInvalidRequestException exception) {
 		return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, exception.getMessage());
+	}
+
+	@ExceptionHandler(value = ZfgcUnauthorizedException.class)
+	public ProblemDetail handleUnauthorized(HttpServletRequest request, ZfgcUnauthorizedException exception) {
+		return ProblemDetail.forStatusAndDetail(HttpStatus.FORBIDDEN, "Forbidden.");
 	}
 
 }

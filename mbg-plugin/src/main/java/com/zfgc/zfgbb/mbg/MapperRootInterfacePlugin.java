@@ -23,7 +23,7 @@ public class MapperRootInterfacePlugin extends PluginAdapter {
 			"countByExample", "selectByExample", "selectByExampleWithLimits", "selectByPrimaryKey",
 			"insert", "insertSelective", "updateByPrimaryKey", "updateByPrimaryKeySelective",
 			"updateByExample", "updateByExampleSelective", "deleteByPrimaryKey", "deleteByExample",
-			VersionedUpdatePlugin.METHOD_NAME);
+			VersionedUpdatePlugin.METHOD_NAME, SelectForUpdatePlugin.METHOD_NAME);
 
 	@Override
 	public boolean validate(List<String> warnings) {

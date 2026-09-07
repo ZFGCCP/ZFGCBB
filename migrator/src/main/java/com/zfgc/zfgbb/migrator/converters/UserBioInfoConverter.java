@@ -13,7 +13,6 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.util.HtmlUtils;
@@ -41,8 +40,10 @@ import com.zfgc.zfgbb.migrator.smf.dbo.SMFMembersDbExample;
 import com.zfgc.zfgbb.migrator.smf.dbo.SMFMembersDbWithBLOBs;
 import com.zfgc.zfgbb.migrator.smf.mappers.SMFAttachmentsDbMapper;
 import com.zfgc.zfgbb.migrator.smf.mappers.SMFMembersDbMapper;
+import lombok.RequiredArgsConstructor;
 
 @Component
+@RequiredArgsConstructor
 public class UserBioInfoConverter extends AbstractConverter<Map<Integer, UserBioInfoDbo>> {
 
 	@Override
@@ -50,29 +51,21 @@ public class UserBioInfoConverter extends AbstractConverter<Map<Integer, UserBio
 		return JobType.USER_BIO_INFO;
 	}
 
-	@Autowired
-	public SMFMembersDbMapper smfMembersMapper;
+	private final SMFMembersDbMapper smfMembersMapper;
 
-	@Autowired
-	public UserBioInfoDboMapper bioInfoMapper;
+	private final UserBioInfoDboMapper bioInfoMapper;
 
-	@Autowired
-	private SMFAttachmentsDbMapper smfAttachmentsDbMapper;
+	private final SMFAttachmentsDbMapper smfAttachmentsDbMapper;
 
-	@Autowired
-	private AvatarDboMapper avatarMapper;
+	private final AvatarDboMapper avatarMapper;
 
-	@Autowired
-	private ContentResourceDboMapper contentMapper;
+	private final ContentResourceDboMapper contentMapper;
 
-	@Autowired
-	private GenderLkupDboMapper genderLkupMapper;
+	private final GenderLkupDboMapper genderLkupMapper;
 
-	@Autowired
-	private MigratorIdMapService idMap;
+	private final MigratorIdMapService idMap;
 
-	@Autowired
-	private SmfSettingsService smfSettings;
+	private final SmfSettingsService smfSettings;
 
 	@Override
 	@Transactional

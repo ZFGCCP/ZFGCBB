@@ -9,7 +9,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -26,30 +25,26 @@ import com.zfgc.zfgbb.migrator.smf.dbo.SMFMessageDbExample;
 import com.zfgc.zfgbb.migrator.smf.dbo.SMFMessageDbWithBLOBs;
 import com.zfgc.zfgbb.migrator.smf.mappers.SMFMessageDbMapper;
 import com.zfgc.zfgbb.migrator.smf.queries.SmfMessageStreamMapper;
+import lombok.RequiredArgsConstructor;
 
 @Component
+@RequiredArgsConstructor
 public class MessageConverter extends AbstractConverter<Void> {
 
-	@Autowired
-	private MessageDboMapper messageMapper;
+	private final MessageDboMapper messageMapper;
 
-	@Autowired
-	private SMFMessageDbMapper smfMessageMapper;
+	private final SMFMessageDbMapper smfMessageMapper;
 
-	@Autowired
-	private SmfMessageStreamMapper smfMessageStreamMapper;
+	private final SmfMessageStreamMapper smfMessageStreamMapper;
 
-	@Autowired
-	private MigratorIdMapService idMap;
+	private final MigratorIdMapService idMap;
 
-	@Autowired
-	private MigratorTimestampMapper migratorTimestampMapper;
+	private final MigratorTimestampMapper migratorTimestampMapper;
 
-	@Autowired
-	private TransactionTemplate transactionTemplate;
+	private final TransactionTemplate transactionTemplate;
 
 	@Value("${zfgbb.migrator.batch-size:5000}")
-	private int batchSize;
+	private final int batchSize;
 
 	private static final Logger logger = LoggerFactory.getLogger(MessageConverter.class);
 

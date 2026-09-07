@@ -8,7 +8,6 @@ import java.util.Objects;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.util.HtmlUtils;
@@ -25,8 +24,10 @@ import com.zfgc.zfgbb.migrator.smf.dbo.SMFTopicDb;
 import com.zfgc.zfgbb.migrator.smf.dbo.SMFTopicDbExample;
 import com.zfgc.zfgbb.migrator.smf.mappers.SMFMessageDbMapper;
 import com.zfgc.zfgbb.migrator.smf.mappers.SMFTopicDbMapper;
+import lombok.RequiredArgsConstructor;
 
 @Component
+@RequiredArgsConstructor
 public class ThreadConverter extends AbstractConverter<Map<Integer, ThreadDbo>> {
 
 	@Override
@@ -34,17 +35,13 @@ public class ThreadConverter extends AbstractConverter<Map<Integer, ThreadDbo>> 
 		return JobType.THREADS;
 	}
 
-	@Autowired
-	public SMFTopicDbMapper smfTopicMapper;
+	private final SMFTopicDbMapper smfTopicMapper;
 
-	@Autowired
-	public ThreadDboMapper threadDboMapper;
+	private final ThreadDboMapper threadDboMapper;
 
-	@Autowired
-	private SMFMessageDbMapper smfMessageMapper;
+	private final SMFMessageDbMapper smfMessageMapper;
 
-	@Autowired
-	private MigratorIdMapService idMap;
+	private final MigratorIdMapService idMap;
 
 	Logger logger = LoggerFactory.getLogger(ThreadConverter.class);
 

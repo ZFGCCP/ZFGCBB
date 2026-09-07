@@ -26,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class BbcodeServiceTest {
-	static BBCodeService service = new BBCodeService();
+	static BBCodeService service = new BBCodeService(null, new BBCodeOutputSanitizer(), null);
 	static BBCodeConfig bbCodeQuote = null;
 	static BBCodeConfig bbCodeCode = null;
 	static BBCodeConfig bbCodeB = null;
@@ -254,10 +254,6 @@ public class BbcodeServiceTest {
 
 	@BeforeAll
 	public static void initialize() throws Exception {
-		Field sanitizerField = BBCodeService.class.getDeclaredField("outputSanitizer");
-		sanitizerField.setAccessible(true);
-		sanitizerField.set(service, new BBCodeOutputSanitizer());
-
 		initQuote();
 		initCode();
 		initB();

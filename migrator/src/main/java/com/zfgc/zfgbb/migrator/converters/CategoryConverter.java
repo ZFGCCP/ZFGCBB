@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,18 +17,17 @@ import com.zfgc.zfgbb.migrator.jobs.MigratorIdMapService;
 import com.zfgc.zfgbb.migrator.smf.dbo.SMFCategoryDb;
 import com.zfgc.zfgbb.migrator.smf.dbo.SMFCategoryDbExample;
 import com.zfgc.zfgbb.migrator.smf.mappers.SMFCategoryDbMapper;
+import lombok.RequiredArgsConstructor;
 
 @Component
+@RequiredArgsConstructor
 public class CategoryConverter extends AbstractConverter<Map<Integer, CategoryDbo>> {
 
-	@Autowired
-	public SMFCategoryDbMapper smfCategoryMapper;
+	private final SMFCategoryDbMapper smfCategoryMapper;
 
-	@Autowired
-	public CategoryDboMapper categoryDboMapper;
+	private final CategoryDboMapper categoryDboMapper;
 
-	@Autowired
-	public MigratorIdMapService idMap;
+	private final MigratorIdMapService idMap;
 
 	@Override
 	public JobType getType() {

@@ -1,6 +1,5 @@
 package com.zfgc.zfgbb.controller.forum;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,13 +17,15 @@ import com.zfgc.zfgbb.model.forum.Thread;
 import com.zfgc.zfgbb.model.forum.ThreadSplit;
 import com.zfgc.zfgbb.controller.BaseController;
 import com.zfgc.zfgbb.services.forum.ForumService;
+import com.zfgc.zfgbb.authorization.AllowAnonymous;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/thread")
+@RequiredArgsConstructor
 public class ThreadController extends BaseController {
 	
-	@Autowired
-	private ForumService forumService;
+	private final ForumService forumService;
 	
 	@GetMapping("/template")
 	public ResponseEntity getThreadTemplate(@RequestParam("boardId") Integer boardId) {
@@ -40,6 +41,7 @@ public class ThreadController extends BaseController {
 	}
 	
 	@GetMapping("/{threadId}")
+	@AllowAnonymous
 	public ResponseEntity getThread(@PathVariable("threadId") Integer threadId, @RequestParam("numPerPage") Integer numPerPage, @RequestParam("pageNo") Integer pageNo) {
 		return ResponseEntity.ok(forumService.getThread(threadId, pageNo, numPerPage, super.zfgcUser()));
 	}

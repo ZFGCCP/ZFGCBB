@@ -3,7 +3,6 @@ package com.zfgc.zfgbb.dao.bbcode;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.zfgc.zfgbb.dao.AbstractDao;
@@ -15,7 +14,6 @@ import com.zfgc.zfgbb.mappers.BBCodeAttributeModeDboMapper;
 @Repository
 public class BBCodeAttributeModeDao extends AbstractDao<BBCodeAttributeModeDboExample, BBCodeAttributeModeDboMapper, BBCodeAttributeModeDbo>  {
 
-	@Autowired
     public BBCodeAttributeModeDao(BBCodeAttributeModeDboMapper mapper) {
         super(mapper);
     }

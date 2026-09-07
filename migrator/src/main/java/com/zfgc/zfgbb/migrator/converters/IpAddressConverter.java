@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -14,21 +13,20 @@ import com.zfgc.zfgbb.dbo.IpAddressDboExample;
 import com.zfgc.zfgbb.mappers.IpAddressDboMapper;
 import com.zfgc.zfgbb.migrator.jobs.JobType;
 import com.zfgc.zfgbb.migrator.smf.queries.SmfMessageDistinctIpsMapper;
+import lombok.RequiredArgsConstructor;
 
 @Component
+@RequiredArgsConstructor
 public class IpAddressConverter extends AbstractConverter<Void> {
 
-	@Autowired
-	private SmfMessageDistinctIpsMapper smfDistinctIpsMapper;
+	private final SmfMessageDistinctIpsMapper smfDistinctIpsMapper;
 
-	@Autowired
-	private IpAddressDboMapper ipAddressMapper;
+	private final IpAddressDboMapper ipAddressMapper;
 
-	@Autowired
-	private TransactionTemplate transactionTemplate;
+	private final TransactionTemplate transactionTemplate;
 
 	@Value("${zfgbb.migrator.batch-size:5000}")
-	private int batchSize;
+	private final int batchSize;
 
 	private static final Logger logger = LoggerFactory.getLogger(IpAddressConverter.class);
 

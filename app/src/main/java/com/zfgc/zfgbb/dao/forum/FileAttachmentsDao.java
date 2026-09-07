@@ -3,7 +3,6 @@ package com.zfgc.zfgbb.dao.forum;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.zfgc.zfgbb.dao.AbstractDao;
@@ -14,7 +13,6 @@ import com.zfgc.zfgbb.mappers.FileAttachmentDboMapper;
 @Repository
 public class FileAttachmentsDao extends AbstractDao<FileAttachmentDboExample, FileAttachmentDboMapper, FileAttachmentDbo>{
 
-	@Autowired
 	public FileAttachmentsDao(FileAttachmentDboMapper mapper) {
 		super(mapper);
 		// TODO Auto-generated constructor stub

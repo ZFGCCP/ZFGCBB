@@ -11,7 +11,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.util.HtmlUtils;
@@ -28,8 +27,10 @@ import com.zfgc.zfgbb.migrator.smf.dbo.SMFTopicDb;
 import com.zfgc.zfgbb.migrator.smf.dbo.SMFTopicDbExample;
 import com.zfgc.zfgbb.migrator.smf.mappers.SMFPollsDbMapper;
 import com.zfgc.zfgbb.migrator.smf.mappers.SMFTopicDbMapper;
+import lombok.RequiredArgsConstructor;
 
 @Component
+@RequiredArgsConstructor
 public class PollConverter extends AbstractConverter<Map<Integer, PollDbo>> {
 
 	@Override
@@ -37,17 +38,13 @@ public class PollConverter extends AbstractConverter<Map<Integer, PollDbo>> {
 		return JobType.POLLS;
 	}
 
-	@Autowired
-	private SMFPollsDbMapper smfPollsMapper;
+	private final SMFPollsDbMapper smfPollsMapper;
 
-	@Autowired
-	private PollDboMapper pollMapper;
+	private final PollDboMapper pollMapper;
 
-	@Autowired
-	private SMFTopicDbMapper threadMapper;
+	private final SMFTopicDbMapper threadMapper;
 
-	@Autowired
-	private MigratorIdMapService idMap;
+	private final MigratorIdMapService idMap;
 
 	@Override
 	@Transactional

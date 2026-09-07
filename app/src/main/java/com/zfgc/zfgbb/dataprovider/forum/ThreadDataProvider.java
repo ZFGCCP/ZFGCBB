@@ -8,11 +8,10 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.zfgc.zfgbb.dao.BoardDao;
-import com.zfgc.zfgbb.dao.BoardPermissionViewDao;
+import com.zfgc.zfgbb.dao.forum.BoardPermissionViewDao;
 import com.zfgc.zfgbb.dao.ThreadDao;
 import com.zfgc.zfgbb.dao.forum.PollChoiceDao;
 import com.zfgc.zfgbb.dao.forum.PollDao;
@@ -35,49 +34,40 @@ import com.zfgc.zfgbb.mappers.AllMessagesInThreadViewDboMapper;
 import com.zfgc.zfgbb.mappers.LatestMessageInThreadViewDboMapper;
 import com.zfgc.zfgbb.mappers.MessageDboMapper;
 import com.zfgc.zfgbb.mapstruct.forum.PollMap;
-import com.zfgc.zfgbb.model.User;
+import com.zfgc.zfgbb.model.users.User;
 import com.zfgc.zfgbb.model.forum.LatestMessage;
 import com.zfgc.zfgbb.model.forum.Message;
 import com.zfgc.zfgbb.model.forum.Poll;
 import com.zfgc.zfgbb.model.forum.Thread;
 import com.zfgc.zfgbb.model.forum.ThreadSplit;
 import com.zfgc.zfgbb.model.users.Permission;
+import lombok.RequiredArgsConstructor;
 
 @Repository
+@RequiredArgsConstructor
 public class ThreadDataProvider extends AbstractDataProvider {
 
-	@Autowired
-	private ThreadDao threadDao;
+	private final ThreadDao threadDao;
 	
-	@Autowired
-	private MessageDataProvider messageDataProvider;
+	private final MessageDataProvider messageDataProvider;
 	
-	@Autowired
-	private BoardPermissionViewDao boardPermissionDao;
+	private final BoardPermissionViewDao boardPermissionDao;
 
-	@Autowired
-	private BoardDao boardDao;
+	private final BoardDao boardDao;
 	
-	@Autowired
-	private PollDao pollDao;
+	private final PollDao pollDao;
 	
-	@Autowired
-	private PollChoiceDao pollChoiceDao;
+	private final PollChoiceDao pollChoiceDao;
 	
-	@Autowired
-	private UserDao userDao;
+	private final UserDao userDao;
 	
-	@Autowired
-	private LatestMessageInThreadViewDboMapper latestMessageMapper;
+	private final LatestMessageInThreadViewDboMapper latestMessageMapper;
 	
-	@Autowired
-	private AllMessagesInThreadViewDboMapper allMessagesMapper;
+	private final AllMessagesInThreadViewDboMapper allMessagesMapper;
 	
-	@Autowired
-	private MessageDboMapper messageMapper;
+	private final MessageDboMapper messageMapper;
 	
-	@Autowired
-	private PollMap pollMap;
+	private final PollMap pollMap;
 	
 	public Thread getThread(Integer threadId, Integer page, Integer count) {
 		Optional<ThreadDbo> threadDb = threadDao.find(threadId);

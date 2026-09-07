@@ -46,6 +46,9 @@ public class UserDbo extends AbstractDbo {
     @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source field: zfgbb.user.password_changed_ts")
     private OffsetDateTime passwordChangedTs;
 
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source field: zfgbb.user.tokens_valid_after_ts")
+    private OffsetDateTime tokensValidAfterTs;
+
     @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source field: zfgbb.user.user_id")
     public Integer getUserId() {
         return userId;
@@ -184,6 +187,16 @@ public class UserDbo extends AbstractDbo {
     @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source field: zfgbb.user.password_changed_ts")
     public void setPasswordChangedTs(OffsetDateTime passwordChangedTs) {
         this.passwordChangedTs = passwordChangedTs;
+    }
+
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source field: zfgbb.user.tokens_valid_after_ts")
+    public OffsetDateTime getTokensValidAfterTs() {
+        return tokensValidAfterTs;
+    }
+
+    @Generated(value="org.mybatis.generator.api.MyBatisGenerator", comments="Source field: zfgbb.user.tokens_valid_after_ts")
+    public void setTokensValidAfterTs(OffsetDateTime tokensValidAfterTs) {
+        this.tokensValidAfterTs = tokensValidAfterTs;
     }
 
     @Override
