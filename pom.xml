@@ -34,7 +34,7 @@
     <m2e.apt.activation>jdt_apt</m2e.apt.activation>
 
     <mapstruct.version>1.7.0.Beta2</mapstruct.version>
-    <lombok.version>1.18.46</lombok.version>
+    <lombok.version>1.18.48</lombok.version>
     <modelmapper.version>3.2.6</modelmapper.version>
     <commons-lang3.version>3.20.0</commons-lang3.version>
     <guava.version>33.7.1-jre</guava.version>
@@ -44,7 +44,7 @@
     <mybatis.version>3.5.19</mybatis.version>
     <mysql-connector.version>26.7.0</mysql-connector.version>
     <postgresql.version>42.7.13</postgresql.version>
-    <flyway.version>13.4.0</flyway.version>
+    <flyway.version>13.5.0</flyway.version>
     <jsoup.version>1.23.2</jsoup.version>
 
     <testcontainers.version>2.0.5</testcontainers.version>
